@@ -322,9 +322,9 @@ c
          read(11,55,end=999) ilyr,(xm(icont,j),j=j1,j2)
          read(11,55,end=999) icnt,(zm(icont,j),j=j1,j2)
          read(11,65,end=99) (ivarz(icont,j),j=j1,j2)
-55       format(i2,1x,10f7.2)
-c65       format(3x,10i7)
-65       format(3x,10(5x,i2))
+55       format(i2,1x,10f8.3)
+c65       format(3x,10i8)
+65       format(3x,10(6x,i2))
          nrz=nrz+1
          if(icnt.ne.1) go to 211
          j1=j1+10

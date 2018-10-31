@@ -18,6 +18,7 @@ c
      +     xzf(ppzff),zff(ppzff),zpts(ppnpts),vpts(ppnpts)
       integer ivarz(player,ppcntr),ivarv(player,ppvel,2)
       include 'vmodel.com'
+      CHARACTER(LEN=50) FMT
 c
       call dxmin(ncont)
 c
@@ -204,10 +205,11 @@ c
 c
 790       read(30,745,end=795) nfrefr
 745       format(i2)
-          read(30,755) (xfrefl(i),i=1,nfrefr)
-          read(30,755) (zfrefl(i),i=1,nfrefr)
+          WRITE(FMT,'("(3x,", I0, "f7.2)")') nfrefr
+          read(30,FMT) (xfrefl(i),i=1,nfrefr)
+          read(30,FMT) (zfrefl(i),i=1,nfrefr)
           read(30,765)
-755       format(3x,<nfrefr>f7.2)
+C 755       format(3x,<nfrefr>f7.2)
 765       format(' ')
 c
           ipen=3
@@ -469,10 +471,11 @@ c
 c
 590       read(30,545,end=595) nfrefr
 545       format(i2)
-          read(30,555) (xfrefl(i),i=1,nfrefr)
-          read(30,555) (zfrefl(i),i=1,nfrefr)
+          WRITE(FMT,'("(3x,", I0, "f7.2)")') nfrefr
+          read(30,FMT) (xfrefl(i),i=1,nfrefr)
+          read(30,FMT) (zfrefl(i),i=1,nfrefr)
           read(30,765)
-555       format(3x,<nfrefr>f7.2)
+C 555       format(3x,<nfrefr>f7.2)
 c
           ipen=3
           do 1010 ii=1,nfrefr

@@ -1,8 +1,8 @@
 #
 # makefile for VMODEL
 #
-EXEDIR=/net/ray/sunbin/
-PLTLIB=/net/ray/src/pltlib
+EXEDIR=../build/
+PLTLIB=../pltlib/
 #
 # compile flags
 #
@@ -29,7 +29,8 @@ XVMODEL_EXEC=$(EXEDIR)xvmodel
 #
 vmodel: $(VMODEL_EXEC)
 $(VMODEL_EXEC): ${VMODEL_OBJS}
-	unilink ${VMODEL_OBJS}
+	# unilink ${VMODEL_OBJS}
+	f77 -o main ${TRAMP_OBJS}
 	mv main ${VMODEL_EXEC}
 #
 xvmodel: $(XVMODEL_EXEC)
