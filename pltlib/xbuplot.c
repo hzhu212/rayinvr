@@ -96,8 +96,10 @@ void xbuinit_ (x_mm_size, y_mm_size)
   /*  create opaque window  */
   win = XCreateSimpleWindow (display, RootWindow (display, screen_num),
 				x, y, win_width, win_height, border_width,
-				WhitePixel (display, screen_num),
-				BlackPixel (display, screen_num));
+        BlackPixel (display, screen_num),
+        WhitePixel (display, screen_num));
+				// WhitePixel (display, screen_num),
+				// BlackPixel (display, screen_num));
 
   /*  Create pixmap of depth 1 (bitmap) for icon  */
   icon_pixmap = XCreateBitmapFromData (display, win, xbuplot_icon_bits,

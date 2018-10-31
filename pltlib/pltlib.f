@@ -183,6 +183,8 @@ c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
 c
       character label(nchar)
+C     Variable FORMAT expression
+      CHARACTER(LEN=50) FMT
 c
       if(iplot.ge.0) then
 c       call rtxhei(ht)
@@ -190,9 +192,13 @@ c       call rtxang(ang)
 c       call rtx(nchar,label,x*sf,y*sf)
       end if
 c
-      if(iplot.le.0) write(19,5)
+C     Variable FORMAT expression
+      WRITE(FMT,'("(i2/i10/4e15.5,", I0, "a1)")') nchar
+
+C       if(iplot.le.0) write(19,5)
+      if(iplot.le.0) write(19,FMT)
      +  3,nchar,x,y,ht,ang,(label(i),i=1,nchar)
-5     format(i2/i10/4e15.5,<nchar>a1)
+C 5     format(i2/i10/4e15.5,<nchar>a1)
 c
       return
       end
