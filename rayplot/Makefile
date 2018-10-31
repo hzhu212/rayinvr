@@ -1,8 +1,8 @@
 #
 # makefile for RAYPLOT
 #
-EXEDIR=/net/ray/sunbin/
-PLTLIB=/net/ray/src/pltlib
+EXEDIR=../build/
+PLTLIB=../pltlib/
 #
 # compile flags
 #
