@@ -3,14 +3,14 @@ c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |             ********  T X M A T C H   ********               |   
+c     |             ********  T X M A T C H   ********               |
 c     |                                                              |
 c     |         select picks with the same positions for two         |
 c     |           different phases from two "tx.in" files            |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -41,10 +41,10 @@ c
 101   read(12,*,end=998) x2,t2,u2,i2
       if(i2.eq.-1) go to 998
       if(i2.eq.0) then
-        x2shot=x2 
-        t2shot=t2 
-        u2shot=u2 
-        i2shot=i2 
+        x2shot=x2
+        t2shot=t2
+        u2shot=u2
+        i2shot=i2
         if(abs(x2shot-x1shot).lt..001.and.abs(t2shot-t1shot).lt..001)
      +  then
           iflag=1

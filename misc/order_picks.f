@@ -3,14 +3,14 @@ c     version 1.3  Aug 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |            *******  O R D E R_P I C K S  *****               |   
+c     |            *******  O R D E R_P I C K S  *****               |
 c     |                                                              |
-c     |             Re-order "tx.in" file in order of                |   
-c     |          increasing x-coordinate within each phase           |   
+c     |             Re-order "tx.in" file in order of                |
+c     |          increasing x-coordinate within each phase           |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -48,7 +48,7 @@ c
            nshot=nshot+1
            ishot(nshot)=i
          end if
-310   continue 
+310   continue
 c
       nshot=nshot-1
       do 320 i=1,nshot
@@ -122,24 +122,24 @@ c
       write(*,*, fmt="('number of picks:         ',i10/)") npicks
       stop
       end
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine sort(x,ipos,npts)
-c                 
+c
 c     sort the elements of array x in order of increasing size using
 c     a bubble sort technique
-c                 
+c
       parameter(pmax=60000)
       real x(pmax)
-      integer ipos(pmax) 
+      integer ipos(pmax)
 c
       do 30 i=1,npts
          ipos(i)=i
 30    continue
 c
       do 10 i=1,npts-1
-         iflag=0  
+         iflag=0
          do 20 j=1,npts-1
             if(x(j).gt.x(j+1)) then
               iflag=1
@@ -150,11 +150,11 @@ c
               ipos(j)=ipos(j+1)
               ipos(j+1)=ih
             end if
-20       continue 
+20       continue
          if(iflag.eq.0) return
-10     continue   
-      return      
-      end         
+10     continue
+      return
+      end
 c
 c     ----------------------------------------------------------------
 c
@@ -202,7 +202,7 @@ c
           rb(i)=rb(j)
           i=j
           j=j+j
-        else 
+        else
           j=ir+1
         end if
         go to 20

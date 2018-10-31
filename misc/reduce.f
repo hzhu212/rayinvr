@@ -3,14 +3,14 @@ c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |              ********   R E D U C E  ********                |   
+c     |              ********   R E D U C E  ********                |
 c     |                                                              |
-c     |            Change the reducing velocity applied              |   
-c     |                      to a "tx.in" file                       |   
+c     |            Change the reducing velocity applied              |
+c     |                      to a "tx.in" file                       |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------

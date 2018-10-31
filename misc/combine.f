@@ -1,6 +1,6 @@
-c                 
+c
 c     version 1.2  Mar 1992
-c                 
+c
 c     ----------------------------------------------------------------
 c     |                                                              |
 c     |            *********  C O M B I N E  **********              |
@@ -10,39 +10,39 @@ c     |            traveltime residuals from two runs                |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        10 -- input:  partial derivatives/traveltime residuals
 c
 c        11 -- input:  partial derivatives/traveltime residuals
 c
 c        12 -- output:  combined partial derivatives/traveltime residuals
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       include 'rayinvr.par'
-c                
+c
       real tres(prayi),apart1(prayi,pnvar),ures(prayi),
      +     tres1(prayi),apart2(prayi,pnvar),tres2(prayi),parorg(pnvar),
      +     ures1(prayi),ures2(prayi),parunc(pnvar)
       integer partyp(pnvar)
-c                 
+c
       open(unit=10, file='i1.in', status='old')
       open(unit=11, file='i2.in', status='old')
       open(unit=12, file='i.out')
 c
 c     read in matrix of partial derivatives and vector of traveltime
-c     residuals 
+c     residuals
 c
       read(10,1)
 1     format(' ')
@@ -53,15 +53,15 @@ c
       read(11,45) narin2,nvar2
 c
       if(narin1+narin2.gt.prayi) then
-        write(6,95) 
+        write(6,95)
 95      format(/'***  too many arrivals  ***'/)
-        stop 
+        stop
       end if
 c
       if(nvar1.ne.nvar2) then
-        write(6,105) 
+        write(6,105)
 105     format(/'***  unequal number of parameters varied  ***'/)
-        stop 
+        stop
       end if
 c
       nvar=nvar1
@@ -133,7 +133,7 @@ c
       write(12,15) (tres(i),i=1,narinv)
       write(12,1)
       write(12,15) (ures(i),i=1,narinv)
-c                 
+c
       read(10,1)
       read(10,25) narin1,trms1,chi1
 25    format(28x,i8/28x,f8.3/26x,f10.3)

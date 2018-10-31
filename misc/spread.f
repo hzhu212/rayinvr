@@ -1,6 +1,6 @@
-c                 
+c
 c     version 1.2  Mar 1992
-c                 
+c
 c     ----------------------------------------------------------------
 c     |                                                              |
 c     |            **********  S P R E A D  ***********              |
@@ -10,31 +10,31 @@ c     |              according to a specified geometry               |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        10 -- input:  traveltime-distance pairs for all receivers
 c
 c        11 -- output:  traveltime-distance pairs for spread geometry
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       open(unit=10, file='tx.in', status='old')
-      open(unit=11, file='tx.out') 
+      open(unit=11, file='tx.out')
 c
       write(6,15)
 15    format(/
      +  'Enter shot gap and maximum offset to left and right (km)')
-      read(5,*) xgap,xmaxl,xmaxr 
+      read(5,*) xgap,xmaxl,xmaxr
       write(6,25)
 25    format(/
      +  'Enter phase number (enter 0 for all phases)')

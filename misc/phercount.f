@@ -3,16 +3,16 @@ c     version 1.4  Dec 1993
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |            *******   P H E R C O U N T  *******              |   
+c     |            *******   P H E R C O U N T  *******              |
 c     |                                                              |
-c     |        Calculate number of arrivals for each phase           |   
-c     |         and average uncertainites for "tx.in" file           |   
+c     |        Calculate number of arrivals for each phase           |
+c     |         and average uncertainites for "tx.in" file           |
 c     |                                                              |
 c     |              Original code written by B. Zelt                |
 c     |                                                              |
 c     |                 Modifications by C. A. Zelt                  |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -30,7 +30,7 @@ c
       open(7,file='tx.in',status='old')
       open(8,file='phcount.out',status='unknown')
       open(9,file='ercount.out',status='unknown')
-c  
+c
       ipmax=0
 100   read(7,*,end=998) d,t,e,iphase
       if(iphase.gt.ipmax) ipmax=iphase

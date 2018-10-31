@@ -3,14 +3,14 @@ c     version 1.3  Aug 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |            *******  O R D E R_P I C K S  *****               |   
+c     |            *******  O R D E R_P I C K S  *****               |
 c     |                                                              |
-c     |             Re-order "tx.in" file in order of                |   
-c     |          increasing x-coordinate within each phase           |   
+c     |             Re-order "tx.in" file in order of                |
+c     |          increasing x-coordinate within each phase           |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -51,7 +51,7 @@ c
            nshot=nshot+1
            ishot(nshot)=i
          end if
-310   continue 
+310   continue
 c
       nshot=nshot-1
       do 320 i=1,nshot

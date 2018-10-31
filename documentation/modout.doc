@@ -23,13 +23,13 @@ Then the boundaries follow using the same format as for the model
 
 Output file: "fort.35". An "x,y,z" file suitable for plotting using gmt.
 first column is x position, second column is z position, third column
-is velocity. 
- 
+is velocity.
+
 note: using modout=2 and tracing rays will cause the v.out file to
 have velocities of 9.999 where there is no ray coverage around the edges
 of the model, and the fort.35 file will omit the unsampled nodes as well.
-This allows plots of the model with the unsample portion of the model 
+This allows plots of the model with the unsample portion of the model
 (around the edges) omitted. Also, fort.63 is a "x,y,z" file where
 first column is x position, second column is z position, third column
-is ray hits. 
+is ray hits.
 

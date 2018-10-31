@@ -1,14 +1,14 @@
 c
 c     version 1.3  Aug 1992
-c     
+c
 c     Inversion routines for RAYINVR
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine cvcalc(i,j,ipos,itype,cf)
-c                 
+c
 c     calculate coefficients of velocity partial derivatives
-c                 
+c
       include 'rayinvr.par'
       include 'rayinvr.com'
 c
@@ -44,14 +44,14 @@ c
       cv(i,j,ipos,5)=cv(i,j,ipos,5)+cf*sign*bb*xb
 c
       return
-      end   
+      end
 c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine velprt(lu,iu,npt)
-c                 
+c
 c     calculate velocity partial derivatives
-c                 
+c
       include 'rayinvr.par'
       include 'rayinvr.com'
 c
@@ -76,13 +76,13 @@ c
 c
       return
       end
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine bndprt(lu,iu,v1,v2,a1,a2,alpha,npt,itype)
-c                 
+c
 c     calculate boundary partial derivatives
-c                 
+c
       include 'rayinvr.par'
       include 'rayinvr.com'
 c
@@ -90,7 +90,7 @@ c
       if(itype.gt.0) then
         iz1=3
         iz2=4
-      else 
+      else
         iz1=1
         iz2=2
       end if
@@ -116,18 +116,18 @@ c
            end if
            fpart(ninv,jv)=fpart(ninv,jv)+
      +       sign(fudge,1.*itype)*(cos(a1)/v1-cos(a2)/v2)*slptrm
-         end if 
+         end if
 10    continue
 c
       return
-      end 
-c                 
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine frprt(vfr,afr,alpha,npt,ifrpt)
-c                 
+c
 c     calculate partial derivatives for floating reflectors
-c                 
+c
       include 'rayinvr.par'
       include 'rayinvr.com'
 c
@@ -149,17 +149,17 @@ c
              slptrm=1.
            end if
            fpart(ninv,jv)=fpart(ninv,jv)+2.*(cos(afr)/vfr)*slptrm
-         end if 
+         end if
 10    continue
 c
       return
-      end 
-c                 
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine fxtinv(npt)
 c
-c     keep track of those rays in the current family which reach the 
+c     keep track of those rays in the current family which reach the
 c     surface of the model
 c
       include 'rayinvr.par'
@@ -180,9 +180,9 @@ c
       subroutine calprt(xshotr,ig,iray,idr,ximax,iflagw,iszero,x2pt)
 c
 c     calculate the partial derivatives at the location of the travel
-c     time picks by interpolating across the end points of a single 
+c     time picks by interpolating across the end points of a single
 c     ray family
-c                 
+c
       include 'rayinvr.par'
       include 'rayinvr.com'
 c
@@ -200,7 +200,7 @@ c
       if(irayf.eq.0) then
         xshotf=xf
         idf=sign(1.,tf)
-        if(abs(xshotr-xshotf).lt..001.and.idr.eq.idf) then 
+        if(abs(xshotr-xshotf).lt..001.and.idr.eq.idf) then
           iflag=1
           npick=isf-nsfc
           isf=isf+1
@@ -213,7 +213,7 @@ c
         npick=npick+1
         if(iflag.eq.1.and.iray.eq.irayf) then
           if(iszero.eq.0) then
-            xpick=xf 
+            xpick=xf
           else
             xpick=abs(xshotr-xf)
           end if
@@ -222,15 +222,15 @@ c
           tvmin=99999.
           if(ninv.gt.1) then
             do 10 i=1,ninv-1
-               x1=xfinv(i)-x2pt 
-               x2=xfinv(i+1)+x2pt 
-               x3=xfinv(i)+x2pt 
-               x4=xfinv(i+1)-x2pt 
+               x1=xfinv(i)-x2pt
+               x2=xfinv(i+1)+x2pt
+               x3=xfinv(i)+x2pt
+               x4=xfinv(i+1)-x2pt
                if((xpick.ge.x1.and.xpick.le.x2).or.
-     +           (xpick.le.x3.and.xpick.ge.x4)) then 
+     +           (xpick.le.x3.and.xpick.ge.x4)) then
                  if(ximax.gt.0..and.min(abs(xfinv(i)-xpick),
      +           abs(xfinv(i+1)-xpick)).gt.ximax) then
-                   if(iflagw.eq.0) write(11,15) 
+                   if(iflagw.eq.0) write(11,15)
 15                 format
      +             ('***  attempt to interpolate over ximax  ***')
                    iflagw=1
@@ -244,7 +244,7 @@ c
                    tintr=(tfinv(i+1)+tfinv(i))/2.
                  end if
                  if(tintr.lt.tvmin) then
-                   ifpos=i 
+                   ifpos=i
                    tvmin=tintr
                  end if
                end if
@@ -253,7 +253,7 @@ c
              x1=xfinv(1)-x2pt
              x2=xfinv(1)+x2pt
              if(xpick.ge.x1.and.xpick.le.x2) then
-               if(ximax.gt.0..and.abs(xfinv(1)-xpick).gt.ximax) 
+               if(ximax.gt.0..and.abs(xfinv(1)-xpick).gt.ximax)
      +         then
                  if(iflagw.eq.0) write(11,15)
                  iflagw=1
@@ -279,7 +279,7 @@ c
 30        if(iapos.eq.0) then
             narinv=narinv+1
             iapos=narinv
-          else  
+          else
             if(tcalc(iapos).le.tvmin) go to 110
           end if
           ipinv(iapos)=npick
@@ -292,8 +292,8 @@ c
           ircalc(iapos)=ig
           dx=xfinv(ifpos+1)-xfinv(ifpos)
           if(dx.ne.0.) then
-            c1=abs((xpick-xfinv(ifpos))/dx) 
-            c2=abs((xpick-xfinv(ifpos+1))/dx) 
+            c1=abs((xpick-xfinv(ifpos))/dx)
+            c2=abs((xpick-xfinv(ifpos+1))/dx)
           else
             c1=.5
             c2=.5

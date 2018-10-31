@@ -1,6 +1,6 @@
 c
 c     version 1.2  Mar 1992
-c                 
+c
 c     ----------------------------------------------------------------
 c     |                                                              |
 c     |            ***********  F T E S T  ************              |
@@ -10,21 +10,21 @@ c     |             chi-squared values uisng the F-test              |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
+c
+c
       program main
 c
       data pmin/.05/
 c
       write(6,*) 'Enter chi-squared and number of points'
-      read(5,*) chi1,n1 
+      read(5,*) chi1,n1
       write(6,*) 'Enter chi-squared and number of points'
-      read(5,*) chi2,n2 
-c     
+      read(5,*) chi2,n2
+c
       if(chi1.gt.chi2) then
         f=chi1/chi2
         df1=n1-1
@@ -38,7 +38,7 @@ c
       prob=betai(0.5*df2,0.5*df1,df2/(df2+df1*f))+
      +     (1.-betai(0.5*df1,0.5*df2,df1/(df1+df2/f)))
 c
-      write(6,5) f,(1.-prob)*100. 
+      write(6,5) f,(1.-prob)*100.
 5     format(/'F = ',f8.3//'There is a ',
      + f6.2,'% chance of significantly different variances'//)
 c
@@ -73,7 +73,7 @@ c
 c
       if(x.lt.(a+1.)/(a+b+2.)) then
         betai=bt*betacf(a,b,x)/a
-      else    
+      else
         betai=1.-bt*betacf(b,a,1.-x)/b
       end if
 c
@@ -86,13 +86,13 @@ c
 c
 c     continued fraction for incomplete beta function used by betai
 c
-      parameter(itmax=100, eps=3.e-7) 
+      parameter(itmax=100, eps=3.e-7)
 c
       am=1.
       bm=1.
       az=1.
       qab=a+b
-      qap=a+1. 
+      qap=a+1.
       qam=a-1.
       bz=1.-qab*x/qap
 c
@@ -136,10 +136,10 @@ c
         write(6,*) '***  argument too small for gammln  ***'
         stop
       end if
-c 
+c
       x=xx-one
       tmp=x+fpf
-      tmp=(x+half)*log(tmp)-tmp 
+      tmp=(x+half)*log(tmp)-tmp
       ser=one
 c
       do 10 j=1,6

@@ -1,4 +1,4 @@
-c                 
+c
 c     version 1.3  Oct 1992
 c
 c     ----------------------------------------------------------------
@@ -10,26 +10,26 @@ c     |                       velocity model                         |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        11 -- input:  original velocity model
-c                 
+c
 c        12 -- output: zoomed-in velocity model
-c                 
+c
 c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       include 'rayinvr.par'
-c                
+c
       real xm1(pncntr,ppcntr),zm1(pncntr,ppcntr),
      +     xm2(pncntr,ppcntr),zm2(pncntr,ppcntr),
      +     xvel1(player,ppvel,2),vf1(player,ppvel,2),
@@ -38,7 +38,7 @@ c
      +        nzed2(pncntr),nvel2(player,2),
      +        ivarz1(player,ppcntr),ivarv1(player,ppvel,2),
      +        ivarz2(player,ppcntr),ivarv2(player,ppvel,2)
-c                 
+c
       open(unit=11, file='v.in', status='old')
       open(unit=12, file='v.out')
 c
@@ -101,11 +101,11 @@ c
          j2=j2+10
          go to 31
 411      ncont=ncont+1
-170   continue    
-c               
+170   continue
+c
 99    nlayer=ncont-1
 c
-      do 171 i=1,ncont 
+      do 171 i=1,ncont
          nzed1(i)=1
 171   continue
       do 172 i=1,nlayer
@@ -114,25 +114,25 @@ c
 172   continue
 c
       do 180 i=1,ncont
-         do 190 j=1,ppcntr 
+         do 190 j=1,ppcntr
             if(abs(xm1(i,j)-xmax).lt..0001) go to 180
             nzed1(i)=nzed1(i)+1
-190      continue 
-180   continue    
+190      continue
+180   continue
 c
-      do 210 i=1,nlayer  
-         do 220 j=1,ppvel  
+      do 210 i=1,nlayer
+         do 220 j=1,ppvel
             if(abs(xvel1(i,j,1)-xmax).lt..0001) go to 210
             nvel1(i,1)=nvel1(i,1)+1
-220      continue 
-210   continue    
+220      continue
+210   continue
 c
-      do 240 i=1,nlayer  
-         do 250 j=1,ppvel  
+      do 240 i=1,nlayer
+         do 250 j=1,ppvel
             if(abs(xvel1(i,j,2)-xmax).lt..0001) go to 240
             nvel1(i,2)=nvel1(i,2)+1
-250      continue 
-240   continue    
+250      continue
+240   continue
 c
 c     change the xmin values of layer boundaries
 c
@@ -140,8 +140,8 @@ c
          if(nzed1(i).le.1) go to 1010
          if(xminn.lt.xm1(i,1)) then
            if(nzed1(i).ge.ppcntr) then
-             write(6,35) 
-35           format(/'***  xminn<xmin and nzed=ppcntr  ***'/)  
+             write(6,35)
+35           format(/'***  xminn<xmin and nzed=ppcntr  ***'/)
              stop
            end if
            xm2(i,1)=xminn
@@ -188,8 +188,8 @@ c
          end if
          if(xmaxn.gt.xm2(i,nzed2(i))) then
            if(nzed2(i).ge.ppcntr) then
-             write(6,45) 
-45           format(/'***  xmaxn>xmax and nzed=ppcntr  ***'/)  
+             write(6,45)
+45           format(/'***  xmaxn>xmax and nzed=ppcntr  ***'/)
              stop
            end if
            xm2(i,nzed2(i)+1)=xmaxn
@@ -217,8 +217,8 @@ c
          if(nvel1(i,1).le.1) go to 3010
          if(xminn.lt.xvel1(i,1,1)) then
            if(nvel1(i,1).ge.ppvel) then
-             write(6,155) 
-155          format(/'***  xminn<xmin and nvel1=ppvel  ***'/)  
+             write(6,155)
+155          format(/'***  xminn<xmin and nvel1=ppvel  ***'/)
              stop
            end if
            xvel2(i,1,1)=xminn
@@ -265,8 +265,8 @@ c
          end if
          if(xmaxn.gt.xvel2(i,nvel2(i,1),1)) then
            if(nvel2(i,1).ge.ppvel) then
-             write(6,165) 
-165          format(/'***  xmaxn>xmax and nvel1=ppvel  ***'/)  
+             write(6,165)
+165          format(/'***  xmaxn>xmax and nvel1=ppvel  ***'/)
              stop
            end if
            xvel2(i,nvel2(i,1)+1,1)=xmaxn
@@ -294,8 +294,8 @@ c
          if(nvel1(i,2).le.1) go to 5010
          if(xminn.lt.xvel1(i,1,2)) then
            if(nvel1(i,2).ge.ppvel) then
-             write(6,75) 
-75           format(/'***  xminn<xmin and nvel2=ppvel  ***'/)  
+             write(6,75)
+75           format(/'***  xminn<xmin and nvel2=ppvel  ***'/)
              stop
            end if
            xvel2(i,1,2)=xminn
@@ -342,8 +342,8 @@ c
          end if
          if(xmaxn.gt.xvel2(i,nvel2(i,2),2)) then
            if(nvel2(i,2).ge.ppvel) then
-             write(6,85) 
-85           format(/'***  xmaxn>xmax and nvel2=ppvel  ***'/)  
+             write(6,85)
+85           format(/'***  xmaxn>xmax and nvel2=ppvel  ***'/)
              stop
            end if
            xvel2(i,nvel2(i,2)+1,2)=xmaxn
@@ -368,49 +368,49 @@ c
 c     write out the new velocity model
 c
       do 570 i=1,nlayer
-         nstart=1  
+         nstart=1
   590    j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nzed2(i)) j2=nzed2(i)
          if(j2.lt.nzed2(i)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(12,55) i,(xm2(i,j),j=j1,j2)
          write(12,55) icnt,(zm2(i,j),j=j1,j2)
          write(12,65) (ivarz2(i,j),j=j1,j2)
-         if(j2.eq.nzed2(i)) go to 600 
+         if(j2.eq.nzed2(i)) go to 600
          nstart=j2+1
          go to 590
-600      nstart=1  
+600      nstart=1
 620      j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nvel2(i,1)) j2=nvel2(i,1)
          if(j2.lt.nvel2(i,1)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(12,55) i,(xvel2(i,j,1),j=j1,j2)
          write(12,55) icnt,(vf2(i,j,1),j=j1,j2)
          write(12,65) (ivarv2(i,j,1),j=j1,j2)
-         if(j2.eq.nvel2(i,1)) go to 630 
+         if(j2.eq.nvel2(i,1)) go to 630
          nstart=j2+1
          go to 620
-630      nstart=1  
+630      nstart=1
 650      j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nvel2(i,2)) j2=nvel2(i,2)
          if(j2.lt.nvel2(i,2)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(12,55) i,(xvel2(i,j,2),j=j1,j2)
          write(12,55) icnt,(vf2(i,j,2),j=j1,j2)
          write(12,65) (ivarv2(i,j,2),j=j1,j2)
-         if(j2.eq.nvel2(i,2)) go to 570 
+         if(j2.eq.nvel2(i,2)) go to 570
          nstart=j2+1
          go to 650
 570   continue

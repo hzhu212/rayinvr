@@ -3,13 +3,13 @@ c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |             ********  T X P H A S E  ********                |   
+c     |             ********  T X P H A S E  ********                |
 c     |                                                              |
-c     |         Select particular phases from a "tx.in" file         |   
+c     |         Select particular phases from a "tx.in" file         |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -25,7 +25,7 @@ c
       open(11, file='tx.in')
       open(12, file='tx.out')
 c
-1001  write(6,15) 
+1001  write(6,15)
 15    format(/'Enter phase number to select (0 to stop)')
       read(5,*) phase(np)
       if(phase(np).gt.0) then

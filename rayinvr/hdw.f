@@ -2,22 +2,22 @@ c
 c     version 1.3  Aug 1992
 c
 c     Head wave routine for RAYINVR
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine hdwave(ifam,ir,n,invr,xsmax,iflag,i1ray,modout)
-c                 
+c
 c     ray now travels along a layer boundary as a head wave.
 c     do not need to use runge kutta routine. after ray has
 c     traveled a distance hws further than previous ray, it
 c     is directed upward into the model.
-c                 
+c
       include 'rayinvr.par'
-      include 'rayinvr.com'           
+      include 'rayinvr.com'
 c
       dhw=0.
 10    l1=layer+1
-      call block(xr(n),l1,ib) 
+      call block(xr(n),l1,ib)
       if(ivg(l1,ib).ne.-1) go to 20
       layer=layer+1
       if(layer.eq.nlayer) go to 999
@@ -192,7 +192,7 @@ c
         dhw=dhw+hws
         go to 1000
       end if
-      return      
+      return
 c
 900   write(11,25)
 25    format('***  ray stopped - consists of too many points  ***')
@@ -200,4 +200,4 @@ c
       iflag=1
       ihdwf=0
       return
-      end         
+      end

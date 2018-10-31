@@ -1,4 +1,4 @@
-c                 
+c
 c     version 1.3  Aug 1992
 c
 c     ----------------------------------------------------------------
@@ -10,34 +10,34 @@ c     |                traveltime inversion problem                  |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        10 -- input:  damping parameters
 c
 c        11 -- input:  matrix of partial derivatives and vector of
 c                      traveltime residuals
-c                 
+c
 c        12 -- output: model parameter adjustments and resolution and
-c                      covariance estimates and updated model 
-c                 
+c                      covariance estimates and updated model
+c
 c        13 -- input/output: initial and updated velocity model
 c
 c        30 -- input:  initial and updated floating reflectors
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       include 'rayinvr.par'
-c                
+c
       real apart(prayi,pnvar),tres(prayi),ata(pnvar,pnvar),
      +     att(pnvar),atad(pnvar,pnvar),atadi(pnvar,pnvar),
      +     dx(pnvar),pvar(3),res(pnvar,pnvar),var(pnvar),
@@ -49,16 +49,16 @@ c
      +        ivarz(player,ppcntr),ivarv(player,ppvel,2),
      +        mpinch(pncntr,ppcntr,2),igrad(player*ppvel),
      +        ivarf(pfrefl,ppfref),npfref(pfrefl),hit(pnvar)
-c                 
+c
       namelist /dmppar/ iscrn,dmpfct,velunc,bndunc,xmax,zshift,
      +                  hnorm,rnorm,nker
-c     
+c
       open(10, file='d.in', status='old')
       open(11, file='i.out', status='old')
       open(12, file='d.out')
       open(13, file='v.in', status='old')
       open(14, file='v.bak')
-c                 
+c
 c     default parameter values
 c
       nker=0
@@ -98,7 +98,7 @@ c
 105     format(/'***  xmax not specified  ***'/)
         stop
       end if
-c                 
+c
 c     read in matrix of partial derivatives and vector of traveltime
 c     residuals
 c
@@ -127,13 +127,13 @@ c
             if(apart(i,j).ne.0.) hit(j)=hit(j)+1
 1020     continue
 1010  continue
-c                 
+c
       do 20 i=1,nvar
          do 30 j=1,i
             ata(i,j)=0.
             do 40 k=1,narinv
                ata(i,j)=ata(i,j)+apart(k,i)*apart(k,j)/tunc(k)**2
-40          continue 
+40          continue
             if(i.ne.j) ata(j,i)=ata(i,j)
 30       continue
 20    continue
@@ -158,21 +158,21 @@ c
                   parunc(i)=parunc(i)**2
                 else
                   parunc(i)=pvar(1)
-                end if 
+                end if
               end if
               if(partyp(i).eq.2) then
                 if(velunc.le.0.) then
                   parunc(i)=parunc(i)**2
                 else
                   parunc(i)=pvar(2)
-                end if 
+                end if
               end if
               if(partyp(i).eq.3) then
                 if(bndunc.le.0.) then
                   parunc(i)=parunc(i)**2
                 else
                   parunc(i)=pvar(1)
-                end if 
+                end if
                 ifrbnd=1
               end if
               atad(i,j)=atad(i,j)+dmpfct/parunc(i)
@@ -211,7 +211,7 @@ c
      +        ' resolution std. error')
       write(12,45) (partyp(i),parorg(i),parunc(i)**.5,dx(i),
      +              parorg(i)+dx(i),res(i,i),sqrt(var(i)),i=1,nvar)
-45    format(i3,6f11.4)            
+45    format(i3,6f11.4)
 c
       if(iscrn.eq.1) then
         write(6,25) dmpfct
@@ -263,40 +263,40 @@ c
          j2=j2+10
          go to 31
 411      ncont=ncont+1
-170   continue    
-c                 
+170   continue
+c
 99    nlayer=ncont-1
-c 
-      do 171 i=1,ncont 
+c
+      do 171 i=1,ncont
          nzed(i)=1
 171   continue
       do 172 i=1,nlayer
          nvel(i,1)=1
          nvel(i,2)=1
 172   continue
-c 
+c
       do 180 i=1,ncont
-         do 190 j=1,ppcntr 
+         do 190 j=1,ppcntr
             if(abs(xm(i,j)-xmax).lt..0001) go to 180
             nzed(i)=nzed(i)+1
-190      continue 
-180   continue    
+190      continue
+180   continue
 c
-      do 210 i=1,nlayer  
-         do 220 j=1,ppvel  
+      do 210 i=1,nlayer
+         do 220 j=1,ppvel
             if(abs(xvel(i,j,1)-xmax).lt..0001) go to 212
             nvel(i,1)=nvel(i,1)+1
-220      continue 
+220      continue
 212      if(nvel(i,1).eq.1.and.vf(i,1,1).eq.0.) nvel(i,1)=0
-210   continue    
+210   continue
 c
-      do 240 i=1,nlayer  
-         do 250 j=1,ppvel  
+      do 240 i=1,nlayer
+         do 250 j=1,ppvel
             if(abs(xvel(i,j,2)-xmax).lt..0001) go to 260
             nvel(i,2)=nvel(i,2)+1
-250      continue 
+250      continue
 260      if(nvel(i,2).eq.1.and.vf(i,1,2).eq.0.) nvel(i,2)=0
-240   continue    
+240   continue
 c
       nlyr=0
       do 470 i=2,ncont
@@ -311,19 +311,19 @@ c
 c     write out original velocity model
 c
       do 1570 i=1,nlayer
-         nstart=1  
+         nstart=1
 1590     j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nzed(i)) j2=nzed(i)
          if(j2.lt.nzed(i)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(14,55) i,(xm(i,j),j=j1,j2)
          write(14,55) icnt,(zm(i,j),j=j1,j2)
          write(14,65) (ivarz(i,j),j=j1,j2)
-         if(j2.eq.nzed(i)) go to 1600 
+         if(j2.eq.nzed(i)) go to 1600
          nstart=j2+1
          go to 1590
 1600     if(nvel(i,1).le.0) then
@@ -332,19 +332,19 @@ c
            write(14,65) 0
            go to 1630
          end if
-         nstart=1  
+         nstart=1
 1620     j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nvel(i,1)) j2=nvel(i,1)
          if(j2.lt.nvel(i,1)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(14,55) i,(xvel(i,j,1),j=j1,j2)
          write(14,55) icnt,(vf(i,j,1),j=j1,j2)
          write(14,65) (ivarv(i,j,1),j=j1,j2)
-         if(j2.eq.nvel(i,1)) go to 1630 
+         if(j2.eq.nvel(i,1)) go to 1630
          nstart=j2+1
          go to 1620
 1630     if(nvel(i,2).le.0) then
@@ -353,19 +353,19 @@ c
            write(14,65) 0
            go to 1570
          end if
-         nstart=1  
+         nstart=1
 1650     j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nvel(i,2)) j2=nvel(i,2)
          if(j2.lt.nvel(i,2)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(14,55) i,(xvel(i,j,2),j=j1,j2)
          write(14,55) icnt,(vf(i,j,2),j=j1,j2)
          write(14,65) (ivarv(i,j,2),j=j1,j2)
-         if(j2.eq.nvel(i,2)) go to 1570 
+         if(j2.eq.nvel(i,2)) go to 1570
          nstart=j2+1
          go to 1650
 1570  continue
@@ -454,7 +454,7 @@ c
                      end if
 410               continue
                 else
-                  zl=zm(i+1,1)    
+                  zl=zm(i+1,1)
                 end if
 420             vl=vf(i,j,2)
                 if(abs(vu-vl).gt..001) then
@@ -470,7 +470,7 @@ c
                   grad(ngrad)=0.
                   igrad(ngrad)=1
                 end if
-              end if 
+              end if
 380        continue
          end if
 c
@@ -683,13 +683,13 @@ c
 c     write out velocity model
 c
       do 570 i=1,nlayer
-         nstart=1  
+         nstart=1
 590      j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nzed(i)) j2=nzed(i)
          if(j2.lt.nzed(i)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(12,55) i,(xm(i,j),j=j1,j2)
@@ -703,16 +703,16 @@ c
            write(6,55) icnt,(zm(i,j),j=j1,j2)
            write(6,65) (ivarz(i,j),j=j1,j2)
          end if
-         if(j2.eq.nzed(i)) go to 600 
+         if(j2.eq.nzed(i)) go to 600
          nstart=j2+1
          go to 590
-600      nstart=1  
+600      nstart=1
 620      j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nvel(i,1)) j2=nvel(i,1)
          if(j2.lt.nvel(i,1)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(12,55) i,(xvel(i,j,1),j=j1,j2)
@@ -726,16 +726,16 @@ c
            write(6,55) icnt,(vf(i,j,1),j=j1,j2)
            write(6,65) (ivarv(i,j,1),j=j1,j2)
          end if
-         if(j2.eq.nvel(i,1)) go to 630 
+         if(j2.eq.nvel(i,1)) go to 630
          nstart=j2+1
          go to 620
-630      nstart=1  
+630      nstart=1
 650      j1=nstart
-         j2=j1+9 
+         j2=j1+9
          if(j2.gt.nvel(i,2)) j2=nvel(i,2)
          if(j2.lt.nvel(i,2)) then
            icnt=1
-         else 
+         else
            icnt=0
          end if
          write(12,55) i,(xvel(i,j,2),j=j1,j2)
@@ -749,7 +749,7 @@ c
            write(6,55) icnt,(vf(i,j,2),j=j1,j2)
            write(6,65) (ivarv(i,j,2),j=j1,j2)
          end if
-         if(j2.eq.nvel(i,2)) go to 570 
+         if(j2.eq.nvel(i,2)) go to 570
          nstart=j2+1
          go to 650
 570   continue
@@ -801,7 +801,7 @@ c     ----------------------------------------------------------------
 c
       subroutine matinv(a,y,n)
 c
-c     invert the nxn matrix a  
+c     invert the nxn matrix a
 c
       include 'rayinvr.par'
 c
@@ -849,7 +849,7 @@ c
            stop
          end if
          vv(i)=1./aamax
-10    continue 
+10    continue
       do 30 j=1,n
          if(j.gt.1) then
            do 40 i=1,j-1

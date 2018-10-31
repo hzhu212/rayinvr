@@ -2,21 +2,21 @@ c
 c     version 1.3  Aug 1992
 c
 c     Calmod routine for TRAMP
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine calmod(ncont,pois,poisb,poisl,poisbl,
      +                  qp,qs,qb,ql,qpbl,qsbl,iamp,iden,iflagm)
-c                 
+c
 c     calculate model parameters now for use later in program
-c                 
-c 
+c
+c
       include 'tramp.par'
       real xa(2*(ppcntr+ppvel)),qp(player),qs(player),
      +     pois(player),poisbl(papois),
      +     qpbl(paqpqs),qsbl(paqpqs),vmod(121),zsmth(pnsmth)
       integer poisb(papois),poisl(papois),qb(paqpqs),ql(paqpqs)
-      include 'tramp.com'                
+      include 'tramp.com'
       iflagm=0
 c
       do 10 i=1,ncont
@@ -166,7 +166,7 @@ c
   120         continue
             else
               z1=zm(i,1)
-              z2=zm(i,1) 
+              z2=zm(i,1)
             end if
 130         s(i,j,1)=(z2-z1)/(xbnd(i,j,2)-xbnd(i,j,1))
             b(i,j,1)=z1-s(i,j,1)*xbnd(i,j,1)
@@ -186,24 +186,24 @@ c
 140           continue
             else
               z3=zm(i+1,1)
-              z4=zm(i+1,1) 
+              z4=zm(i+1,1)
             end if
 150         s(i,j,2)=(z4-z3)/(xbnd(i,j,2)-xbnd(i,j,1))
             b(i,j,2)=z3-s(i,j,2)*xbnd(i,j,1)
-c                 
-c           check for layer pinchouts 
-c                 
+c
+c           check for layer pinchouts
+c
             ivg(i,j)=1
-            if(abs(z3-z1).lt..0005) ivg(i,j)=2 
-            if(abs(z4-z2).lt..0005) ivg(i,j)=3 
+            if(abs(z3-z1).lt..0005) ivg(i,j)=2
+            if(abs(z4-z2).lt..0005) ivg(i,j)=3
             if(abs(z3-z1).lt..0005.and.abs(z4-z2).lt..0005) ivg(i,j)=-1
 c
-110      continue 
-100   continue    
+110      continue
+100   continue
 c
 c     assign velocities to each model block
 c
-      do 160 i=1,nlayer 
+      do 160 i=1,nlayer
 c
          if(nvel(i,1).eq.0) then
            do 161 j=i-1,1,-1
@@ -243,7 +243,7 @@ c
             go to (1001,1002,1003,1004,1005,1006), ivcase
 c
 1001        do 180 k=1,n1g-1
-               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg)) 
+               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg))
      +           then
                  dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,1)
@@ -255,7 +255,7 @@ c
 180         continue
 c
 1811        do 1812 k=1,n1g-1
-               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg)) 
+               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg))
      +           then
                  dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,2)
@@ -267,39 +267,39 @@ c
 1812        continue
 c
 181         do 182 k=1,nvel(i,2)-1
-               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2)) 
+               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(i,k,2)
                  if(ivg(i,j).ne.2) then
                    vm(i,j,3)=(c1*vf(i,k,2)+c2*vf(i,k+1,2))/dxx
                  else
                    vm(i,j,3)=vm(i,j,1)
-                 end if 
+                 end if
                  go to 187
                end if
 182         continue
 c
 187         do 1822 k=1,nvel(i,2)-1
-               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2)) 
+               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(i,k,2)
                  if(ivg(i,j).ne.3) then
                    vm(i,j,4)=(c1*vf(i,k,2)+c2*vf(i,k+1,2))/dxx
                  else
-                   vm(i,j,4)=vm(i,j,2) 
+                   vm(i,j,4)=vm(i,j,2)
                  end if
                  go to 171
                end if
 1822        continue
-c    
+c
 1002        do 183 k=1,n1g-1
-               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg)) 
+               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(ig,k,jg)
                  vm(i,j,1)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
@@ -309,9 +309,9 @@ c
 183         continue
 c
 1833        do 1832 k=1,n1g-1
-               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg)) 
+               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(ig,k,jg)
                  vm(i,j,2)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
@@ -334,9 +334,9 @@ c
             end if
 c
             do 185 k=1,nvel(i,2)-1
-               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2)) 
+               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(i,k,2)
                  if(ivg(i,j).ne.2) then
@@ -349,9 +349,9 @@ c
 185         continue
 c
 188         do 1851 k=1,nvel(i,2)-1
-               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2)) 
+               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(i,k,2)
                  if(ivg(i,j).ne.3) then
@@ -364,7 +364,7 @@ c
 1851        continue
 c
 1004        vm(i,j,1)=vf(ig,1,jg)
-            vm(i,j,2)=vf(ig,1,jg) 
+            vm(i,j,2)=vf(ig,1,jg)
             if(ig.ne.i) then
               vm(i,j,1)=vm(i,j,1)+.001
               vm(i,j,2)=vm(i,j,2)+.001
@@ -377,9 +377,9 @@ c
             go to 171
 c
 1005        do 186 k=1,n1g-1
-               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg)) 
+               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(ig,k,jg)
                  vm(i,j,1)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
@@ -390,23 +390,23 @@ c
 186         continue
 c
 1861        do 1862 k=1,n1g-1
-               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg)) 
+               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(ig,k,jg)
                  vm(i,j,2)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
                  if(ig.ne.i) vm(i,j,2)=vm(i,j,2)+.001
-                 vm(i,j,4)=vm(i,j,2)                        
+                 vm(i,j,4)=vm(i,j,2)
                  go to 171
                end if
 1862        continue
 c
 1006        vm(i,j,1)=vf(ig,1,jg)
             if(ig.ne.i) vm(i,j,1)=vm(i,j,1)+.001
-            vm(i,j,2)=vm(i,j,1) 
+            vm(i,j,2)=vm(i,j,1)
             vm(i,j,3)=vm(i,j,1)
-            vm(i,j,4)=vm(i,j,1) 
+            vm(i,j,4)=vm(i,j,1)
 c
 c           calculate velocity coefficients
 c
@@ -434,7 +434,7 @@ c
             v4=vm(i,j,4)
 c
             c(i,j,1)=s2*(xb2*v1-xb1*v2)+b2*(v2-v1)-
-     +               s1*(xb2*v3-xb1*v4)-b1*(v4-v3)       
+     +               s1*(xb2*v3-xb1*v4)-b1*(v4-v3)
             c(i,j,2)=s2*(v2-v1)-s1*(v4-v3)
             c(i,j,3)=-xb2*v1+xb1*v2+xb2*v3-xb1*v4
             c(i,j,4)=-v2+v1+v4-v3
@@ -456,21 +456,21 @@ c
 172           continue
             end if
             if(abs(vm(i,j,1)-vm(i,j,2)).le..001.and.abs(vm(i,j,2)-
-     +        vm(i,j,3)).le..001.and.abs(vm(i,j,3)-vm(i,j,4)).le..001. 
+     +        vm(i,j,3)).le..001.and.abs(vm(i,j,3)-vm(i,j,4)).le..001.
      +        and.vm(i,j,1).ne.0.) ivg(i,j)=0
 c
 170      continue
-160   continue    
+160   continue
 c
 c     assign values to array vsvp
-c                 
-      if(pois(1).lt.-10.) then 
-        do 190 i=1,nlayer 
+c
+      if(pois(1).lt.-10.) then
+        do 190 i=1,nlayer
            do 200 j=1,nblk(i)
               vsvp(i,j)=0.57735
 200        continue
-190     continue  
-      else        
+190     continue
+      else
         if(nlayer.gt.1) then
           if(pois(2).lt.-10.) then
             do 210 j=1,nblk(1)
@@ -481,7 +481,7 @@ c
                   vsvp(i,j)=vsvp(1,1)
 230            continue
 220         continue
-          else    
+          else
             do 240 i=1,nlayer
                if(pois(i).lt.-10.) then
                  do 250 j=1,nblk(i)
@@ -490,99 +490,99 @@ c
                else
                  do 260 j=1,nblk(i)
                     vsvp(i,j)=sqrt((1.-2.*pois(i))/(2.*(1.-pois(i))))
-260              continue 
+260              continue
                end if
-240         continue 
-          end if  
-        end if    
-      end if      
-c                 
+240         continue
+          end if
+        end if
+      end if
+c
 c     calculate velocity ratios for specific model blocks specified
 c     through the arrays poisbl, poisl and poisb
-c                 
-      i=1         
+c
+      i=1
 270   if(poisbl(i).lt.-10.) go to 280
       vsvp(poisl(i),poisb(i))=
      +  sqrt((1.-2.*poisbl(i))/(2.*(1.-poisbl(i))))
-      i=i+1       
+      i=i+1
       if(i.le.papois) go to 270
-c                 
+c
 c     assign switch iq and array q
-c                 
+c
 280   if(iamp.eq.0) go to 400
       if(qp(1).gt.0..or.qs(1).gt.0..or.qpbl(1).gt.0..or.qsbl(1).gt.0.)
-     +  then      
-        iq=1      
-        if(qp(1).le.0.) then 
+     +  then
+        iq=1
+        if(qp(1).le.0.) then
           do 290 i=1,nlayer
              qp(i)=1.e10
-290       continue 
-        else      
+290       continue
+        else
           if(nlayer.gt.1) then
             if(qp(2).le.0.) then
               do 300 i=2,nlayer
                  qp(i)=qp(1)
 300           continue
-            else  
+            else
               do 310 i=2,nlayer
                  if(qp(i).le.0.) qp(i)=1.e10
 310           continue
             end if
-          end if  
-        end if    
-        if(qs(1).le.0.) then 
+          end if
+        end if
+        if(qs(1).le.0.) then
           do 320 i=1,nlayer
              qs(i)=1.e10
-320       continue 
-        else      
+320       continue
+        else
           if(nlayer.gt.1) then
             if(qs(2).le.0.) then
               do 330 i=2,nlayer
                  qs(i)=qs(1)
 330           continue
-            else  
+            else
               do 340 i=2,nlayer
                  if(qs(i).le.0.) qs(i)=1.e10
 340           continue
             end if
-          end if  
-        end if    
-      end if      
-c                 
+          end if
+        end if
+      end if
+c
       do 350 i=1,nlayer
          do 360 j=1,nblk(i)
             q(i,j,1)=qp(i)
             q(i,j,2)=qs(i)
-360      continue 
-350   continue    
-c                 
+360      continue
+350   continue
+c
 c     assign q values to specific model blocks specified through
 c     the arrays qpbl, qsbl, ql and qb
-c                 
-      i=1         
+c
+      i=1
 370   if(qpbl(i).le.0.) go to 380
       q(ql(i),qb(i),1)=qpbl(i)
-      i=i+1       
+      i=i+1
       if(i.le.paqpqs) go to 370
-c                 
-380   j=1         
+c
+380   j=1
 390   if(qsbl(j).le.0.) go to 400
       q(ql(i),qb(i),2)=qsbl(j)
-      i=i+1       
-      j=j+1       
+      i=i+1
+      j=j+1
       if(j.le.paqpqs) go to 390
-c                 
+c
 400   if(ibsmth.gt.0) then
         xsinc=(xmax-xmin)/float(npbnd-1)
         do 600 i=1,nlayer+1
            if(i.lt.(nlayer+1)) then
-             il=i 
-             ib=1 
-           else   
+             il=i
+             ib=1
+           else
              il=i-1
-             ib=2 
-           end if 
-           iblk=1 
+             ib=2
+           end if
+           iblk=1
            do 610 j=1,npbnd
               x=xmin+float(j-1)*xsinc
               if(x.lt.xmin) x=xmin+.001
@@ -595,22 +595,22 @@ c
                 go to 620
               end if
 610        continue
-600     continue  
+600     continue
         if(nbsmth.gt.0) then
           do 630 i=1,nlayer+1
              do 640 j=1,npbnd
                 zsmth(j)=cosmth(i,j)
-640          continue 
-             do 650 j=1,nbsmth 
-                call smooth(zsmth,npbnd) 
+640          continue
+             do 650 j=1,nbsmth
+                call smooth(zsmth,npbnd)
 650          continue
              do 660 j=1,npbnd
                 cosmth(i,j)=zsmth(j)
-660          continue 
+660          continue
 630       continue
-        end if    
-      end if      
-c                 
+        end if
+      end if
+c
       if(idump.eq.1) then
         write(12,15) nlayer
 15      format('***  velocity model:  ***'//'number of layers=',i2)
@@ -620,12 +620,12 @@ c
 25           format(/'layer#',i2,'  nblk=',i2,
      +' (ivg,x1,x2,z11,z12,z21,z22,s1,b1,s2,b2,vp1,vs1,vp2,vs2,
      +vp3,vs3,vp4,vs4,c1,c2,...,c11)')
-           else   
+           else
              write(12,35) i,nblk(i)
 35           format(/'layer#',i2,'  nblk=',i2,
      +' (ivg,x1,x2,z11,z12,z21,z22,s1,b1,s2,b2,vp1,vs1,vp2,vs2,
      +vp3,vs3,vp4,vs4,c1,c2,...,c11,qp,qs)')
-           end if 
+           end if
            write(12,36) (ivg(i,j),j=1,nblk(i))
            write(12,45) (xbnd(i,j,1),j=1,nblk(i))
            write(12,45) (xbnd(i,j,2),j=1,nblk(i))
@@ -638,11 +638,11 @@ c
            write(12,45) (s(i,j,2),j=1,nblk(i))
            write(12,45) (b(i,j,2),j=1,nblk(i))
            write(12,45) (vm(i,j,1),j=1,nblk(i))
-           write(12,45) (vm(i,j,1)*vsvp(i,j),j=1,nblk(i)) 
+           write(12,45) (vm(i,j,1)*vsvp(i,j),j=1,nblk(i))
            write(12,45) (vm(i,j,2),j=1,nblk(i))
            write(12,45) (vm(i,j,2)*vsvp(i,j),j=1,nblk(i))
            write(12,45) (vm(i,j,3),j=1,nblk(i))
-           write(12,45) (vm(i,j,3)*vsvp(i,j),j=1,nblk(i)) 
+           write(12,45) (vm(i,j,3)*vsvp(i,j),j=1,nblk(i))
            write(12,45) (vm(i,j,4),j=1,nblk(i))
            write(12,45) (vm(i,j,4)*vsvp(i,j),j=1,nblk(i))
            write(12,55) (c(i,j,1),j=1,nblk(i))
@@ -659,21 +659,21 @@ c
            if(iq.eq.1) then
              write(12,55) (q(i,j,1),j=1,nblk(i))
              write(12,55) (q(i,j,2),j=1,nblk(i))
-           end if 
+           end if
 36         format(100i10)
 45         format(100f10.4)
 55         format(100e10.3)
-410     continue  
-        xmod=xmax-xmin 
-        write(12,65) 
+410     continue
+        xmod=xmax-xmin
+        write(12,65)
 65      format(/'equivalent 1-dimensional velocity model:'/)
         do 520 i=1,nlayer
            z1sum=0.
            z2sum=0.
-           vp1=0. 
-           vp2=0. 
-           vs1=0. 
-           vs2=0. 
+           vp1=0.
+           vp2=0.
+           vs1=0.
+           vs2=0.
            vp1sum=0.
            vp2sum=0.
            vs1sum=0.
@@ -701,14 +701,14 @@ c
              vp1=vp1sum/xvmod
              vp2=vp2sum/xvmod
              vs1=vs1sum/xvmod
-             vs2=vs2sum/xvmod 
-           end if 
+             vs2=vs2sum/xvmod
+           end if
            write(12,75) i,z1,z2,vp1,vp2,vs1,vs2
 75         format('layer# ',i2,'   z1=',f7.2,'   z2=',f7.2,
      +            ' km'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s'/
      +                  9x,'  vs1=',f7.2,'  vs2=',f7.2,' km/s')
-520     continue  
-      end if      
+520     continue
+      end if
       if(igrid.ne.0) then
         if(xgrid.le.0.) xgrid=(xmax-xmin)/100.
         if(zgrid.le.0.) zgrid=(zmax-zmin)/50.
@@ -721,12 +721,12 @@ c
         do 1710 i=1,nx
            xp=xmin+.001+float(i-1)*xinc
            do 1720 j=1,nz
-              zp=zmin+.001+float(j-1)*zinc 
+              zp=zmin+.001+float(j-1)*zinc
               call xzpt(xp,zp,la,ib,iflag)
               layer=la
               iblk=ib
               if(iabs(igrid).eq.1) then
-                vmod(j)=vel(xp,zp) 
+                vmod(j)=vel(xp,zp)
                 if(igrid.eq.-1) vmod(j)=vmod(j)*vsvp(la,ib)
               else
                 if(iabs(igrid).eq.2) then
@@ -734,23 +734,23 @@ c
      +               +c(layer,iblk,10)*zp+c(layer,iblk,11))/
      +               (c(layer,iblk,6)*xp+c(layer,iblk,7))**2
                   t2=(c(layer,iblk,3)+c(layer,iblk,4)*xp)/
-     +               (c(layer,iblk,6)*xp+c(layer,iblk,7)) 
+     +               (c(layer,iblk,6)*xp+c(layer,iblk,7))
                   vmod(j)=sqrt(t1**2+t2**2)
                   if(igrid.eq.-2) vmod(j)=vmod(j)*vsvp(la,ib)
-                else 
-                  if(igrid.eq.3) vmod(j)=(2.*vsvp(la,ib)**2-1.)/ 
+                else
+                  if(igrid.eq.3) vmod(j)=(2.*vsvp(la,ib)**2-1.)/
      +                                   (2.*(vsvp(la,ib)**2-1.))
                 end if
               end if
-1720       continue 
+1720       continue
            write(23,1770) (vmod(j),j=1,nz)
 c1770       format(121a4)
 1770       format(10f10.3)
-1710    continue  
-      end if      
-c                 
+1710    continue
+      end if
+c
       if(iden.eq.1) then
-        do 1880 i=1,nlayer 
+        do 1880 i=1,nlayer
            if(vm(i,1,1).gt.0.) then
              xl=xbnd(i,1,1)-(xmax-xmin)
              xri=xbnd(i,1,1)
@@ -765,7 +765,7 @@ c
              if(den.lt.denmin) den=denmin
              if(vsw.le..001) den=1.0
              write(23,1815) 4,den,den,xl,z11,xri,z12,xri,z22,xl,z21
-           end if 
+           end if
            if(vm(i,nblk(i),1).gt.0.) then
              xl=xbnd(i,nblk(i),2)
              xri=xbnd(i,nblk(i),2)+(xmax-xmin)
@@ -781,17 +781,17 @@ c
              if(den.lt.denmin) den=denmin
              if(vsw.le..001) den=1.0
              write(23,1815) 4,den,den,xl,z11,xri,z12,xri,z22,xl,z21
-           end if 
-1880    continue  
+           end if
+1880    continue
         do 1810 i=1,nlayer
            do 1820 j=1,nblk(i)
               if(vm(i,j,1).gt.0.) then
                 xl=xbnd(i,j,1)
                 xri=xbnd(i,j,2)
                 z11=s(i,j,1)*xl+b(i,j,1)
-                z12=s(i,j,1)*xri+b(i,j,1) 
+                z12=s(i,j,1)*xri+b(i,j,1)
                 z21=s(i,j,2)*xl+b(i,j,2)
-                z22=s(i,j,2)*xri+b(i,j,2) 
+                z22=s(i,j,2)*xri+b(i,j,2)
                 vave=(vm(i,j,1)+vm(i,j,2)+vm(i,j,3)+vm(i,j,4))/4.
                 vsw=vave*vsvp(i,j)
                 if(z11.eq.z21) z21=z11+.001
@@ -803,14 +803,14 @@ c
                 write(23,1815) 4,den,den,xl,z11,xri,z12,xri,z22,xl,z21
 1815            format(i5,2f7.4/10f8.3)
               end if
-1820       continue 
-1810    continue  
-      end if      
-c                 
-      return      
-c                 
+1820       continue
+1810    continue
+      end if
+c
+      return
+c
 999   write(6,900)
 900   format(/'***  error in velocity model  ***'/)
       iflagm=1
       return
-      end         
+      end

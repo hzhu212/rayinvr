@@ -2,9 +2,9 @@ c
 c     version 1.2  Mar 1992
 c
 c     Misc routines for VMODEL
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine dxmin(ncont)
 c
 c     determine the value of xmin
@@ -36,43 +36,43 @@ c
 c
       stop
       end
-c                 
-c     ----------------------------------------------------------------
-c                 
-      subroutine smooth(x,n) 
-c                 
-c     three point triangular smoothing filter
-c                 
-      real x(n) 
 c
-      m=n-1       
-      a=0.77*x(1)+0.23*x(2) 
-      b=0.77*x(n)+0.23*x(m) 
-      xx=x(1)     
-      xr=x(2)     
-      do 10 i=2,m 
-         xl=xx    
-         xx=xr    
-         xr=x(i+1) 
-         x(i)=0.54*xx+0.23*(xl+xr) 
- 10   continue    
-      x(1)=a      
-      x(n)=b      
-      return      
-      end         
-c                 
 c     ----------------------------------------------------------------
-c                 
+c
+      subroutine smooth(x,n)
+c
+c     three point triangular smoothing filter
+c
+      real x(n)
+c
+      m=n-1
+      a=0.77*x(1)+0.23*x(2)
+      b=0.77*x(n)+0.23*x(m)
+      xx=x(1)
+      xr=x(2)
+      do 10 i=2,m
+         xl=xx
+         xx=xr
+         xr=x(i+1)
+         x(i)=0.54*xx+0.23*(xl+xr)
+ 10   continue
+      x(1)=a
+      x(n)=b
+      return
+      end
+c
+c     ----------------------------------------------------------------
+c
       subroutine sort(x,y,ix,npts)
-c                 
+c
 c     sort the elements of array x in order of increasing size using
 c     a bubble sort technique and sort the arrays y and ix with x
-c                 
+c
       real x(1),y(1)
-      integer ix(1) 
+      integer ix(1)
 c
       do 10 i=1,npts-1
-         iflag=0  
+         iflag=0
          do 20 j=1,npts-1
             if(x(j).gt.x(j+1)) then
               iflag=1
@@ -86,23 +86,23 @@ c
               ix(j)=ix(j+1)
               ix(j+1)=ixh
             end if
-20       continue 
-         if(iflag.eq.0) go to 999   
-10    continue   
-999   return      
-      end         
-c                 
+20       continue
+         if(iflag.eq.0) go to 999
+10    continue
+999   return
+      end
+c
 c     ----------------------------------------------------------------
 c
       subroutine smooth2(x,npts,n,nt)
-c                 
-c     smooth2 applies an n-point moving average operator to the array  
-c     x, where n is an odd integer. The procedure is repeated nT times. 
+c
+c     smooth2 applies an n-point moving average operator to the array
+c     x, where n is an odd integer. The procedure is repeated nT times.
 c
       parameter(ixd=1000)
 c
       real x(npts),y(ixd)
-c        
+c
       ioff=n/2
 c
       do 50 k=1,nt

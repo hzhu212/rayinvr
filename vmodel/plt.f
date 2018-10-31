@@ -1,16 +1,16 @@
 c
 c     version 1.2  Mar 1992
-c                 
-c     Plotting routines for VMODEL 
+c
+c     Plotting routines for VMODEL
 c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltmod(ncont,iaxlab,ivel,velht,idash,izort,xtinc,
      +           xsinc,ntsmth,idump,ifrefl,symht,iroute,inode,idcol,
      +           ivcol,ivarz,ivarv,izrefl,ntsmt,npsmt,ndot,dashlf)
-c                 
+c
 c     plot the 2-D velocity model versus depth or time
-c                 
+c
       include 'vmodel.par'
       real xcp(ppcntr),zcp(ppcntr),xpts(ppnpts),xppts(ppnpts),
      +     tpts(ppnpts),tppts(ppnpts),xfrefl(ppfref),zfrefl(ppfref),
@@ -18,10 +18,10 @@ c
      +     xzf(ppzff),zff(ppzff),zpts(ppnpts),vpts(ppnpts)
       integer ivarz(player,ppcntr),ivarv(player,ppvel,2)
       include 'vmodel.com'
-c        
+c
       call dxmin(ncont)
 c
-      if(iplots.eq.0) then 
+      if(iplots.eq.0) then
         call plots(xwndow,ywndow,iroute)
         call segmnt(1)
         iplots=1
@@ -34,21 +34,21 @@ c
      +         xtmin,xtmax,ntickx,ndecix,'DISTANCE (km)',13,albht)
           call axtick(zmin,zmax,ztmin,ztmax,ntickz,ndeciz)
           call axis(orig,orig,zmin,zmax,zmm,zscale,90.,1,
-     +         ztmin,ztmax,ntickz,ndeciz,'DEPTH (km)',10,albht) 
+     +         ztmin,ztmax,ntickz,ndeciz,'DEPTH (km)',10,albht)
         else
           call axis(orig,orig+tmm,xmin,xmax,xmm,xscale,0.,-1,
      +         xtmin,xtmax,ntickx,ndecix,'DISTANCE (km)',13,albht)
           call axtick(tmin,tmax,ttmin,ttmax,ntickt,ndecit)
           call axis(orig,orig,tmin,tmax,tmm,tscale,90.,1,
-     +         ttmin,ttmax,ntickt,ndecit,'TIME (s)',8,albht) 
+     +         ttmin,ttmax,ntickt,ndecit,'TIME (s)',8,albht)
         end if
-      end if      
-      if(izort.eq.0) then
-        call box(orig,orig,orig+xmm,orig+zmm)     
-      else
-        call box(orig,orig,orig+xmm,orig+tmm)     
       end if
-c                 
+      if(izort.eq.0) then
+        call box(orig,orig,orig+xmm,orig+zmm)
+      else
+        call box(orig,orig,orig+xmm,orig+tmm)
+      end if
+c
       if(izort.eq.0) then
         do 10 i=1,ncont
            nptsc=nzed(i)
@@ -116,9 +116,9 @@ c
                 end if
 71              xpp=(xp-xmin)/xscale+orig
                 zpp=(zu-zmax)/zscale+orig
-                if(ivel.eq.1) 
+                if(ivel.eq.1)
      +            call number(xpp-1.25*ht,zpp-1.25*ht,ht,vu,0.,2)
-                if(inode.eq.1.and.ivarv(i,j,1).eq.1) 
+                if(inode.eq.1.and.ivarv(i,j,1).eq.1)
      +            call dot(xpp,zpp-0.375*symht,0.75*symht,ivcol)
 60           continue
              do 80 j=1,nvel(i,2)
@@ -142,13 +142,13 @@ c
                 end if
 91              xpp=(xp-xmin)/xscale+orig
                 zpp=(zl-zmax)/zscale+orig
-                if(ivel.eq.1) 
+                if(ivel.eq.1)
      +            call number(xpp-1.25*ht,zpp+.25*ht,ht,vl,0.,2)
-                if(inode.eq.1.and.ivarv(i,j,2).eq.1) 
+                if(inode.eq.1.and.ivarv(i,j,2).eq.1)
      +            call dot(xpp,zpp+0.375*symht,0.75*symht,ivcol)
 80           continue
-50        continue  
-        end if      
+50        continue
+        end if
 c
         if(idump.eq.1) then
           if(xsinc.lt.0.) xsinc=(xmax-xmin)/100.
@@ -162,7 +162,7 @@ c
 5         format(10(50f7.2))
 c
 c          do 170 i=1,ncont-1
-c             do 180 j=1,npts 
+c             do 180 j=1,npts
 c                xp=xpts(j)
 c                if(nzed(i).eq.1) then
 c                  zpts(j)=zm(i,1)
@@ -185,7 +185,7 @@ c170       continue
                   vpts(j)=vf(i,j,1)
                 else
                   do 190 k=1,nvel(i,1)-1
-                     if(xp.ge.xvel(i,k,1).and.xp.le.xvel(i,k+1,1)) 
+                     if(xp.ge.xvel(i,k,1).and.xp.le.xvel(i,k+1,1))
      +               then
                  vpts(j)=(vf(i,k+1,1)-vf(i,k,1))*(xp-xvel(i,k,1))/
      +                   (xvel(i,k+1,1)-xvel(i,k,1))+vf(i,k,1)
@@ -206,7 +206,7 @@ c
 745       format(i2)
           read(30,755) (xfrefl(i),i=1,nfrefr)
           read(30,755) (zfrefl(i),i=1,nfrefr)
-          read(30,765) 
+          read(30,765)
 755       format(3x,<nfrefr>f7.2)
 765       format(' ')
 c
@@ -267,12 +267,12 @@ c
              if(xzf(1).ge.xcpz(i).and.xzf(1).le.xcpz(i+1)) then
                zp1=(zcpz(i+1)-zcpz(i))/(xcpz(i+1)-xcpz(i))*
      +             (xzf(1)-xcpz(i))+zcpz(i)
-             end if   
+             end if
              if(xzf(npzf).ge.xcpz(i).and.xzf(npzf).le.xcpz(i+1)) then
                zp2=(zcpz(i+1)-zcpz(i))/(xcpz(i+1)-xcpz(i))*
      +             (xzf(npzf)-xcpz(i))+zcpz(i)
                go to 3960
-             end if   
+             end if
 3950      continue
 3960      xpl(1)=xzf(1)
           zpl(1)=zp1
@@ -294,7 +294,7 @@ c
                  zpl(npts)=zp2
                end if
                go to 3940
-             end if 
+             end if
 3930      continue
 3940      continue
 c
@@ -420,9 +420,9 @@ c
                 if(vu.gt.0.) go to 252
                 il=il-1
                 go to 102
-              end if 
-              if(vl.gt.0.) then               
-                vu=vl   
+              end if
+              if(vl.gt.0.) then
+                vu=vl
                 go to 252
               else
                 if(vu.gt.0.) go to 252
@@ -441,13 +441,13 @@ c
                 add=2.*alog(vl/vu)/grad
               end if
               tpts(j)=tpts(j)+add
-120        continue 
+120        continue
 c
            if(ntsmth.gt.0) then
              do 140 j=1,ntsmth
                 call smooth(tpts,npts)
-140          continue  
-           end if      
+140          continue
+           end if
 c
            do 130 j=1,npts
               tppts(j)=(tpts(j)-tmax)/tscale+orig
@@ -461,7 +461,7 @@ c
            end if
            if(idump.eq.1) write(14,5) (tpts(j),j=1,npts)
 c
-110     continue    
+110     continue
 c
 1900    if(abs(ifrefl).eq.1) then
 c
@@ -540,9 +540,9 @@ c
                   if(vu.gt.0.) go to 1252
                   il=il-1
                   go to 1102
-                end if 
-                if(vl.gt.0.) then               
-                  vu=vl   
+                end if
+                if(vl.gt.0.) then
+                  vu=vl
                   go to 1252
                 else
                   if(vu.gt.0.) go to 1252
@@ -646,9 +646,9 @@ c
                if(vu.gt.0.) go to 2252
                il=il-1
                go to 2102
-             end if 
-             if(vl.gt.0.) then               
-               vu=vl   
+             end if
+             if(vl.gt.0.) then
+               vu=vl
                go to 2252
              else
                if(vu.gt.0.) go to 2252
@@ -688,19 +688,19 @@ c
 c
       call empty
 c
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltvp(nlayer,xvp,iaxlab,izort,iroute,vtime)
-c                 
+c
 c     plot 1-D velocity profile versus depth or time at x=xvp
-c                    
+c
       include 'vmodel.par'
       real v(pinvel),z(pinvel),xvp(1)
       include 'vmodel.com'
-c   
+c
       call dxmin(nlayer+1)
 c
       iaxis=1
@@ -710,13 +710,13 @@ c
          if(xvp(k).ge.xmin.and.xvp(k).le.xmax) then
            ifvtime=0
            xp=xvp(k)
-           write(13,5) xp    
+           write(13,5) xp
 5          format(/'x position: ',f7.2,' km'/)
            if(iplots.eq.0) then
              call plots(xwndow,ywndow,iroute)
              call segmnt(1)
              iplots=1
-             iflag1=1 
+             iflag1=1
            else
              iflag1=0
            end if
@@ -740,14 +740,14 @@ c
                 end if
              end if
              if(izort.eq.0) then
-               call box(orig,orig,orig+vmm,orig+zmm)       
+               call box(orig,orig,orig+vmm,orig+zmm)
              else
-               call box(orig,orig,orig+vmm,orig+tmm)       
+               call box(orig,orig,orig+vmm,orig+tmm)
              end if
              iaxis=0
            end if
-c                 
-1000       np=0    
+c
+1000       np=0
            do 10 i=1,nlayer
               if(nzed(i).eq.1) then
                 zu=zm(i,1)
@@ -806,7 +806,7 @@ c
                 z(np*2)=(zl-zmax)/zscale+orig
                 write(13,15) i,zu,zl,vu,vl
 15              format('layer# ',i2,'   z1=',f7.2,'   z2=',f7.2,
-     +                 ' km'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s') 
+     +                 ' km'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s')
               else
                 if(np.eq.1) then
                   z(1)=0.
@@ -822,7 +822,7 @@ c
                 z(np*2)=z(np*2-1)+add
                 write(13,25) i,z(np*2-1),z(np*2),vu,vl
 25              format('layer# ',i2,'   t1=',f7.2,'   t2=',f7.2,
-     +                 ' s'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s') 
+     +                 ' s'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s')
                 if(ifvtime.eq.0.and.vtime.gt.0..and.
      +            (vtime.le.vu.or.vtime.le.vl)) then
                   if(vtime.le.vu) then
@@ -847,14 +847,14 @@ c
 c
            call line(v,z,2*np)
 c
-         end if    
-100   continue    
+         end if
+100   continue
 c
       call empty
 c
-      return      
-      end     
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
 c
       subroutine pltrms(nlayer,xrinc,vrmstl,vrmsbl,nrsmth,iaxlab,
@@ -876,7 +876,7 @@ c
         iplots=1
       else
         call aldone
-        call erase           
+        call erase
       end if
       if(iaxlab.eq.1) then
         call axtick(xmint,xmax,xtmin,xtmax,ntickx,ndecix)
@@ -886,7 +886,7 @@ c
         call axis(orig,orig,vrmin,vrmax,vrmm,rscale,90.,1,
      +  vrtmin,vrtmax,ntckvr,ndecir,'RMS VELOCITY (km/s)',19,albht)
       end if
-      call box(orig,orig,orig+xmm,orig+vrmm)           
+      call box(orig,orig,orig+xmm,orig+vrmm)
 c
       nrms=int((xmax-xmin)/xrinc+.5)+1
       if(nrms.gt.ppnpts) nrms=ppnpts
@@ -894,10 +894,10 @@ c
       do 100 ii=1,nrms
          xrms(ii)=xmin+.001+float(ii-1)*xrinc
          xp=xrms(ii)
-         tsum=0.  
-         vsum=0.  
+         tsum=0.
+         vsum=0.
          np=0
-         do 10 i=1,nlayer     
+         do 10 i=1,nlayer
             if(nzed(i).eq.1) then
               zu=zm(i,1)
             else
@@ -955,29 +955,29 @@ c
               k=abs((vl-vu)/h)
               if(abs(k).gt.1.e-6) then
                 tsum=tsum+alog(1.+k*h/vu)/k
-              else 
+              else
                 tsum=tsum+h/vu
               end if
               vsum=vsum+vu*h+0.5*k*h**2
             end if
-10       continue 
+10       continue
 c
 c
          xprms(ii)=(xrms(ii)-xmin)/xscale+orig
          vrms(ii)=sqrt(vsum/tsum)
          vprms(ii)=(vrms(ii)-vrmin)/rscale+orig
-100   continue    
+100   continue
 c
       if(nrsmth.gt.0) then
         do 130 i=1,nrsmth
            call smooth(vprms,nrms)
-130     continue  
-      end if      
-c                 
+130     continue
+      end if
+c
       call line(xprms,vprms,nrms)
 c
       call empty
-c                 
+c
       if(idump.eq.1) then
         write(14,5) (xrms(i),i=1,nrms)
         write(14,5) (vrms(i),i=1,nrms)
@@ -987,6 +987,6 @@ c
         write(14,15) (xrms(i),vrms(i),i=1,nrms)
 15      format(2f7.2)
       end if
-c                 
-      return      
-      end         
+c
+      return
+      end

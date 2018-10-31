@@ -159,7 +159,7 @@ c
 c
       if(invr.eq.1) then
         do 310 i=1,nlayer
-           ivlyr=0 
+           ivlyr=0
            do 320 j=1,nzed(i)
               if(ivarz(i,j).ne.1.and.ivarz(i,j).ne.-1) ivarz(i,j)=0
               if(ivarz(i,j).eq.-1) ivlyr=1
@@ -183,7 +183,7 @@ c
            ivgrad=0
            if(nvel(i,2).gt.0) then
              do 322 j=1,nvel(i,2)
-                if(ivarv(i,j,2).ne.1.and.ivarv(i,j,2).ne.-1) 
+                if(ivarv(i,j,2).ne.1.and.ivarv(i,j,2).ne.-1)
      +             ivarv(i,j,2)=0
                 if(ivarv(i,j,2).eq.-1) ivgrad=1
 322          continue
@@ -292,7 +292,7 @@ c
                 parorg(nvar)=zfrefl(i,j)
               end if
 431        continue
-426     continue 
+426     continue
 c
         if(nvar.eq.0) then
           write(6,445)
@@ -357,9 +357,9 @@ c
               izv(i,j,1)=iv
               if(iv.gt.0) then
                 cz(i,j,1,1)=0.
-                cz(i,j,1,2)=0.   
+                cz(i,j,1,2)=0.
               end if
-              z2=zm(i,1) 
+              z2=zm(i,1)
               izv(i,j,2)=0
             end if
 130         s(i,j,1)=(z2-z1)/(xbnd(i,j,2)-xbnd(i,j,1))
@@ -383,7 +383,7 @@ c
                      izv(i,j,3)=iv
                      if(iv.gt.0) then
                        cz(i,j,3,1)=xm(i+1,k+1)
-                       cz(i,j,3,2)=xm(i+1,k+1)-xm(i+1,k)   
+                       cz(i,j,3,2)=xm(i+1,k+1)-xm(i+1,k)
                      end if
                    end if
                    c1=(xm(i+1,k+1)-xbnd(i,j,2))/dx
@@ -400,7 +400,7 @@ c
                      izv(i,j,4)=iv
                      if(iv.gt.0) then
                        cz(i,j,4,1)=xm(i+1,k)
-                       cz(i,j,4,2)=xm(i+1,k+1)-xm(i+1,k)   
+                       cz(i,j,4,2)=xm(i+1,k+1)-xm(i+1,k)
                      end if
                    end if
                    go to 150
@@ -419,28 +419,28 @@ c
                 izv(i,j,3)=iv
                 if(iv.gt.0) then
                   cz(i,j,3,1)=0.
-                  cz(i,j,3,2)=0.   
+                  cz(i,j,3,2)=0.
                 end if
               end if
-              z4=zm(i+1,1) 
+              z4=zm(i+1,1)
               izv(i,j,4)=0
             end if
 150         s(i,j,2)=(z4-z3)/(xbnd(i,j,2)-xbnd(i,j,1))
             b(i,j,2)=z3-s(i,j,2)*xbnd(i,j,1)
-c                 
-c           check for layer pinchouts 
-c                 
+c
+c           check for layer pinchouts
+c
             ivg(i,j)=1
-            if(abs(z3-z1).lt..0005) ivg(i,j)=2 
-            if(abs(z4-z2).lt..0005) ivg(i,j)=3 
+            if(abs(z3-z1).lt..0005) ivg(i,j)=2
+            if(abs(z4-z2).lt..0005) ivg(i,j)=3
             if(abs(z3-z1).lt..0005.and.abs(z4-z2).lt..0005) ivg(i,j)=-1
 c
-110      continue 
-100   continue    
+110      continue
+100   continue
 c
 c     assign velocities to each model block
 c
-      do 160 i=1,nlayer 
+      do 160 i=1,nlayer
 c
          if(nvel(i,1).eq.0) then
            do 161 j=i-1,1,-1
@@ -480,7 +480,7 @@ c
             go to (1001,1002,1003,1004,1005,1006), ivcase
 c
 1001        do 180 k=1,n1g-1
-               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg)) 
+               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg))
      +           then
                  dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,1)
@@ -510,7 +510,7 @@ c
 180         continue
 c
 1811        do 1812 k=1,n1g-1
-               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg)) 
+               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg))
      +           then
                  dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,2)
@@ -540,16 +540,16 @@ c
 1812        continue
 c
 181         do 182 k=1,nvel(i,2)-1
-               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2)) 
+               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(i,k,2)
                  if(ivg(i,j).ne.2) then
                    vm(i,j,3)=(c1*vf(i,k,2)+c2*vf(i,k+1,2))/dxx
                  else
                    vm(i,j,3)=vm(i,j,1)
-                 end if 
+                 end if
                  if(invr.eq.1) then
                    if(ivg(i,j).eq.2) then
                      ivv(i,j,3)=0
@@ -563,7 +563,7 @@ c
                        ivv(i,j,3)=0
                        if(iv.lt.0) then
                          icorn=1
-                       else 
+                       else
                          icorn=0
                        end if
                      end if
@@ -602,15 +602,15 @@ c
 182         continue
 c
 187         do 1822 k=1,nvel(i,2)-1
-               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2)) 
+               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(i,k,2)
                  if(ivg(i,j).ne.3) then
                    vm(i,j,4)=(c1*vf(i,k,2)+c2*vf(i,k+1,2))/dxx
                  else
-                   vm(i,j,4)=vm(i,j,2) 
+                   vm(i,j,4)=vm(i,j,2)
                  end if
                  if(invr.eq.1) then
                    if(ivg(i,j).eq.3) then
@@ -662,11 +662,11 @@ c
                  go to 171
                end if
 1822        continue
-c    
+c
 1002        do 183 k=1,n1g-1
-               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg)) 
+               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(ig,k,jg)
                  vm(i,j,1)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
@@ -692,9 +692,9 @@ c
 183         continue
 c
 1833        do 1832 k=1,n1g-1
-               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg)) 
+               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(ig,k,jg)
                  vm(i,j,2)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
@@ -726,7 +726,7 @@ c
             if(invr.eq.1) then
               iv=ivarv(i,1,2)
               ivv(i,j,3)=iv
-              ivv(i,j,4)=0 
+              ivv(i,j,4)=0
               if(iv.gt.0) then
                 if(ivg(i,j).ne.2) call cvcalc(i,j,3,3,1.)
                 if(ivg(i,j).ne.3) call cvcalc(i,j,3,4,1.)
@@ -743,7 +743,7 @@ c
             if(invr.eq.1) then
               iv=ivarv(ig,1,jg)
               ivv(i,j,1)=iv
-              ivv(i,j,2)=0 
+              ivv(i,j,2)=0
               if(iv.gt.0) then
                 call cvcalc(i,j,1,1,1.)
                 call cvcalc(i,j,1,2,1.)
@@ -751,9 +751,9 @@ c
             end if
 c
             do 185 k=1,nvel(i,2)-1
-               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2)) 
+               if(xbndcl.ge.xvel(i,k,2).and.xbndcl.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(i,k,2)
                  if(ivg(i,j).ne.2) then
@@ -805,9 +805,9 @@ c
 185         continue
 c
 188         do 1851 k=1,nvel(i,2)-1
-               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2)) 
+               if(xbndcr.ge.xvel(i,k,2).and.xbndcr.le.xvel(i,k+1,2))
      +           then
-                 dxx=xvel(i,k+1,2)-xvel(i,k,2)   
+                 dxx=xvel(i,k+1,2)-xvel(i,k,2)
                  c1=xvel(i,k+1,2)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(i,k,2)
                  if(ivg(i,j).ne.3) then
@@ -818,7 +818,7 @@ c
                  if(invr.eq.1) then
                    if(ivg(i,j).eq.3) then
                      ivv(i,j,4)=0
-                     icorn=2   
+                     icorn=2
                    else
                      iv=ivarv(i,k+1,2)
                      if(iv.gt.0) then
@@ -859,7 +859,7 @@ c
 1851        continue
 c
 1004        vm(i,j,1)=vf(ig,1,jg)
-            vm(i,j,2)=vf(ig,1,jg) 
+            vm(i,j,2)=vf(ig,1,jg)
             if(ig.ne.i) then
               vm(i,j,1)=vm(i,j,1)+.001
               vm(i,j,2)=vm(i,j,2)+.001
@@ -867,7 +867,7 @@ c
             if(invr.eq.1) then
               iv=ivarv(ig,1,jg)
               ivv(i,j,1)=iv
-              ivv(i,j,2)=0 
+              ivv(i,j,2)=0
               if(iv.gt.0) then
                 call cvcalc(i,j,1,1,1.)
                 call cvcalc(i,j,1,2,1.)
@@ -900,9 +900,9 @@ c
             go to 171
 c
 1005        do 186 k=1,n1g-1
-               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg)) 
+               if(xbndcl.ge.xvel(ig,k,jg).and.xbndcl.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,1)
                  c2=xbnd(i,j,1)-xvel(ig,k,jg)
                  vm(i,j,1)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
@@ -931,14 +931,14 @@ c
 186         continue
 c
 1861        do 1862 k=1,n1g-1
-               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg)) 
+               if(xbndcr.ge.xvel(ig,k,jg).and.xbndcr.le.xvel(ig,k+1,jg))
      +           then
-                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)   
+                 dxx=xvel(ig,k+1,jg)-xvel(ig,k,jg)
                  c1=xvel(ig,k+1,jg)-xbnd(i,j,2)
                  c2=xbnd(i,j,2)-xvel(ig,k,jg)
                  vm(i,j,2)=(c1*vf(ig,k,jg)+c2*vf(ig,k+1,jg))/dxx
                  if(ig.ne.i) vm(i,j,2)=vm(i,j,2)+.001
-                 vm(i,j,4)=vm(i,j,2)                        
+                 vm(i,j,4)=vm(i,j,2)
                  if(invr.eq.1) then
                    iv=ivarv(ig,k+1,jg)
                    ivv(i,j,2)=iv
@@ -965,15 +965,15 @@ c
 c
 1006        vm(i,j,1)=vf(ig,1,jg)
             if(ig.ne.i) vm(i,j,1)=vm(i,j,1)+.001
-            vm(i,j,2)=vm(i,j,1) 
+            vm(i,j,2)=vm(i,j,1)
             vm(i,j,3)=vm(i,j,1)
-            vm(i,j,4)=vm(i,j,1) 
+            vm(i,j,4)=vm(i,j,1)
             if(invr.eq.1) then
               iv=ivarv(ig,1,jg)
               ivv(i,j,1)=iv
-              ivv(i,j,2)=0 
-              ivv(i,j,3)=0 
-              ivv(i,j,4)=0 
+              ivv(i,j,2)=0
+              ivv(i,j,3)=0
+              ivv(i,j,4)=0
               if(iv.gt.0) then
                 call cvcalc(i,j,1,1,1.)
                 call cvcalc(i,j,1,2,1.)
@@ -1009,7 +1009,7 @@ c
             v4=vm(i,j,4)
 c
             c(i,j,1)=s2*(xb2*v1-xb1*v2)+b2*(v2-v1)-
-     +               s1*(xb2*v3-xb1*v4)-b1*(v4-v3)       
+     +               s1*(xb2*v3-xb1*v4)-b1*(v4-v3)
             c(i,j,2)=s2*(v2-v1)-s1*(v4-v3)
             c(i,j,3)=-xb2*v1+xb1*v2+xb2*v3-xb1*v4
             c(i,j,4)=-v2+v1+v4-v3
@@ -1031,21 +1031,21 @@ c
 172           continue
             end if
             if(abs(vm(i,j,1)-vm(i,j,2)).le..001.and.abs(vm(i,j,2)-
-     +        vm(i,j,3)).le..001.and.abs(vm(i,j,3)-vm(i,j,4)).le..001. 
+     +        vm(i,j,3)).le..001.and.abs(vm(i,j,3)-vm(i,j,4)).le..001.
      +        and.ivg(i,j).ne.-1) ivg(i,j)=0
 c
 170      continue
-160   continue    
-c                 
+160   continue
+c
 c     assign values to array vsvp
-c                 
-      if(pois(1).lt.-10.) then 
-        do 190 i=1,nlayer 
+c
+      if(pois(1).lt.-10.) then
+        do 190 i=1,nlayer
            do 200 j=1,nblk(i)
               vsvp(i,j)=0.57735
 200        continue
-190     continue  
-      else        
+190     continue
+      else
         if(nlayer.gt.1) then
           if(pois(2).lt.-10.) then
             do 210 j=1,nblk(1)
@@ -1056,7 +1056,7 @@ c
                   vsvp(i,j)=vsvp(1,1)
 230            continue
 220         continue
-          else    
+          else
             do 240 i=1,nlayer
                if(pois(i).lt.-10.) then
                  do 250 j=1,nblk(i)
@@ -1065,36 +1065,36 @@ c
                else
                  do 260 j=1,nblk(i)
                     vsvp(i,j)=sqrt((1.-2.*pois(i))/(2.*(1.-pois(i))))
-260              continue 
+260              continue
                end if
-240         continue 
-          end if  
-        end if    
-      end if      
-c                 
+240         continue
+          end if
+        end if
+      end if
+c
 c     calculate velocity ratios for specific model blocks specified
 c     through the arrays poisbl, poisl and poisb
-c                 
-      i=1         
+c
+      i=1
 270   if(poisbl(i).lt.-10.) go to 400
       vsvp(poisl(i),poisb(i))=
      +  sqrt((1.-2.*poisbl(i))/(2.*(1.-poisbl(i))))
-      i=i+1       
+      i=i+1
       if(i.le.papois) go to 270
-c                 
+c
 c     calculation of smooth layer boundaries
 c
 400   if(ibsmth.gt.0) then
         xsinc=(xmax-xmin)/float(npbnd-1)
         do 600 i=1,nlayer+1
            if(i.lt.(nlayer+1)) then
-             il=i 
-             ib=1 
-           else   
+             il=i
+             ib=1
+           else
              il=i-1
-             ib=2 
-           end if 
-           iblk=1 
+             ib=2
+           end if
+           iblk=1
            do 610 j=1,npbnd
               x=xmin+float(j-1)*xsinc
               if(x.lt.xmin) x=xmin+.001
@@ -1107,7 +1107,7 @@ c
                 go to 620
               end if
 610        continue
-600     continue  
+600     continue
         n1ns=nint(xminns/xsinc)+1
         n2ns=nint(xmaxns/xsinc)+1
         iflag12=0
@@ -1126,17 +1126,17 @@ c
 6640         continue
              do 640 j=1,npbnd
                 zsmth(j)=cosmth(i,j)
-640          continue 
-             do 650 j=1,nbsmth 
+640          continue
+             do 650 j=1,nbsmth
                 if(iflag12.eq.1.and.iflagns.eq.1) then
-                  call smooth2(zsmth,npbnd,n1ns,n2ns) 
+                  call smooth2(zsmth,npbnd,n1ns,n2ns)
                 else
-                  call smooth(zsmth,npbnd) 
+                  call smooth(zsmth,npbnd)
                 end if
 650          continue
              do 660 j=1,npbnd
                 cosmth(i,j)=zsmth(j)
-660          continue 
+660          continue
              if(idump.eq.2) then
                do 670 j=1,npbnd
                   x=xmin+float(j-1)*xsinc
@@ -1145,9 +1145,9 @@ c
 670            continue
              end if
 630       continue
-        end if    
-      end if      
-c                 
+        end if
+      end if
+c
       if(idump.eq.1) then
         write(12,15) nlayer
 15      format('***  velocity model:  ***'//'number of layers=',i2)
@@ -1168,11 +1168,11 @@ c
            write(12,45) (s(i,j,2),j=1,nblk(i))
            write(12,45) (b(i,j,2),j=1,nblk(i))
            write(12,45) (vm(i,j,1),j=1,nblk(i))
-           write(12,45) (vm(i,j,1)*vsvp(i,j),j=1,nblk(i)) 
+           write(12,45) (vm(i,j,1)*vsvp(i,j),j=1,nblk(i))
            write(12,45) (vm(i,j,2),j=1,nblk(i))
            write(12,45) (vm(i,j,2)*vsvp(i,j),j=1,nblk(i))
            write(12,45) (vm(i,j,3),j=1,nblk(i))
-           write(12,45) (vm(i,j,3)*vsvp(i,j),j=1,nblk(i)) 
+           write(12,45) (vm(i,j,3)*vsvp(i,j),j=1,nblk(i))
            write(12,45) (vm(i,j,4),j=1,nblk(i))
            write(12,45) (vm(i,j,4)*vsvp(i,j),j=1,nblk(i))
            write(12,55) (c(i,j,1),j=1,nblk(i))
@@ -1189,18 +1189,18 @@ c
 35         format(100i10)
 45         format(100f10.4)
 55         format(100e10.3)
-510     continue  
+510     continue
 c
-        xmod=xmax-xmin 
-        write(12,65) 
+        xmod=xmax-xmin
+        write(12,65)
 65      format(/'equivalent 1-dimensional velocity model:'/)
         do 520 i=1,nlayer
            z1sum=0.
            z2sum=0.
-           vp1=0. 
-           vp2=0. 
-           vs1=0. 
-           vs2=0. 
+           vp1=0.
+           vp2=0.
+           vs1=0.
+           vs2=0.
            vp1sum=0.
            vp2sum=0.
            vs1sum=0.
@@ -1228,13 +1228,13 @@ c
              vp1=vp1sum/xvmod
              vp2=vp2sum/xvmod
              vs1=vs1sum/xvmod
-             vs2=vs2sum/xvmod 
-           end if 
+             vs2=vs2sum/xvmod
+           end if
            write(12,75) i,z1,z2,vp1,vp2,vs1,vs2
 75         format('layer# ',i2,'   z1=',f7.2,'   z2=',f7.2,
      +            ' km'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s'/
      +                  9x,'  vs1=',f7.2,'  vs2=',f7.2,' km/s')
-520     continue  
+520     continue
 c
         if(xmin1d.lt.-999998.) xmin1d=xmin
         if(xmax1d.lt.-999998.) xmax1d=xmax
@@ -1245,10 +1245,10 @@ c
         do 720 i=1,nlayer
            z1sum=0.
            z2sum=0.
-           vp1=0. 
-           vp2=0. 
-           vs1=0. 
-           vs2=0. 
+           vp1=0.
+           vp2=0.
+           vs1=0.
+           vs2=0.
            vp1sum=0.
            vp2sum=0.
            vs1sum=0.
@@ -1275,7 +1275,7 @@ c
               z1sum=z1sum+xblk*(z11+z12)/2.
               z2sum=z2sum+xblk*(z21+z22)/2.
               if(vm(i,j,1).gt..001) then
-                layer=i 
+                layer=i
                 iblk=j
                 v11=vel(xb1,z11)
                 v12=vel(xb2,z12)
@@ -1294,18 +1294,18 @@ c
              vp1=vp1sum/xvmod
              vp2=vp2sum/xvmod
              vs1=vs1sum/xvmod
-             vs2=vs2sum/xvmod 
-           end if 
+             vs2=vs2sum/xvmod
+           end if
            write(12,155) i,xmax,0,z1,0
 155        format(i2,1x,f7.2/i2,1x,f7.2/3x,i7)
            write(12,155) i,xmax,0,vp1,0
            write(12,155) i,xmax,0,vp2,0
            if(i.eq.nlayer) write(12,165) i+1,xmax,0,z2
 165        format(i2,1x,f7.2/i2,1x,f7.2)
-720     continue  
-      end if      
+720     continue
+      end if
 c
-      if(idump.eq.1) write(12,85) 
+      if(idump.eq.1) write(12,85)
 85    format(/'layer   max. gradient (km/s/km)   block')
 c
       do 910 i=1,nlayer
@@ -1356,12 +1356,12 @@ c
          if(idump.eq.1) write(12,95) i,delv,ibd
 95       format(i4,f17.4,i17)
          if(delv.gt.dvmax) then
-           idvmax=idvmax+1 
+           idvmax=idvmax+1
            ldvmax(idvmax)=i
          end if
 910   continue
 c
-      if(idump.eq.1) write(12,105) 
+      if(idump.eq.1) write(12,105)
 105   format(/'boundary   slope change (degrees)   between points')
 c
       do 930 i=1,ncont
@@ -1370,8 +1370,8 @@ c
          ips2=0
          if(nzed(i).gt.2) then
            do 940 j=1,nzed(i)-2
-              slope1=(zm(i,j+1)-zm(i,j))/(xm(i,j+1)-xm(i,j)) 
-              slope2=(zm(i,j+2)-zm(i,j+1))/(xm(i,j+2)-xm(i,j+1)) 
+              slope1=(zm(i,j+1)-zm(i,j))/(xm(i,j+1)-xm(i,j))
+              slope2=(zm(i,j+2)-zm(i,j+1))/(xm(i,j+2)-xm(i,j+1))
               ds1=atan(slope1)*pi18
               ds2=atan(slope2)*pi18
               if(abs(ds2-ds1).gt.dslope) then
@@ -1389,10 +1389,10 @@ c
          end if
 930   continue
 c
-      return      
-c                 
+      return
+c
 999   write(6,900)
 900   format(/'***  error in velocity model 2 ***'/)
       iflagm=1
       return
-      end         
+      end

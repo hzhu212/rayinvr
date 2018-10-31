@@ -1,6 +1,6 @@
-c                 
+c
 c     version 1.2  May 1998
-c                 
+c
 c     ----------------------------------------------------------------
 c     |                                                              |
 c     |             *********  T X Z E R O  **********               |
@@ -9,22 +9,22 @@ c     |           Add Gaussian noise to traveltime picks             |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        10 -- input:  original traveltime-distance pairs
 c
 c        11 -- output:  noisy traveltime-distance pairs
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       open(unit=10, file='tx.in', status='old')
@@ -40,6 +40,6 @@ c
         write(11,35) xr,tr,ur,ir
       end if
       go to 100
-c  
-999   stop 
+c
+999   stop
       end

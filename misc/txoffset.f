@@ -3,14 +3,14 @@ c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |            ********  T X O F F S E T  ********               |   
+c     |            ********  T X O F F S E T  ********               |
 c     |                                                              |
 c     |         Convert a "tx.in" file with a shot at 0 km to a      |
 c     |              file with shots at any position                 |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------

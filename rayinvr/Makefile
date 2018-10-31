@@ -25,7 +25,7 @@ XRAYINVR_OBJS= main.o trc.o atrc.o adjpt.o rngkta.o plt.o misc.o inv.o hdw.o cal
 #
 # Executable name
 #
-RAYINVR_EXEC=$(EXEDIR)rayinvr 
+RAYINVR_EXEC=$(EXEDIR)rayinvr
 XRAYINVR_EXEC=$(EXEDIR)xrayinvr
 #
 rayinvr: $(RAYINVR_EXEC)
@@ -52,19 +52,19 @@ blkdat.o   :  rayinvr.par rayinvr.com
 hdw.o      :  rayinvr.par rayinvr.com
 calmod.o   :  rayinvr.par rayinvr.com
 rngkta.o   :  rayinvr.par rayinvr.com
- 
+
 $(PLTLIB)/pltsub.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/pltlib.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/xpltlib.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 
 $(PLTLIB)/xbuplot.o: FORCE
 	cd $(@D);cc -O -I/usr/openwin/share/include -c xbuplot.c

@@ -3,14 +3,14 @@ c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |            ***********  T X 2 P O I S  *********             |   
+c     |            ***********  T X 2 P O I S  *********             |
 c     |                                                              |
 c     |        Calculate Poisson's ratio from P- and S-wave          |
 c     |          travel times in two separate tx.in files            |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------

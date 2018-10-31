@@ -1,6 +1,6 @@
-c                 
+c
 c     version 1.2  Mar 1992
-c                 
+c
 c     ----------------------------------------------------------------
 c     |                                                              |
 c     |            *********  T T N O I S E  **********              |
@@ -9,22 +9,22 @@ c     |           Add Gaussian noise to traveltime picks             |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        10 -- input:  original traveltime-distance pairs
 c
 c        11 -- output:  noisy traveltime-distance pairs
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       open(unit=10, file='tx.in', status='old')
@@ -46,15 +46,15 @@ c
         write(11,35) xr,tr,ur,ir
       end if
       go to 100
-c  
-999   stop 
+c
+999   stop
       end
 c
 c     -----------------------------------------------------------------
 c
       function gasdev(idum)
 c
-c     returns a normally distributed number with zero mean and unit 
+c     returns a normally distributed number with zero mean and unit
 c     variance
 c
       data iset/0/
@@ -84,7 +84,7 @@ c
       dimension r(97)
       parameter (m1=259200, ia1=7141, ic1=54773, rm1=1./m1)
       parameter (m2=134456, ia2=8121, ic2=28411, rm2=1./m2)
-      parameter (m3=243000, ia3=4561, ic3=51349)           
+      parameter (m3=243000, ia3=4561, ic3=51349)
       data iff/0/
       if(idum.lt.0.or.iff.eq.0) then
         iff=1
@@ -96,7 +96,7 @@ c
         do 11 j=1,97
            ix1=mod(ia1*ix1+ic1,m1)
            ix2=mod(ia2*ix2+ic2,m2)
-           r(j)=(float(ix1)+float(ix2)*rm2)*rm1 
+           r(j)=(float(ix1)+float(ix2)*rm2)*rm1
 11      continue
         idum=1
       end if

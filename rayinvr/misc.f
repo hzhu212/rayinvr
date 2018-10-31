@@ -1,24 +1,24 @@
 c
 c     version 1.3  Aug 1992
 c
-c     Misc routines for RAYINVR                
+c     Misc routines for RAYINVR
 c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine ttime(is,xshot,npt,nr,a1,ifam,itt,iszero,iflag,
      +                 uf,irayf)
-c                 
+c
 c     calculate travel time along a single ray using the equation:
-c                 
+c
 c                       t=2*h/(v1+v2)
-c                 
+c
 c     for the travel time between two points a distance h apart
-c      
+c
       include 'rayinvr.par'
       real vave(ppray)
       integer itt(1)
-      include 'rayinvr.com'           
-c 
+      include 'rayinvr.com'
+c
       if(idump.eq.1) write(12,15) ifam,nr,npt,xr(npt),zr(npt),
      +  ar(npt,1)*pi18,ar(npt,2)*pi18,vr(npt,1),vr(npt,2),
      +  layer,iblk,id,iwave
@@ -37,15 +37,15 @@ c          write(67,25) nr,xr(i),zr(i),time,uf,irayf
            iflagw=2
          end if
          time=time+tr(i)/vave(i)
-10    continue    
+10    continue
 c
       a2=fid1*(90.-fid*ar(npt,1)*pi18)/fid
       nptr=npt
       if(vred.eq.0.) then
         timer=time
-      else      
+      else
         timer=time-abs(xr(npt)-xshot)/vred
-      end if    
+      end if
       rayid(ntt)=float(idray(1))+float(idray(2))/10.
       if(nr.eq.0) go to 999
       write(11,5) is,nr,a1,a2,xr(npt),zr(npt),timer,nptr,
@@ -55,27 +55,27 @@ c
         itt(ifam)=itt(ifam)+1
         if(iszero.eq.0) then
           range(ntt)=xr(npt)
-        else    
+        else
           range(ntt)=abs(xr(npt)-xshot)
-        end if  
+        end if
         tt(ntt)=timer
         xshtar(ntt)=xshot
         fidarr(ntt)=fid1
         ntt=ntt+1
-      end if    
-999   return      
-      end         
-c                 
+      end if
+999   return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine sort(x,npts)
-c                 
+c
 c     sort the elements of array x in order of increasing size using
 c     a bubble sort technique
-c                 
-      real x(1) 
+c
+      real x(1)
       do 10 i=1,npts-1
-         iflag=0  
+         iflag=0
          do 20 j=1,npts-1
             if(x(j).gt.x(j+1)) then
               iflag=1
@@ -83,57 +83,57 @@ c
               x(j)=x(j+1)
               x(j+1)=xh
             end if
-20       continue 
+20       continue
          if(iflag.eq.0) return
-10     continue   
-      return      
-      end         
-c                 
+10     continue
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
-      subroutine smooth(x,n) 
-c                 
+c
+      subroutine smooth(x,n)
+c
 c     three point triangular smoothing filter
-c                 
-      real x(n) 
-      m=n-1       
-      a=0.77*x(1)+0.23*x(2) 
-      b=0.77*x(n)+0.23*x(m) 
-      xx=x(1)     
-      xr=x(2)     
-      do 10 i=2,m 
-         xl=xx    
-         xx=xr    
-         xr=x(i+1) 
-         x(i)=0.54*xx+0.23*(xl+xr) 
- 10   continue    
-      x(1)=a      
-      x(n)=b      
-      return      
-      end         
-c                 
+c
+      real x(n)
+      m=n-1
+      a=0.77*x(1)+0.23*x(2)
+      b=0.77*x(n)+0.23*x(m)
+      xx=x(1)
+      xr=x(2)
+      do 10 i=2,m
+         xl=xx
+         xx=xr
+         xr=x(i+1)
+         x(i)=0.54*xx+0.23*(xl+xr)
+ 10   continue
+      x(1)=a
+      x(n)=b
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
-      subroutine smooth2(x,n,n1,n2) 
-c                 
+c
+      subroutine smooth2(x,n,n1,n2)
+c
 c     three point triangular smoothing filter
-c                 
-      real x(n) 
-      m=n-1       
-      a=0.77*x(1)+0.23*x(2) 
-      b=0.77*x(n)+0.23*x(m) 
-      xx=x(1)     
-      xr=x(2)     
-      do 10 i=2,m 
-         xl=xx    
-         xx=xr    
-         xr=x(i+1) 
-         if(i.lt.n1.or.i.gt.n2) x(i)=0.54*xx+0.23*(xl+xr) 
- 10   continue    
-      if(n1.gt.1) x(1)=a      
-      if(n2.lt.n) x(n)=b      
-      return      
-      end         
+c
+      real x(n)
+      m=n-1
+      a=0.77*x(1)+0.23*x(2)
+      b=0.77*x(n)+0.23*x(m)
+      xx=x(1)
+      xr=x(2)
+      do 10 i=2,m
+         xl=xx
+         xx=xr
+         xr=x(i+1)
+         if(i.lt.n1.or.i.gt.n2) x(i)=0.54*xx+0.23*(xl+xr)
+ 10   continue
+      if(n1.gt.1) x(1)=a
+      if(n2.lt.n) x(n)=b
+      return
+      end
 c
 c     ----------------------------------------------------------------
 c
@@ -196,7 +196,7 @@ c     ----------------------------------------------------------------
 c
       subroutine modwr(modout,dx,dz,modi,ifrbnd,frz,xmmin,xmmax)
 c
-c     output the velocity model on a uniform grid for input to the 
+c     output the velocity model on a uniform grid for input to the
 c     plotting program MODPLT
 c
       include 'rayinvr.par'
@@ -227,9 +227,9 @@ c
       end if
 c
       do 10 i=1,nz+1
-         zmod=zmin+float(i-1)*dz 
+         zmod=zmin+float(i-1)*dz
          do 20 j=1,nx+1
-            xmod=xmmin+float(j-1)*dx 
+            xmod=xmmin+float(j-1)*dx
 c
             call xzpt(xmod,zmod,layer,iblk,iflag)
 c
@@ -244,7 +244,7 @@ c
             if(modout.le.-2) zgmt(j)=-zgmt(j)
 c
 20       continue
-c 
+c
          if(abs(modout).eq.2) then
            do 110 j=1,nx+1
               iflag=0
@@ -363,7 +363,7 @@ c
         do 90 i=1,nfrefl
 c          write(32,15) npfref(i)*2
 c          write(32,25) (xfrefl(i,j),zfrefl(i,j),j=1,npfref(i)),
-c    +                  (xfrefl(i,j),zfrefl(i,j)+frz,j=npfref(i),1,-1) 
+c    +                  (xfrefl(i,j),zfrefl(i,j)+frz,j=npfref(i),1,-1)
 90      continue
       end if
 c
@@ -374,7 +374,7 @@ c     ----------------------------------------------------------------
 c
       subroutine fd(dxz,xmmin,xmmax,ifd)
 c
-c     output the velocity model on a uniform grid for input to the 
+c     output the velocity model on a uniform grid for input to the
 c     finite difference program FD
 c
       include 'rayinvr.par'
@@ -388,14 +388,14 @@ c
       zmaxr=zmin+float(nz)*dxz
 c
       write(0,*) xmmin,xmmaxr,zmin,zmaxr,dxz,nx+1,nz+1
-      if(ifd.ne.2) 
+      if(ifd.ne.2)
      +  write(35,5) xmmin,xmmaxr,zmin,zmaxr,dxz,nx+1,nz+1
 5     format(5f10.3,2i10)
 c
       do 10 i=1,nz+1
-         zmod=zmin+float(i-1)*dxz 
+         zmod=zmin+float(i-1)*dxz
          do 20 j=1,nx+1
-            xmod=xmmin+float(j-1)*dxz 
+            xmod=xmmin+float(j-1)*dxz
 c
             call xzpt(xmod,zmod,layer,iblk,iflag)
 c
@@ -409,7 +409,7 @@ c
             zgmt(j)=-zmod
 c
 20       continue
-c 
+c
          if(ifd.ne.2) then
 112        write(35,25) (vzgrid(j),j=1,nx+1)
 25         format(10f10.3)
@@ -429,7 +429,7 @@ c     ----------------------------------------------------------------
 c
       subroutine cells(npt,xmmin,dx,dz)
 c
-c     identify grid cells that have been sampled by ray path 
+c     identify grid cells that have been sampled by ray path
 c
       include 'rayinvr.par'
       include 'rayinvr.com'

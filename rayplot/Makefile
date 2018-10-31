@@ -6,7 +6,7 @@ PLTLIB=/net/ray/src/pltlib
 #
 # compile flags
 #
-FFLAGS =  -O 
+FFLAGS =  -O
 CFLAGS =  -O -I/usr/openwin/include
 #
 #rules for compiling .f files:
@@ -24,8 +24,8 @@ XRAYPLOT_OBJS= rayplot.o $(PLTLIB)/pltsub.o $(PLTLIB)/xpltlib.o $(PLTLIB)/xbuplo
 #
 # Executable name
 #
-RAYPLOT_EXEC=$(EXEDIR)rayplot 
-XRAYPLOT_EXEC=$(EXEDIR)xrayplot 
+RAYPLOT_EXEC=$(EXEDIR)rayplot
+XRAYPLOT_EXEC=$(EXEDIR)xrayplot
 #
 rayplot: $(RAYPLOT_EXEC)
 $(RAYPLOT_EXEC): ${RAYPLOT_OBJS}
@@ -44,11 +44,11 @@ FORCE:
 $(PLTLIB)/pltlib.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/xpltlib.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/xbuplot.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:

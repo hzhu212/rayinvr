@@ -1,6 +1,6 @@
-c                 
+c
 c     version 1.3  Aug 1992
-c                 
+c
 c     ----------------------------------------------------------------
 c     |                                                              |
 c     |            ***********  I S E I S  ************              |
@@ -10,24 +10,24 @@ c     |          uniform or specified seismogram locations           |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        10 -- input:  original traveltime-distance pairs
 c
 c        11 -- output:  interpolated traveltime-distance pairs
 c
 c        12 -- input:  observed seismogram locations (uneven spacing)
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       real seis(10000),x(10000),t(10000),u(10000),
@@ -53,20 +53,20 @@ c
         write(6,15)
 15      format(/'Enter minimum and maximum seismogram location and'
      +         /'station increment (km)')
-        read(5,*) xmins,xmaxs,xincs 
-        nseis=nint((xmaxs-xmins)/xincs)+1        
+        read(5,*) xmins,xmaxs,xincs
+        nseis=nint((xmaxs-xmins)/xincs)+1
         do 10 i=1,nseis
            seis(i)=xmins+float(i-1)*xincs
 10      continue
       else
-        write(6,55) 
+        write(6,55)
 55      format(
      +    'Enter  0  for single or  1  for multiple set of receivers')
         read(5,*) iset
-        open(unit=12, file='rec.in', status='old') 
+        open(unit=12, file='rec.in', status='old')
         if(iset.eq.0) then
           i=1
-101       read(12,25,end=99) seis(i)        
+101       read(12,25,end=99) seis(i)
 25        format(f10.3)
           i=i+1
           go to 101
@@ -82,9 +82,9 @@ c
 100   read(10,5) xf,tf,uf,irayf
 5     format(3f10.3,i10)
       if(irayf.lt.0) then
-        iflag=2   
-        go to 500 
-      end if 
+        iflag=2
+        go to 500
+      end if
       if(irayf.eq.0) then
 500     if(iflag.ne.0.and.npts.gt.1) then
           if(ispace.eq.1.and.iset.eq.1) then
@@ -117,7 +117,7 @@ c
 75            format('shot ',f7.2,' km   direction ',i2,
      +               '   number of seismograms: ',i4)
               rewind(12)
-            end if 
+            end if
           end if
           irh=ir(1)
           npt=1
@@ -179,17 +179,17 @@ c
           th(1)=t(ipos)
           uh(1)=u(ipos)
           ipos=ipos+1
-          go to 200 
+          go to 200
         end if
 400     write(11,5) xf,tf,0.0,irayf
         if(iflag.eq.2) go to 999
-        npts=0 
+        npts=0
         iflag=1
         xshot=xf
-        idr=nint(tf) 
+        idr=nint(tf)
       else
         npts=npts+1
-        x(npts)=xf 
+        x(npts)=xf
         t(npts)=tf
         u(npts)=uf
         ir(npts)=irayf

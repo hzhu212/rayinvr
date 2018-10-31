@@ -3,13 +3,13 @@ c     version 1.3  Aug 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |            ******  S M O O T H_P I C K S  ******             |   
+c     |            ******  S M O O T H_P I C K S  ******             |
 c     |                                                              |
-c     |           Smooth a "tx.in" file within each phase            |   
+c     |           Smooth a "tx.in" file within each phase            |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -112,26 +112,26 @@ c
       write(*,*, fmt="('number of picks:         ',i10/)") npicks
       stop
       end
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
-      subroutine smooth(x,n) 
-c                 
+c
+      subroutine smooth(x,n)
+c
 c     three point triangular smoothing filter
-c                 
-      real x(n) 
-      m=n-1       
-      a=0.77*x(1)+0.23*x(2) 
-      b=0.77*x(n)+0.23*x(m) 
-      xx=x(1)     
-      xr=x(2)     
-      do 10 i=2,m 
-         xl=xx    
-         xx=xr    
-         xr=x(i+1) 
-         x(i)=0.54*xx+0.23*(xl+xr) 
- 10   continue    
-      x(1)=a      
-      x(n)=b      
-      return      
-      end         
+c
+      real x(n)
+      m=n-1
+      a=0.77*x(1)+0.23*x(2)
+      b=0.77*x(n)+0.23*x(m)
+      xx=x(1)
+      xr=x(2)
+      do 10 i=2,m
+         xl=xx
+         xx=xr
+         xr=x(i+1)
+         x(i)=0.54*xx+0.23*(xl+xr)
+ 10   continue
+      x(1)=a
+      x(n)=b
+      return
+      end

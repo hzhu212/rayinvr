@@ -12,9 +12,9 @@
 #define XFLUSH 0
 #define MAX_COLOURS 16
 
-/*  These are used as arguments to nearly every Xlib routine, so it saves 
- *  routine arguments to declare them global.  If there were 
- *  additional source files, they would be declared extern there. 
+/*  These are used as arguments to nearly every Xlib routine, so it saves
+ *  routine arguments to declare them global.  If there were
+ *  additional source files, they would be declared extern there.
  */
 Display *display;
 int screen_num;
@@ -68,7 +68,7 @@ void xbuinit_ (x_mm_size, y_mm_size)
   XClassHint class_hints;
   XSetWindowAttributes set_window_attributes;
   int exposed_once = 0;  /*  flag if window has been exposed yet  */
-  
+
   /*  connect to X server  */
   if ((display = XOpenDisplay (display_name)) == NULL)
   {
@@ -81,7 +81,7 @@ void xbuinit_ (x_mm_size, y_mm_size)
   screen_num = DefaultScreen (display);
 
   /*  Note that in a real application, x and y would default to 0
-   *  but would be settable from the command line or resource database.  
+   *  but would be settable from the command line or resource database.
    */
   x = y = 0;
 
@@ -94,36 +94,36 @@ void xbuinit_ (x_mm_size, y_mm_size)
   win_height = mm_to_pixels (*y_mm_size);
 
   /*  create opaque window  */
-  win = XCreateSimpleWindow (display, RootWindow (display, screen_num), 
+  win = XCreateSimpleWindow (display, RootWindow (display, screen_num),
 				x, y, win_width, win_height, border_width,
-				WhitePixel (display, screen_num), 
+				WhitePixel (display, screen_num),
 				BlackPixel (display, screen_num));
 
   /*  Create pixmap of depth 1 (bitmap) for icon  */
-  icon_pixmap = XCreateBitmapFromData (display, win, xbuplot_icon_bits, 
+  icon_pixmap = XCreateBitmapFromData (display, win, xbuplot_icon_bits,
 					xbuplot_icon_width,xbuplot_icon_height);
 
   /*  x, y, width, and height hints are now taken from
    *  the actual settings of the window when mapped. Note
-   *  that PPosition and USSize must be specified anyway. 
+   *  that PPosition and USSize must be specified anyway.
    *  We specify PMaxSize and PMinSize so the user can't resize the window
    */
   size_hints.flags = PPosition | USSize | PMaxSize | PMinSize;
   size_hints.min_width = size_hints.max_width = win_width;
   size_hints.min_height = size_hints.max_height = win_height;
 
-  /*  These calls store window_name and icon_name into XTextProperty 
-   *  structures and set their other fields properly. 
+  /*  These calls store window_name and icon_name into XTextProperty
+   *  structures and set their other fields properly.
    */
   if (XStringListToTextProperty (&window_name, 1, &windowName) == 0)
   {
-    (void) fprintf (stderr, 
+    (void) fprintf (stderr,
 			"ERROR: structure allocation for windowName failed.\n");
     exit(-1);
   }
   if (XStringListToTextProperty (&icon_name, 1, &iconName) == 0)
   {
-    (void) fprintf (stderr, 
+    (void) fprintf (stderr,
 			"ERROR: structure allocation for iconName failed.\n");
     exit(-1);
   }
@@ -136,8 +136,8 @@ void xbuinit_ (x_mm_size, y_mm_size)
 
   class_hints.res_name = "xbuplot";
   class_hints.res_class = "xbuplot";
-  
-  XSetWMProperties (display, win, &windowName, &iconName, NULL, 0, 
+
+  XSetWMProperties (display, win, &windowName, &iconName, NULL, 0,
 			&size_hints, &wm_hints, &class_hints);
 
   /*  Set backing store to on since we can't service Expose events  */
@@ -145,7 +145,7 @@ void xbuinit_ (x_mm_size, y_mm_size)
   XChangeWindowAttributes (display,win, CWBackingStore, &set_window_attributes);
 
   /*  Select event types wanted  */
-  XSelectInput (display, win, ExposureMask | StructureNotifyMask | 
+  XSelectInput (display, win, ExposureMask | StructureNotifyMask |
 		ButtonPressMask | KeyPressMask);
 
   /*  Load font and get font information structure  */
@@ -191,7 +191,7 @@ void xbuplot_ (x_mm, y_mm, pen_down)
   last_x = x;
   last_y = y;
 }
-  
+
 
 /********  xbuline_  ********/
 void xbuline_ (x1_mm, y1_mm, x2_mm, y2_mm)
@@ -211,7 +211,7 @@ void xbuline_ (x1_mm, y1_mm, x2_mm, y2_mm)
   last_x = x2;
   last_y = y2;
 }
-  
+
 
 /********  xbulines_  ********/
 void xbulines_ (x_mm, y_mm, num_points)
@@ -236,7 +236,7 @@ void xbulines_ (x_mm, y_mm, num_points)
 #endif
 }
 
-  
+
 /********  xbusymbol_  ********/
 void xbusymbol_ (x_mm, y_mm, height_mm, string, angle, num_chars)
   float *x_mm, *y_mm;  /*  point to draw string at  */
@@ -255,17 +255,17 @@ void xbusymbol_ (x_mm, y_mm, height_mm, string, angle, num_chars)
   height = mm_to_pixels (*height_mm);
   character [1] = 0;
 
-  if ((int) (*angle + 0.5) == 0) 
+  if ((int) (*angle + 0.5) == 0)
   {
     XDrawString (display, win, gc, x, y, string, *num_chars);
-  } 
+  }
   else if ((int) (*angle + 0.5) == 90)
   {
     for (i = 1; i <= *num_chars; i++)
     {
       character [0] = string [i - 1];
-      XDrawString (display, win, gc, x, 
-			(unsigned int) (y - ((*num_chars - i) * 1.2 * height)), 
+      XDrawString (display, win, gc, x,
+			(unsigned int) (y - ((*num_chars - i) * 1.2 * height)),
 			character, 1);
     }
   }
@@ -300,28 +300,28 @@ void xbunumber_ (x_mm, y_mm, height_mm, number, angle, num_dec_points)
   ndp = *num_dec_points;
   if (*number > 0.0)
   {
-    rounded_number = (float) ((long) (*number * pwr (10.0, ndp) + 0.5) 
+    rounded_number = (float) ((long) (*number * pwr (10.0, ndp) + 0.5)
                         / pwr (10.0,  ndp));
   }
   else
   {
-    rounded_number = (float) ((long) (*number * pwr (10.0, ndp) - 0.5) 
+    rounded_number = (float) ((long) (*number * pwr (10.0, ndp) - 0.5)
                         / pwr (10.0,  ndp));
   }
   sprintf (string, "%g", rounded_number);
   num_chars = strlen (string);
 
-  if ((int) (*angle + 0.5) == 0) 
+  if ((int) (*angle + 0.5) == 0)
   {
     XDrawString (display, win, gc, x, y, string, num_chars);
-  } 
+  }
   else if ((int) (*angle + 0.5) == 90)
   {
     for (i = 1; i <= num_chars; i++)
     {
       character [0] = string [i - 1];
-      XDrawString (display, win, gc, x, 
-                        (unsigned int) (y - ((num_chars - i) * 1.2 * height)), 
+      XDrawString (display, win, gc, x,
+                        (unsigned int) (y - ((num_chars - i) * 1.2 * height)),
                         character, 1);
     }
   }
@@ -377,7 +377,7 @@ float pwr (number, exponent)
   float value;
 
   value = 1.0;
-  
+
   for (i = 1; i <= exponent; i++)
   {
     value *= number;
@@ -387,7 +387,7 @@ float pwr (number, exponent)
 
 
 /********  colour_available  ********/
-/*  find out in the display supports colour. 
+/*  find out in the display supports colour.
  *  i.e. PseudoColor, TrueColor, DirectColor, and StaticColor
  *  return 0 is colour_available == false
  *  return 1 is colour_available == true
@@ -399,7 +399,7 @@ int colour_available ()
   XVisualInfo visual_info;
 
   default_depth = DefaultDepth (display, screen_num);
-  if (default_depth == 1) 
+  if (default_depth == 1)
   {
     /*  Must be static grey. use black and white  */
     /*  return value of 0 for "colour_available == false"  */
@@ -407,7 +407,7 @@ int colour_available ()
   }
 
   /*  check to see if a visual class that supports colour is available  */
-  while (!XMatchVisualInfo (display, screen_num, default_depth, class--, 
+  while (!XMatchVisualInfo (display, screen_num, default_depth, class--,
 				&visual_info))
     ;
   class++;  /*  set class back to which class was found  */
@@ -444,8 +444,8 @@ unsigned long get_colour (colour)
   default_colour_map   = DefaultColormap (display, screen_num);
 
   /*  parse colour name to see if colour is available. if not use white  */
-  if (!XParseColor (display, default_colour_map, colour_name [colour], 
-			&exact_def)) 
+  if (!XParseColor (display, default_colour_map, colour_name [colour],
+			&exact_def))
     return (WhitePixel (display, screen_num));
 
   /*  allocate colour. if not available use white  */
@@ -464,7 +464,7 @@ void xbucolour_ (colour)
   int *colour;
 {
 
-  if (can_use_colours) 
+  if (can_use_colours)
     XSetForeground (display, gc, get_colour (*colour));
 }
 
@@ -525,7 +525,7 @@ void xbuevent_ (x_mm, y_mm, button, key)
       case ButtonPress:
         *button = event.xbutton.button;
         *x_mm = (double) event.xbutton.x / (double) win_width * win_width_mm;
-        *y_mm = (double) (win_height - event.xbutton.y) / (double) win_height 
+        *y_mm = (double) (win_height - event.xbutton.y) / (double) win_height
 		* win_height_mm;
         got_event++;
         break;
@@ -551,7 +551,7 @@ void xbuevent_ (x_mm, y_mm, button, key)
           default:
             *key = buffer;
             *x_mm = (double) event.xkey.x / (double) win_width * win_width_mm;
-            *y_mm = (double) (win_height - event.xkey.y) / (double) win_height 
+            *y_mm = (double) (win_height - event.xkey.y) / (double) win_height
 			* win_height_mm;
             got_event++;
             break;

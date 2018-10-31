@@ -3,14 +3,14 @@ c     version 1.3  Aug 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |               ********   X S H O T  ********                 |   
+c     |               ********   X S H O T  ********                 |
 c     |                                                              |
-c     |          Change the shot position and/or direction           |   
-c     |                      in a "tx.in" file                       |   
+c     |          Change the shot position and/or direction           |
+c     |                      in a "tx.in" file                       |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -43,7 +43,7 @@ c
         tw=fidirn
       end if
       if(if.gt.0) then
-        xw=xshotn+fidirn*(xf-xshotc)*fidirc 
+        xw=xshotn+fidirn*(xf-xshotc)*fidirc
         tw=tf
       end if
       if(if.lt.0) then

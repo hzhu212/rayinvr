@@ -1,14 +1,14 @@
-c                 
+c
 c     version 1.2  Mar 1992
 c
 c     Block data for PLTSYN
 c
 c     ----------------------------------------------------------------
-c                 
-      block data  
-c                 
+c
+      block data
+c
 c     assign default and initial values to common block parameters
-c                 
+c
       include 'pltsyn.par'
       include 'pltsyn.com'
 c
@@ -20,5 +20,5 @@ c
      +     ishade,ifill,dens/0,1,5./,inmo,vrms/0,2.5/,
      +     iplot,iplots,orig,iseg,nseg/1,0,12.5,0,0/,
      +     xwndow,ywndow/2*0./,ibcol,ifcol/0,1/,sf/1.2/
-c                 
+c
       end

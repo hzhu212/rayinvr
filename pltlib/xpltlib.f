@@ -3,22 +3,22 @@ c     version 1.0  June 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |           ***********  X P L T L I B  ***********            |  
+c     |           ***********  X P L T L I B  ***********            |
 c     |                                                              |
-c     |         Plot library to convert Calcomp-like calls           |   
+c     |         Plot library to convert Calcomp-like calls           |
 c     |                     to xbuplot calls                         |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |           Modified from pltlib by T. J. Cote (GSC)           |
 c     |     Postscript added by D. Demanet (Liege Univ, Belgium)     |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
 c
 c     The routine pcolor is required only if the local graphics allows
-c     colour plotting. 
+c     colour plotting.
 c
 c     ----------------------------------------------------------------
 c
@@ -85,7 +85,7 @@ c
 c
       integer fill
       real x0, y0
-c 
+c
       if (iplot .ge. 0) then
         call xbuerase
 c       if background colour is not black then draw colour rectangle
@@ -99,7 +99,7 @@ ccc       fill = 1
 ccc     end if
         call xbucolour (ifcol)
       end if
-      
+
 c
       if (iplot .le. 0) then
 	write(19,*) 'erasepage'
@@ -119,7 +119,7 @@ c
 c
       integer pen
 c
-      pen = 3 - ipen 
+      pen = 3 - ipen
       if (iplot .ge. 0) call xbuplot (x, y, pen)
 c
       if (iplot .le. 0) then
@@ -141,12 +141,12 @@ c     ----------------------------------------------------------------
 c
       subroutine number (x, y, ht, xnum, ang, ndeci)
 c
-c     plot the floating point number 
+c     plot the floating point number
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
       character*30 buffor
       integer lon
-c 
+c
       if (iplot .ge. 0) then
         call xbunumber (x, y, ht, xnum, ang, ndeci)
       end if
@@ -231,7 +231,7 @@ c
       end if
 c
       return
-      end  
+      end
 c
 c     ----------------------------------------------------------------
 c
@@ -240,7 +240,7 @@ c
 c     flush the graphics buffer
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       if (iplot .ge. 0) call xbuflush
 c
       if (iplot .le. 0) then
@@ -291,7 +291,7 @@ c     set the colour for polylines
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
       common /cps/ ipscol,xcurr,ycurr
-c 
+c
       if (iplot .ge. 0) call xbucolour (icol)
 c
       if (iplot .le. 0) then
@@ -341,7 +341,7 @@ c
 c     open and close Uniras segments
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       if (iplot .ge. 0) then
       end if
 c
@@ -354,13 +354,13 @@ c
       end
 c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine aldone
 c
-c     wait unitl the user is ready for the next plot 
+c     wait unitl the user is ready for the next plot
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       character reply*1
 c
       if (iplot .ge. 0) then
@@ -370,7 +370,7 @@ c
 25      format (a1)
         if (reply (1:1) .eq. 's') then
           call plotnd(1)
-          stop   
+          stop
         end if
         if (reply (1:1) .eq. '0') isep = 0
         if (reply (1:1) .eq. '1') isep = 1
@@ -405,7 +405,7 @@ c
 25        format (a1)
           if (reply .ne. 'q' .and. reply .ne. 'Q') go to 101
         end if
-c 
+c
         call xbuclose
       end if
 c

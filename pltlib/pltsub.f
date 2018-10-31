@@ -15,11 +15,11 @@ c     amin, amax   - min and max value of axis
 c     amm          - length of axis (mm)
 c     ascale       - plot scale in axis-units/plot-units
 c     theta        - angle of axis in degrees (i.e. 0 or 90)
-c     iside        - side of axis that is labelled 
+c     iside        - side of axis that is labelled
 c                    (+1 for left or bottom, -1 for right or top)
 c     amint, amaxt - min and max value of tick marks
-c     ntick        - number of intervals separated by tick marks 
-c                    (i.e. the number of tick marks equals ntick+1)          
+c     ntick        - number of intervals separated by tick marks
+c                    (i.e. the number of tick marks equals ntick+1)
 c     ndeci        - number of digits after decimal for axis numbers
 c     label        - axis label
 c     nchar        - number of characters in axis label
@@ -35,7 +35,7 @@ c
       ticlen=ticfac*abs(albht)
 c
 c     plot axis line
-c 
+c
       call plot(xorig,yorig,3)
       if(theta.eq.0.) then
         call plot(xorig+amm,yorig,2)
@@ -131,7 +131,7 @@ c
         xpos=xpos-float(iside)*albht*1.5
         ypos=yorig+(amm-alblen)/2.
         call symbol(xpos,ypos,albht,label,90.,nchar)
-      end if 
+      end if
 c
       return
       end
@@ -171,7 +171,7 @@ c
          dy=y(i+1)-yp(nplt)
          distxy=sqrt(dx**2+dy**2)
          fctr=dash/distxy
-         nptss=int(1./fctr+.00001) 
+         nptss=int(1./fctr+.00001)
          if(nptss.gt.0) then
            do 20 j=1,nptss
               nplt=nplt+1
@@ -183,7 +183,7 @@ c
          if(abs(1./fctr-float(nptss)).gt..00001) then
            rem=dash*(1.-1./fctr+float(nptss))
          else
-           rem=0. 
+           rem=0.
          end if
 10    continue
 c
@@ -216,13 +216,13 @@ c
       call plot(x1,z1,2)
 c
       return
-      end  
+      end
 c
 c     ----------------------------------------------------------------
 c
       subroutine ssymbl(x,y,ht,isymbl)
 c
-c     plot special symbols centred at (x,y) of height ht  
+c     plot special symbols centred at (x,y) of height ht
 c
       ht2=ht/2.
 c
@@ -242,7 +242,7 @@ c
       call plot(x+ht2,y+ht2,2)
       call plot(x-ht2,y+ht2,3)
       call plot(x+ht2,y-ht2,2)
-      return 
+      return
 c
 c     plot a "*"
 c
@@ -281,21 +281,21 @@ c
       subroutine axtick(amin,amax,amint,amaxt,ntick,ndeci)
 c
 c     determine appropriate values for the minimum and maximum position
-c     of tick marks, the number of tick marks, and the number of 
-c     digits after the decimal given the minimum and maximum axis 
+c     of tick marks, the number of tick marks, and the number of
+c     digits after the decimal given the minimum and maximum axis
 c     values
 c
       parameter(ndiv=18)
       integer tcndec(ndiv)
-      real tcmax(ndiv),tcinc(ndiv) 
-c 
-      data tcmax/.01,.02,.05,.1,.2,.5,1.,2.,5.,10.,20.,50.,
-     +           100.,200.,500.,1000.,2000.,5000./, 
-     +     tcinc/.001,.002,.005,.01,.02,.05,.1,.2,.5,1.,2.,5.,
-     +           10.,20.,50.,100.,200.,500./,     
-     +     tcndec/3,3,3,2,2,2,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1/ 
+      real tcmax(ndiv),tcinc(ndiv)
 c
-      alen=amax-amin 
+      data tcmax/.01,.02,.05,.1,.2,.5,1.,2.,5.,10.,20.,50.,
+     +           100.,200.,500.,1000.,2000.,5000./,
+     +     tcinc/.001,.002,.005,.01,.02,.05,.1,.2,.5,1.,2.,5.,
+     +           10.,20.,50.,100.,200.,500./,
+     +     tcndec/3,3,3,2,2,2,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1/
+c
+      alen=amax-amin
       do 10 i=1,ndiv
          if(alen.le.tcmax(i)) then
            ipos=i

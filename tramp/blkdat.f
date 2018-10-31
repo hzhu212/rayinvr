@@ -2,16 +2,16 @@ c
 c     version 1.3  Aug 1992
 c
 c     Block data for TRAMP
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
-      block data  
-c                 
+c
+      block data
+c
 c     assign default and initial values to common block parameters
-c                 
+c
       include 'tramp.par'
       include 'tramp.com'
-c                 
+c
       data hws,crit,angbnd,omega,hedcut/-1.,1.,20.,5.,25./,
      +  irkc,tol,hdenom,hmin,idump/0,.0005,64.,.01,0/,
      +  itx,vred/0,8./,nzed/pncntr*1/,nvel/pinvel*1/,
@@ -35,5 +35,5 @@ c
      +  igrid,xgrid,zgrid/0,-1,-1/,nstepr/15/,ntray,ntpts/0,0/,
      +  icomp/1/,isrch/0/,iq/0/,istop/1/,ibcol,ifcol,sf/0,1,1.2/,
      +  izrefl/prayf*0/
-c                 
-      end         
+c
+      end

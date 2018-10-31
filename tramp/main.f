@@ -10,61 +10,61 @@ c     |           for Traveltime and Amplitude Modelling             |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
 c
 c
-c     I/O units:  
+c     I/O units:
 c
 c        10 -- input:  program input parameters
 c
-c        11 -- output: summary ray tracing information for each ray 
+c        11 -- output: summary ray tracing information for each ray
 c                      traced
 c
 c        12 -- output: details of velocity model and each point
 c                      of each ray traced
-c                 
+c
 c        13 -- ouptut: summary amplitude information for each ray
 c                      traced
-c                 
+c
 c        14 -- output: details of amplitude calculations for each
 c                      ray traced
-c                 
+c
 c        16 -- input:  receiver locations
 c
 c        17 -- output: calculated traveltime-distance pairs
 c
 c        19 -- output: all Calcomp plot calls
-c                 
+c
 c        20 -- input:  velocity model
-c                 
+c
 c        21 -- ouptut: calculated traveltime and amplitude of each
 c                      arrival of each trace of synthetic sections
-c                 
+c
 c        22 -- ouptut: namelist parameters
 c
 c        23 -- output: misc output
 c
 c        24 -- output: calculated amplitude-distance pairs
-c                 
+c
 c        26 -- input:  observed traveltime-distance pairs
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       include 'tramp.par'
-c                
+c
       real amin(prayt),amax(prayt),xshot(pshot),xvz(pnvz),
      +     xshots(pshot2),theta(pnrayf),dist(pnrayf),space(prayf),
      +     zshot(pshot),pois(player),poisbl(papois),qp(player),
      +     qs(player),qpbl(paqpqs),qsbl(paqpqs),zsmth(pnsmth),
      +     xshota(pshot2),zshota(pshot2),tatan(pitan2),angtan(pitan2)
-c                 
+c
       integer idr(pshot2),nray(prayf),itt(ptrayf),ishot(pshot),
      +        ncbnd(prayf),nsec(pshot),mir(pnrayf),ishotr(pshot2),
      +        nrbnd(prayf),rbnd(preflt),ncaust(prayf),iturn(prayf),
@@ -74,8 +74,8 @@ c
      +        ibreak(prayf),ihead(player),irayt(prayt),iinta(ptrayf),
      +        mcol(5),modi(player),frbnd(prayf)
 c
-      include 'tramp.com'                 
-c                 
+      include 'tramp.com'
+c
       namelist /pltpar/ iplot,imod,ibnd,idash,ivel,iray,irays,
      +                  irayps,idot,icntr,itx,idata,iszero,itxout,
      +                  iamout,ivz,ivzp,ivrms,igrid,idump,isum,istep,
@@ -95,7 +95,7 @@ c
      +                  ampmin,ampmax,atmin,atmax,amm,nticka,ndecia,
      +                  vmin,vmax,vmm,ntickv,ndeciv,
      +                  vrmin,vrmax,vrmm,ntckvr,ndecir
-c                 
+c
       namelist /trapar/ ishot,iraysl,irayt,iturn,isrch,istop,ibsmth,
      +                  imodf,xshot,zshot,ray,nray,space,amin,amax,
      +                  nsmax,aamin,aamax,stol,xsmax,step,smin,smax,
@@ -121,7 +121,7 @@ c
      +     iint/prayf*0/,nsmax/prayf*-1/,dbnd/prayf*0/,
      +     cbnd/pconvt*-99/,ibreak/prayf*1/,
      +     ishot/pshot*0/,ncbnd/prayf*-1/,irayt/prayt*1/
-c     
+c
       istep=0
       ntan=90
       ifast=1
@@ -144,48 +144,48 @@ c
       ngroup=0
       nshot=0
       ia0=1
-      iden=0   
-      icmp=0      
-      nrskip=1    
-      itxout=0 
+      iden=0
+      icmp=0
+      nrskip=1
+      itxout=0
       iamout=0
-      spamp=1.    
-      amprev=0    
-      idata=0     
-      isum=1      
-      stol=-1.    
-      ampsmt=0.1  
-      ttunc=.01  
-      nrsmth=0    
-      ivrms=0     
-      xrinc=-1.   
-      vrmstl=-1   
-      vrmsbl=-1   
-      icaust=1    
-      idash=1     
-      ivel=0      
-      velht=0.7   
-      iaxlab=1    
-      splnf=1.    
-      sdev=1.     
-      aamin=5.    
-      aamax=85.   
-      aainc=.1    
-      aaimin=1.    
-      idot=0      
-      iszero=0    
-      ibnd=1      
-      imod=1      
-      iray=1      
-      iamp=0      
-      nskip=0     
-      ivz=0       
-      isect=0     
+      spamp=1.
+      amprev=0
+      idata=0
+      isum=1
+      stol=-1.
+      ampsmt=0.1
+      ttunc=.01
+      nrsmth=0
+      ivrms=0
+      xrinc=-1.
+      vrmstl=-1
+      vrmsbl=-1
+      icaust=1
+      idash=1
+      ivel=0
+      velht=0.7
+      iaxlab=1
+      splnf=1.
+      sdev=1.
+      aamin=5.
+      aamax=85.
+      aainc=.1
+      aaimin=1.
+      idot=0
+      iszero=0
+      ibnd=1
+      imod=1
+      iray=1
+      iamp=0
+      nskip=0
+      ivz=0
+      isect=0
 c
       open(unit=10, file='r.in', status='old')
-c                 
+c
 c     read in program control parameters from unit 10
-c                 
+c
       read(10,pltpar)
       read(10,axepar)
       read(10,trapar)
@@ -199,7 +199,7 @@ c
 c
       if(imodf.ne.1) then
         iunit=10
-        read(10,1)  
+        read(10,1)
 1       format(' '/' '/' ')
       else
         open(unit=20, file='v.in', status='old')
@@ -255,27 +255,27 @@ c
          j2=j2+10
          go to 31
 411      ncont=ncont+1
-20    continue    
-c                 
+20    continue
+c
 99    nlayer=ncont-1
 c
       if(iplot.eq.0) iplot=-1
       if(iplot.eq.2) iplot=0
-c     
+c
 c     open I/O units
 c
-      
+
       open(unit=11, file='r1.out')
       if(idump.eq.1) open(unit=12, file='r2.out')
       if(iamp.gt.0) open(unit=13, file='a1.out')
       if(iamp.gt.0.and.idump.eq.1) open(unit=14, file='a2.out')
       if(isect.eq.2) open(unit=16, file='rec.in', status='old')
-      if(itxout.gt.0) open(unit=17, file='tx.out') 
+      if(itxout.gt.0) open(unit=17, file='tx.out')
       if(iplot.le.0) open(unit=19, file='p.out')
-      if(isect.gt.0) open(unit=21, file='sect.out') 
+      if(isect.gt.0) open(unit=21, file='sect.out')
       if(((ivrms.ne.0.or.icntr.ne.0.or.ivz.ne.0).and.idump.eq.1).or.
-     +  igrid.ne.0.or.iden.eq.1) open(unit=23, file='m.out') 
-      if(iamout.eq.1) open(unit=24, file='amp.out') 
+     +  igrid.ne.0.or.iden.eq.1) open(unit=23, file='m.out')
+      if(iamout.eq.1) open(unit=24, file='amp.out')
 c
 c     read in observed data
 c
@@ -297,10 +297,10 @@ c
         isf=isf+1
         if(ipf(isf-1).ne.-1) go to 910
       end if
-c                 
+c
 c     determine if plot parameters for distance axis of travel
 c     time and amplitude plots are same as model distance parameters
-c                 
+c
       if(xmint.lt.-1000.) xmint=xmin
       if(xmaxt.lt.-1000.) xmaxt=xmax
       if(xtmint.lt.-1000.) xtmint=xtmin
@@ -308,9 +308,9 @@ c
       if(xmmt.lt.-1000.) xmmt=xmm
       if(ndecxt.lt.-1) ndecxt=ndecix
       if(ntckxt.lt.0) ntckxt=ntickx
-c                 
+c
 c     calculate scale of each plot axis
-c                 
+c
       xscale=(xmax-xmin)/xmm
       xscalt=(xmaxt-xmint)/xmmt
       zscale=-(zmax-zmin)/zmm
@@ -321,7 +321,7 @@ c
 c
       if(itrev.eq.1) tscale=-tscale
       if(iroute.ne.1) then
-        isep=0 
+        isep=0
         ibcol=0
       end if
       if(isep.eq.2) isep=3
@@ -346,9 +346,9 @@ c
         colour(10)=7
         ncol=10
       end if
-c                 
+c
 c     calculate velocity model parameters
-c                 
+c
       call calmod(ncont,pois,poisb,poisl,poisbl,
      +            qp,qs,qb,ql,qpbl,qsbl,iamp,iden,iflagm)
 c
@@ -356,7 +356,7 @@ c
 c
 c     assign values to the arrays xshota, zshota and idr
 c     and determine nshot
-c          
+c
       do 290 i=1,pshot
          if(ishot(i).eq.-1.or.ishot(i).eq.2) then
            nshot=nshot+1
@@ -375,78 +375,78 @@ c
            ishotr(nshot)=2*i
          end if
 290   continue
-c                 
+c
 c     calculate the z coordinate of shot points if not specified
 c     by the user - assumed to be at the top of the first layer
-c                 
+c
       zshift=abs(zmax-zmin)/10000.
       do 300 i=1,nshot
         if(zshota(i).lt.-1000.) then
-         if(xshota(i).lt.xbnd(1,1,1).or.xshota(i).gt.xbnd(1,nblk(1),2)) 
+         if(xshota(i).lt.xbnd(1,1,1).or.xshota(i).gt.xbnd(1,nblk(1),2))
      +   go to 300
          do 310 j=1,nblk(1)
-            if(xshota(i).ge.xbnd(1,j,1).and.xshota(i).le.xbnd(1,j,2)) 
+            if(xshota(i).ge.xbnd(1,j,1).and.xshota(i).le.xbnd(1,j,2))
      +      zshota(i)=s(1,j,1)*xshota(i)+b(1,j,1)+zshift
-310      continue 
-        end if    
-300   continue    
-c                 
+310      continue
+        end if
+300   continue
+c
 c     assign default value to nray if not specified or
 c     nray(1) if only it is specified and also ensure that nray<=pnrayf
-c                 
+c
       if(nray(1).lt.0) then
          do 320 i=1,prayf
             nray(i)=10
-320      continue 
-      else        
+320      continue
+      else
         if(nray(2).lt.0) then
           if(nray(1).gt.pnrayf) nray(1)=pnrayf
           do 330 i=2,prayf
              nray(i)=nray(1)
 330       continue
-        else      
+        else
           do 340 i=1,prayf
              if(nray(i).lt.0) nray(i)=10
              if(nray(i).gt.pnrayf) nray(i)=pnrayf
 340       continue
-        end if    
-      end if      
-c                 
+        end if
+      end if
+c
 c     assign default value to stol if not specified by the user
-c                 
+c
       if(stol.lt.0.) stol=(xmax-xmin)/3500.
-c                 
-c     assign default values to xrinc, vrmstl, and vrmsbl if not 
-c     specified   
-c                 
+c
+c     assign default values to xrinc, vrmstl, and vrmsbl if not
+c     specified
+c
       if(ivrms.ne.0) then
         if(xrinc.lt.0.) xrinc=(xmaxt-xmint)/100.
         if(vrmstl.lt.0) vrmstl=1
         if(vrmsbl.lt.0) vrmsbl=nlayer
-      end if      
-c                 
+      end if
+c
 c     assign default value to xcinc if not specified
-c                 
+c
       if(icntr.ne.0) then
         if(xcinc.lt.0.) xcinc=(xmax-xmin)/100.
-      end if      
-c                 
+      end if
+c
 c     check array ncbnd for array values greater than pconv
-c                 
-      do 470 i=1,prayf 
+c
+      do 470 i=1,prayf
          if(ncbnd(i).gt.pconv) then
            write(6,135)
 135        format(/'***  max converting boundaries exceeded  ***/')
            go to 900
-         end if   
-470   continue    
-c                 
+         end if
+470   continue
+c
 c     plot velocity model
-c                 
-      if((imod.eq.1.or.iray.gt.0.or.irays.eq.1).and.isep.lt.2) 
+c
+      if((imod.eq.1.or.iray.gt.0.or.irays.eq.1).and.isep.lt.2)
      +  call pltmod(ncont,ibnd,imod,iaxlab,ivel,velht,idash,idata,
      +              iroute)
-c           
+c
 c     calculation of smooth layer boundaries
 c
       if(ibsmth.gt.0) then
@@ -462,7 +462,7 @@ c
 680     continue
       end if
       if(isep.gt.1.and.ibsmth.eq.2) ibsmth=1
-c                 
+c
       write(11,35)
 35    format('shot  ray i.angle  f.angle   dist     depth',1x,
      +       'red.time  npts code')
@@ -476,51 +476,51 @@ c
         hedcut=hedcut/100.
         omega=omega*6.283185307
         sdev=sdev/100.
-      end if      
+      end if
 c
       if(nrskip.lt.1) nrskip=1
       if(hws.lt.0.) hws=(xmax-xmin)/25.
-      crit=crit/pi18 
+      crit=crit/pi18
       angbnd=angbnd/pi18
       do 30 i=1,player
          ihead(i)=0
-30    continue    
+30    continue
 c
       do 260 i=1,prayf
          if(nrbnd(i).gt.prefl) then
            write(6,125)
 125        format(/'***  max reflecting boundaries exceeded  ***'/)
            go to 900
-         end if   
-260   continue    
+         end if
+260   continue
 c
       do 710 i=1,preflt
         if(rbnd(i).ge.nlayer) then
          write(6,165)
 165   format(/'***  reflect boundary greater than # of layers  ***'/)
-        end if    
-710   continue    
+        end if
+710   continue
 c
       do 40 i=1,prayf
          if(ray(i).lt.1.) go to 50
          ngroup=ngroup+1
-40    continue  
+40    continue
 50    if(ngroup.eq.0) then
         write(6,55)
 55      format(/'***  no ray codes specified  ***'/)
         go to 900
-      end if    
+      end if
       if(nsmax(1).lt.0) then
         do 350 i=1,ngroup
            nsmax(i)=10
 350     continue
-      else      
+      else
         if(nsmax(2).lt.0.and.ngroup.gt.1) then
           do 360 i=2,ngroup
              nsmax(i)=nsmax(1)
 360       continue
-        end if  
-      end if    
+        end if
+      end if
 c
       do 3900 k=1,ngroup
          if(izrefl(k).gt.0) then
@@ -531,40 +531,40 @@ c
            read(36,385) (xzf(i,j),j=1,npzf(i))
            read(36,385) (zff(i,j),j=1,npzf(i))
 385        format(10f7.2)
-           i=i+1 
+           i=i+1
            go to 395
 399        nzf=i-1
            go to 3910
          end if
 3900  continue
 3910  continue
-c                 
+c
 c     assign values to xmins, xmaxs and xincs if not specified
-c                 
+c
       if(isect.eq.1) then
         xincss=(xmax-xmin)/50.
         if(xmins.lt.-9999.) xmins=xmin+xincss
         if(xmaxs.lt.-9999.) xmaxs=xmax-xincss
         if(xincs.lt.-9999.) xincs=(xmaxs-xmins)/48.
-        iflags=0  
+        iflags=0
         if(xmins.ge.xmaxs.or.xincs.le.0.) iflags=1
-        nseis=0   
+        nseis=0
         if(xincs.ne.0.) nseis=int((xmaxs-xmins)/xincs+.5)+1
         if(nseis.le.0.or.nseis.gt.pseis) iflags=1
         if(iflags.eq.1) then
-         write(6,475) 
-475      format(/ 
+         write(6,475)
+475      format(/
      +   '***  error in specification of seismogram parameters  ***'/)
          go to 9999
-        end if    
-      end if      
-c                 
+        end if
+      end if
+c
 c     assign default values to smin and smax if not specified
-c                 
+c
       if(smin.lt.0.) smin=(xmax-xmin)/4500.
       if(smax.lt.0.) smax=(xmax-xmin)/15.
-c                 
-      ist=0       
+c
+      ist=0
       iflagp=0
 c
       if(nshot.eq.0) go to 1000
@@ -592,7 +592,7 @@ c
            bcotan(i)=tatan(i)-mcotan(i)*angtan(i)
 6040    continue
       end if
-c                 
+c
       do 60 is=1,nshot
          ist=ist+1
          id=idr(is)
@@ -604,27 +604,27 @@ c
            zsec=zshotr
            idsec=id
            if(iszero.eq.0) xshots(isec)=xshotr
-           ics=1  
+           ics=1
            do 810 i=1,nlayer
-              tang(i,1)=999. 
-              tang(i,2)=999. 
+              tang(i,1)=999.
+              tang(i,2)=999.
               tang(i,3)=999.
               tang(i,4)=999.
-810        continue 
-         else     
+810        continue
+         else
            if(abs(xshotr-xsec).lt..001.and.abs(zshotr-zsec).lt..001)
-     +       then 
+     +       then
              if(iflags.eq.1) go to 60
              ics=0
              if(id.ne.idsec) then
                do 830 i=1,nlayer
-                  tang(i,1)=999. 
-                  tang(i,2)=999. 
+                  tang(i,1)=999.
+                  tang(i,2)=999.
                   tang(i,3)=999.
                   tang(i,4)=999.
-830            continue 
+830            continue
              end if
-           else   
+           else
              isec=isec+1
              xsec=xshotr
              zsec=zshotr
@@ -632,22 +632,22 @@ c
              if(iszero.eq.0) xshots(isec)=xshotr
              ics=1
              do 820 i=1,nlayer
-                tang(i,1)=999. 
-                tang(i,2)=999. 
+                tang(i,1)=999.
+                tang(i,2)=999.
                 tang(i,3)=999.
                 tang(i,4)=999.
-820          continue 
-           end if 
-         end if   
+820          continue
+           end if
+         end if
          if(ics.eq.1) then
-c                 
+c
            call xzpt(xshotr,zshotr,layer1,iblk1,iflags)
-c                 
+c
            if(iflags.eq.1) then
              write(11,95)
 95       format('***  location of shot point outside model  ***')
-             go to 60 
-           end if 
+             go to 60
+           end if
 c
            if((imod.eq.1.or.iray.gt.0.or.irays.eq.1).and.isep.gt.1) then
              if(iflagp.eq.1) call aldone
@@ -655,11 +655,11 @@ c
              call pltmod(ncont,ibnd,imod,iaxlab,ivel,velht,idash,idata,
      +                   iroute)
            end if
-c                 
-         end if   
+c
+         end if
          irbnd=0
          ictbnd=0
-c                 
+c
          do 70 i=1,ngroup
             if(iraysl.eq.1) then
               irpos=(ishotr(is)-1)*ngroup+i
@@ -674,7 +674,7 @@ c
             fid=float(id)
             fid1=fid
             do 250 j=1,prefl+1
-               refll(j)=0 
+               refll(j)=0
 250         continue
             do 251 j=1,pconv+1
                icbnd(j)=-1
@@ -724,20 +724,20 @@ c
                  icbnd(j)=cbnd(ictbnd)
 630           continue
             end if
-c               
+c
             call auto(xshotr,zshotr,i,ifam,idl,idt,aminr,amaxr,
      +           aamin,aamax,layer1,iblk1,aainc,aaimin,nsmax(i),
      +           iflag,iturn(i),amin(ia0),amax(ia0),ia0,stol,
      +           irays,nskip,idot,irayps,xsmax,istep)
-c               
+c
             if(iflag.ne.0) then
               write(11,65) ishotw(is),ray(i)
 65            format('***  shot#',i4,' ray code',f5.1,
      +               ' no rays traced  ***')
               nrayr=0
               nrayl=nrayl+1
-              go to 69 
-            end if 
+              go to 69
+            end if
             if(nrayr.le.0) go to 69
             if(amaxr.eq.aminr.and.ihdwf.ne.1) then
               if(nrayr.gt.1) then
@@ -797,12 +797,12 @@ c
                  if(angled.gt.amaxr) then
                    angled=amaxr
                    iend=1
-                 end if 
+                 end if
                else
-                 if(angled.lt.amaxr) then 
+                 if(angled.lt.amaxr) then
                    angled=amaxr
                    iend=1
-                 end if 
+                 end if
                end if
                if(ir.eq.nrayr.and.nrayr.gt.1) angled=amaxr
                angle=fid*(90.-angled)/pi18
@@ -812,7 +812,7 @@ c
                am=angle
                if((fid1*angle).lt.0.) then
                  id=-id
-                 fid=float(id) 
+                 fid=float(id)
                end if
                layer=layer1
                iblk=iblk1
@@ -835,20 +835,20 @@ c
                idray(1)=layer1
                idray(2)=1
                nrg=nrg+1
-c                 
+c
                call trace(npt,ifam,ir,iturnt,iamp,ihamp,iflag,idl,idt)
-c                 
+c
                if(iflag.gt.1) then
                 if(ntt.gt.pray) then
                   write(6,995)
                   go to 1000
                 end if
                 if(iflag.eq.2) then
-c                 
+c
                  call hdwave(is,npt,ifam,ir,xshotr,angled,nskip,itt,
      +                hlayer,iszero,idot,iray,iamp,caust,spamp,nrskip,
      +                irayps,xsmax,ishotw(is),ampsmt,istep,angled)
-c                 
+c
                  iheadf(hlayer)=0
                 else
                  call difrct(is,npt,ifam,ir,xshotr,angled,nskip,itt,
@@ -856,31 +856,31 @@ c
      +              istep,anglew)
                 end if
                else
-c                 
+c
                  call ttime(ishotw(is),xshotr,npt,ir,angled,ifam,itt,
      +                    iszero,iamp,iflag)
-c                 
+c
                  if((iray.eq.1.or.(iray.eq.2.and.vr(npt,2).gt.0.)).
-     +             and.mod(ir-1,nrskip).eq.0) 
+     +             and.mod(ir-1,nrskip).eq.0)
      +             call pltray(npt,nskip,idot,irayps,istep,angled)
-c                 
-                 if(iamp.gt.0.and.vr(npt,2).ne.0.) 
+c
+                 if(iamp.gt.0.and.vr(npt,2).ne.0.)
      +             call calamp(npt,ifam,ir,namp,theta,dist,mir,caust,
      +                xshotr,layer1,iblk1,amprev,spamp,ishotw(is),i)
-c                 
-               end if 
+c
+               end if
                if(ntt.gt.pray) then
                  write(6,995)
 995              format(/
      +     '***  max number of rays reaching surface exceeded  ***'/)
                  go to 890
-               end if 
+               end if
 90          continue
-c                 
+c
 890         if(iamp.gt.0.and.namp.gt.0) call spread(ifam,theta,dist,
      +        mir,namp,sdev,splnf,ampsmt,iintf,icaust,ibrka(ifam),
      +        xshotr,fid1,idump,ishotw(is))
-c                 
+c
             if(iray.gt.0) call empty
 c
             nrayr=nrg
@@ -890,9 +890,9 @@ c
 c
             if(ntt.gt.pray) go to 1000
 c
-70       continue 
-60    continue    
-c                 
+70       continue
+60    continue
+c
 1000  if((itx.gt.0.and.ntt.gt.1).or.idata.ne.0) then
         if(isep.gt.0.and.iplots.eq.1) call aldone
         call plttx(ifam,itt,iszero,idata,iaxlab,xshota,
@@ -901,20 +901,20 @@ c
 c
       if(irkc.eq.1) write(6,75)
 75    format(/'***  possible inaccuracies in rngkta  ***'/)
-c                 
+c
       amp1=ampmin
       amp2=ampmax
       if(iamp.eq.2.and.ntt.gt.1) call pltamp(ifam,itt,iaxlab,
      +                       ibrka,iamout,ampunc,iroute,amp1,amp2)
-c                 
+c
       if(isect.gt.0.and.ntt.gt.2.and.iamp.gt.0)
      +  call calsec(xshots,itt,nsec,isec,isect,iinta,ibrka,icmp)
-c                 
+c
       if(ivrms.ne.0) call pltrms(xrinc,vrmstl,vrmsbl,nrsmth,iaxlab,
      +                           ivrms,iroute)
-c                 
+c
       if(ivz.ne.0) call pltvz(xvz,iaxlab,ivz,ivzp,iroute)
-c                 
+c
       if(nrayl.gt.0) then
         write(6,785) nrayl
         write(11,785) nrayl
@@ -923,32 +923,32 @@ c
       end if
 c
 900   if(isum.gt.0) then
-        ntblk=0     
+        ntblk=0
         do 920 i=1,nlayer
            ntblk=ntblk+nblk(i)
-920     continue    
-c                 
+920     continue
+c
         write(6,935)
-        write(11,935) 
+        write(11,935)
 935     format(/'|---------------------------------------------------',
      +          '-------------|'/'|',64x,'|')
-        if(ntpts.gt.0) then 
+        if(ntpts.gt.0) then
           write(6,905) ntray,ntpts
           write(11,905) ntray,ntpts
 905       format('|  total of ',i5,' rays consisting of ',i7,
      +           ' points were traced  |'/'|',64x,'|')
-        else        
+        else
           write(6,915)
           write(11,915)
 915       format('|                   ***  no rays traced  ***',
      +           21x,'|'/'|',64x,'|')
-        end if      
+        end if
         write(6,925) nlayer,ntblk
         write(11,925) nlayer,ntblk
 925     format('|           model consists of ',i2,' layers and ',i3,
      +         ' blocks           |'/,'|',64x,'|'/
      +  '|----------------------------------------------------------',
-     +  '------|'/) 
+     +  '------|'/)
 c
       end if
 c
@@ -956,7 +956,7 @@ c
 c
 9999  if(idump.eq.1) then
 c
-        open(unit=22, file='n.out') 
+        open(unit=22, file='n.out')
 c
         write(22,pltpar)
         write(22,axepar)
@@ -964,11 +964,11 @@ c
         write(22,amppar)
       end if
 c
-      stop        
-c                 
+      stop
+c
 999   write(6,105)
 105   format(/'***  error in velocity model  ***'/)
-c                 
-      go to 9999  
 c
-      end         
+      go to 9999
+c
+      end

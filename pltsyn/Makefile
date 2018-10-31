@@ -24,8 +24,8 @@ XPLTSYN_OBJS= main.o pltsec.o misc.o blkdat.o $(PLTLIB)/pltsub.o $(PLTLIB)/xpltl
 #
 # Executable name
 #
-PLTSYN_EXEC=$(EXEDIR)pltsyn 
-XPLTSYN_EXEC=$(EXEDIR)xpltsyn 
+PLTSYN_EXEC=$(EXEDIR)pltsyn
+XPLTSYN_EXEC=$(EXEDIR)xpltsyn
 #
 pltsyn: $(PLTSYN_EXEC)
 $(PLTSYN_EXEC): ${PLTSYN_OBJS}

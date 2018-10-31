@@ -3,14 +3,14 @@ c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |               ********  T X 2 R E C  ********                |   
+c     |               ********  T X 2 R E C  ********                |
 c     |                                                              |
 c     |         Obtain a "rec.in" file for input to TRAMP from       |
 c     |                       a "tx.in" file                         |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -36,7 +36,7 @@ c
              if(abs(xshotc-xshot(i)).lt..001.and.abs(x-xrec(i)).lt..001)
      +       go to 100
 10        continue
-        end if 
+        end if
         n=n+1
         xshot(n)=xshotc
         xrec(n)=x

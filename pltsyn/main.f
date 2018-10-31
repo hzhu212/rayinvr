@@ -1,4 +1,4 @@
-c                 
+c
 c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
@@ -9,31 +9,31 @@ c     |          Synthetic Record Section Plotting Program           |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
 c
-c                 
-c     I/O units:  
+c
+c     I/O units:
 c
 c        10 -- input: program control parameters
 c
-c        11 -- input: calculated travel time, amplitude, and phase 
-c                     of each arrival of each trace of synthetic 
+c        11 -- input: calculated travel time, amplitude, and phase
+c                     of each arrival of each trace of synthetic
 c                     section
 c
 c        12 -- output: synthetic seismograms
 c
 c        17 -- input: tx.out file output by RAYINVR
 c
-c        18 -- output: seismogram amplitudes at times specified in 
+c        18 -- output: seismogram amplitudes at times specified in
 c                      tx.out
 c
 c        20 -- input: source wavelet
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       program main
 c
       include 'pltsyn.par'
@@ -53,26 +53,26 @@ c
      +                  tmin,tmax,ttmin,ttmax,tmm,ntickt,ndecit
 c
       data xomit/pseis*-99999./
-c                 
+c
 c     default parameter values
-c                 
+c
       iroute=1
       twin=.25
       imeth=1
       iamp=0
-      itrev=0     
-      idump=0     
-      nptsw=19    
-      spmin=-1.   
-      ipol=0      
-      nskip=1     
-      vred=8.    
-c                 
+      itrev=0
+      idump=0
+      nptsw=19
+      spmin=-1.
+      ipol=0
+      nskip=1
+      vred=8.
+c
       open(unit=10, file='s.in', status='old')
 c
       read(10,pltpar)
       read(10,axepar)
-c                 
+c
       open(unit=11, file='sect.out', status='old')
       if(idump.eq.1) open(unit=12, file='syn.out')
       if(iwavlt.eq.2) open(unit=20, file='w.in', status='old')
@@ -84,7 +84,7 @@ c
       xscale=(xmax-xmin)/xmm
       tscale=(tmax-tmin)/tmm
       if(itrev.eq.1) tscale=-tscale
-c                 
+c
       ipol=-2*ipol+1
       if(amp.lt.0.) amp=(xmax-xmin)/100.
       if(spmin.lt.0.) spmin=(xmax-xmin)/100000.
@@ -95,11 +95,11 @@ c
       end if
 c
       if(iroute.ne.1) ibcol=0
-c                 
+c
       call pltsec(vred,xomit,nskip,ipol,spmin,nptsw,itrev,idump,
      +            iamp,twin,imeth,iroute)
-c                 
+c
       if(iplots.eq.1) call plotnd(1)
 c
-      stop        
-      end         
+      stop
+      end

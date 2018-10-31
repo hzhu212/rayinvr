@@ -1,8 +1,8 @@
-c      
+c
 c     version 1.3  Aug 1992
 c
 c     common blocks for RAYINVR
-c           
+c
 c     ----------------------------------------------------------------
 c
       integer refll(prefl+1),nblk(player),ivarz(player,ppcntr),

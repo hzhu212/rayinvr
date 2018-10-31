@@ -25,7 +25,7 @@ c
       open(11, file='tx.in')
       open(12, file='tx.out')
 c
-1001  write(6,15) 
+1001  write(6,15)
 15    format(/'Enter shot position (km) and time shift (s)'/
      +        '(enter 0,0 to stop)')
       read(5,*) xshot(ns),tshift(ns)

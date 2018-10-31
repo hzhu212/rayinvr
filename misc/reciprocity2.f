@@ -3,13 +3,13 @@ c     version 1.4  Dec 1993
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |          ********   R E C I P R O C I T Y  ******            |   
+c     |          ********   R E C I P R O C I T Y  ******            |
 c     |                                                              |
-c     |        Check travel time reciprocity of "tx.in" file         |   
+c     |        Check travel time reciprocity of "tx.in" file         |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -92,7 +92,7 @@ c
            dist=99999.
            if(nphase.eq.1) then
              if((xh(1).gt.xshotc.and.xh(1).le.xshot(i)).or.
-     +          (xh(1).gt.xshot(i).and.xh(1).le.xshotc)) then      
+     +          (xh(1).gt.xshot(i).and.xh(1).le.xshotc)) then
                 distc=abs(xshot(i)-xh(1))
                 if(distc.lt.tol) dist=distc
              end if
@@ -277,7 +277,7 @@ c
                  else
                    flag=' '
                  end if
-                 write(11,4) 
+                 write(11,4)
      +             x1rec(i),x2rec(i),xirec(i),xirec(j),irec(i),drec(i),
      +             max(urec(i),urec(j)),trec(j)-trec(i),flag
                  nused=nused+1
@@ -327,13 +327,13 @@ c
                  else
                    flag=' '
                  end if
-                 write(11,4) 
+                 write(11,4)
      +             x1rec(i),x2rec(i),xirec(i),xirec(j),irec(i),drec(i),
      +             max(urec(i),urec(j)),trec(j)-trec(i),flag
                  write(6,4) 1000.*x1rec(i),1000.*x2rec(i),
      +           1000.*xirec(i),1000.*xirec(j),irec(i),1000.*drec(i),
      +           1000.*max(urec(i),urec(j)),1000.*trec(j)-trec(i),flag
-                 if(drec(i).lt.xmax) then 
+                 if(drec(i).lt.xmax) then
                    do 430 ii=1,nshot
                       if(abs(xshot(ii)-x1rec(i)).lt..001) is1=ii
                       if(abs(xshot(ii)-x2rec(i)).lt..001) is2=ii
@@ -403,7 +403,7 @@ c
                  if(abs(x1rec(i)-x2rec(j)).lt..001.and.
      +           abs(x1rec(j)-x2rec(i)).lt..001.and.
      +           abs(irec(i)).eq.abs(irec(j))) then
-                   if(drec(i).lt.xmax) then 
+                   if(drec(i).lt.xmax) then
                      do 9430 ii=1,nshot
                         if(abs(xshot(ii)-x1rec(i)).lt..001) is1=ii
                         if(abs(xshot(ii)-x2rec(i)).lt..001) is2=ii
@@ -434,7 +434,7 @@ c     ----------------------------------------------------------------
 c
       subroutine matinv(a,y,n)
 c
-c     invert the nxn matrix a  
+c     invert the nxn matrix a
 c
       include 'rayinvr.par'
 c
@@ -482,7 +482,7 @@ c
            stop
          end if
          vv(i)=1./aamax
-10    continue 
+10    continue
       do 30 j=1,n
          if(j.gt.1) then
            do 40 i=1,j-1

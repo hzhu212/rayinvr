@@ -1,21 +1,21 @@
 c
 c     version 1.3  Aug 1992
-c                 
+c
 c     Plotting routines for RAYINVR
 c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltmod(ncont,ibnd,imod,iaxlab,ivel,velht,idash,
      +                  ifrbnd,idata,iroute,i33)
-c                 
-c     plot the velocity model 
-c                 
+c
+c     plot the velocity model
+c
       include 'rayinvr.par'
       real xcp(pnsmth),zcp(pnsmth)
       include 'rayinvr.com'
 c
-      if(iplots.eq.0) then 
-        if((isep.eq.0.or.isep.eq.2).and.(itx.gt.0.or.idata.ne.0)) 
+      if(iplots.eq.0) then
+        if((isep.eq.0.or.isep.eq.2).and.(itx.gt.0.or.idata.ne.0))
      +    sep=sep+orig+tmm
         call plots(xwndow,ywndow,iroute)
         call segmnt(1)
@@ -29,21 +29,21 @@ c
 c       call axis(orig,sep+zmm,xmin,xmax,xmm,xscale,0.,-1,
 c    +       xtmin,xtmax,ntickx,ndecix,'DISTANCE (m)',12,albht)
 c       call axis(orig,sep,zmin,zmax,zmm,zscale,90.,1,
-c    +       ztmin,ztmax,ntickz,ndeciz,'DEPTH (m)',9,albht) 
+c    +       ztmin,ztmax,ntickz,ndeciz,'DEPTH (m)',9,albht)
         call axis(orig,sep+zmm,xmin,xmax,xmm,xscale,0.,-1,
      +       xtmin,xtmax,ntickx,ndecix,'DISTANCE (km)',13,albht)
         call axis(orig,sep,zmin,zmax,zmm,zscale,90.,1,
-     +       ztmin,ztmax,ntickz,ndeciz,'DEPTH (km)',10,albht) 
-      end if      
+     +       ztmin,ztmax,ntickz,ndeciz,'DEPTH (km)',10,albht)
+      end if
       call box(orig,sep,orig+xmm,sep+zmm)
 c
       if(ititle.eq.0.and.title.ne.' ') then
-        if(xtitle.lt.-999999.) xtitle=0.  
+        if(xtitle.lt.-999999.) xtitle=0.
         if(ytitle.lt.-999999.) ytitle=0.
         call symbol(xtitle,ytitle,albht,title,0.,80)
         ititle=1
       end if
-c                 
+c
       if(imod.eq.1) then
 c
         call pcolor(mcol(1))
@@ -92,7 +92,7 @@ c
         end if
 c
         if(ibnd.eq.1) then
-c               
+c
           call pcolor(mcol(2))
 c
           do 30 i=1,nlayer
@@ -113,18 +113,18 @@ c
                     end if
                   end if
 40             continue
-             end if 
+             end if
 30        continue
-        end if  
+        end if
 c
         if(ibsmth.eq.2) then
-c               
+c
           call pcolor(mcol(4))
 c
-          do 600 i=1,npbnd 
+          do 600 i=1,npbnd
              x=xmin+float(i-1)*xsinc
              xcp(i)=(x-xmin)/xscale+orig
-600       continue 
+600       continue
           do 610 i=1,nlayer+1
              do 620 j=1,npbnd
                 zcp(j)=(cosmth(i,j)-zmax)/zscale+sep
@@ -132,7 +132,7 @@ c
              call line(xcp,zcp,npbnd)
              if(i33.eq.1) write(33,335) 0.,0,0,0.,0.
 610       continue
-        end if  
+        end if
       end if
 c
       if(ivel.ne.0) then
@@ -193,29 +193,29 @@ c
                   call number(xp4,zp4,htt,v4,0.,2)
                 else
                   call number(xp2-4.*htt,zp2,htt,v2,0.,2)
-                end if 
+                end if
               end if
-60         continue 
-50      continue  
-      end if      
+60         continue
+50      continue
+      end if
 c
       call pcolor(ifcol)
 c
       call empty
 c
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine plttx(ifam,npts,iszero,idata,iaxlab,xshot,idr,nshot,
      +   itxout,ibrka,ivraya,ttunc,itrev,xshotr,fidrr,itxbox,iroute,
      +   iline)
-c                 
+c
 c     plot the travel time curves for all rays reaching the surface -
 c     for each group of rays a separate curve is drawn for each
-c     ray code    
-c                
+c     ray code
+c
       include 'rayinvr.par'
       real xh(pnrayf),th(pnrayf),rh(pnrayf),xs(pnrayf),f(pnrayf),
      +     x(pnrayf),t(pnrayf),xshot(1),xsh(pnrayf),fh(pnrayf)
@@ -233,7 +233,7 @@ c
       dashtl=tmm/100.
       if(vred.ne.0.) then
         rvred=1./vred
-      else 
+      else
         rvred=0.
       end if
 c
@@ -243,34 +243,34 @@ c
           tlab='TIME (s)'
 c         nchart=9
 c         tlab='TIME (ms)'
-        else      
+        else
           i1=int(vred)
           id1=int((vred-float(i1))*10+.05)
-          id2=int((vred-float(i1)-float(id1)/10.)*100.+.5) 
+          id2=int((vred-float(i1)-float(id1)/10.)*100.+.5)
           if(id1.eq.0.and.id2.eq.0) then
             nchart=9
             tlab='T-D/  (s)'
             tlab(5:5)=char(i1+48)
-          else    
+          else
             if(id2.eq.0) then
               nchart=11
               tlab='T-D/    (s)'
               tlab(5:7)=char(i1+48)//'.'//char(id1+48)
-            else  
+            else
               nchart=12
               tlab='T-D/     (s)'
               tlab(5:8)=char(i1+48)//'.'//char(id1+48)//char(id2+48)
             end if
-          end if    
+          end if
         end if
-      end if      
+      end if
 c
       if(itrev.ne.1) then
         tadj=tmin
       else
         tadj=tmax
       end if
-c                 
+c
       xshoth=-99999.
       fidh=0.
       iflag1=0
@@ -283,13 +283,13 @@ c
 c
       do 10 i=1,ifam
 c
-         nh1=n    
+         nh1=n
 c
          if(npts(i).gt.0) then
            do 20 j=1,npts(i)
               xh(j)=range(j+nh1)
               th(j)=tt(j+nh1)
-              rh(j)=rayid(j+nh1) 
+              rh(j)=rayid(j+nh1)
               xsh(j)=xshtar(j+nh1)
               fh(j)=fidarr(j+nh1)
               n=n+1
@@ -310,7 +310,7 @@ c
 c
            if(iflaga.eq.1) then
              if(ipflag.eq.0) go to 1010
-             if(iplots.eq.0) then 
+             if(iplots.eq.0) then
                call plots(xwndow,ywndow,iroute)
                call segmnt(1)
                iplots=1
@@ -335,8 +335,8 @@ c    +           xtmint,xtmaxt,ntckxt,ndecxt,'OFFSET (m)',10,albht)
      +           xtmint,xtmaxt,ntckxt,ndecxt,'DISTANCE (km)',13,albht)
                call axis(orig,orig,tmin,tmax,tmm,tscale,90.,1,
      +           ttmin,ttmax,ntickt,ndecit,tlab,nchart,albht)
-             end if      
-             call box(orig,orig,orig+xmmt,orig+tmm)           
+             end if
+             call box(orig,orig,orig+xmmt,orig+tmm)
 c
              if(ititle.eq.0.and.title.ne.' ') then
                if(xtitle.lt.-999999.) xtitle=0.
@@ -357,7 +357,7 @@ c
 310            continue
              end if
 c
-             if(idata.ne.0) 
+             if(idata.ne.0)
      +         call pltdat(iszero,idata,xshot,idr,nshot,tadj,xshota,
      +                     xbmin,xbmax,tbmin,tbmax,itxbox,ida)
 1010         if((itx.ge.3.or.itxout.eq.3).and.narinv.gt.0) then
@@ -416,15 +416,15 @@ c                     write(17,5) xcalc(j),twrite,ttunc,abs(icalc(j))
                if(itx.ge.3.and.itcol.eq.3) call pcolor(ifcol)
              end if
            end if
-c                    
+c
            iflag1=1
 c
-           if(itx.ne.1.and.itx.ne.2.and.itxout.ne.1.and.itxout.ne.2) 
+           if(itx.ne.1.and.itx.ne.2.and.itxout.ne.1.and.itxout.ne.2)
      +     go to 10
 c
-           nh2=0  
+           nh2=0
 1000       if(nh2.lt.npts(i)) then
-             k=0  
+             k=0
 100          k=k+1
              if((k+nh2).le.npts(i)) then
                x(k)=(xh(k+nh2)-xmint)/xscalt+orig
@@ -437,7 +437,7 @@ c
                else
                  if(rh(k+nh2).eq.rhc) go to 100
                end if
-             end if 
+             end if
              npt=k-1
              nh2=nh2+npt
              if(ibrka(i).eq.0.or.itx.eq.2.or.npt.lt.3) then
@@ -472,7 +472,7 @@ c
                      call line(x,t,npt)
                    else
                      if(x(1).ge.xbmin.and.x(1).le.xbmax.and.t(1).ge.
-     +               tbmin.and.t(1).le.tbmax) then 
+     +               tbmin.and.t(1).le.tbmax) then
                        if(itx.lt.3) call plot(x(1),t(1),3)
                        iout=0
                      else
@@ -481,7 +481,7 @@ c
                      do 42 j=2,npt
                         ipen=3
                         if(x(j).ge.xbmin.and.x(j).le.xbmax.and.t(j).ge.
-     +                  tbmin.and.t(j).le.tbmax) then 
+     +                  tbmin.and.t(j).le.tbmax) then
                           if(iout.eq.0) ipen=2
                           iout=0
                         else
@@ -494,7 +494,7 @@ c
                    if(itx.lt.3.and.symht.gt.0.) then
                      do 41 j=1,npt
                         if(itxbox.eq.0.or.(x(j).ge.xbmin.and.x(j).le.
-     +                  xbmax.and.t(j).ge.tbmin.and.t(j).le.tbmax)) 
+     +                  xbmax.and.t(j).ge.tbmin.and.t(j).le.tbmax))
      +                  call ssymbl(x(j),t(j),symht,4)
 41                   continue
                    end if
@@ -504,7 +504,7 @@ c
      +           and.t(1).ge.tbmin.and.t(1).le.tbmax)).and.symht.gt.0..
      +           and.itx.lt.3) call ssymbl(x(1),t(1),symht,4)
                end if
-             else 
+             else
                ih=0
                if(itxout.eq.1.or.itxout.eq.2) then
                  if(xs(1).ne.xshoth.or.f(1).ne.fidh) then
@@ -564,11 +564,11 @@ c
                       write(17,5) xw,tw,ttunc,ib
                     end if
                     if(itxbox.eq.0.or.(x(j).ge.xbmin.and.x(j).le.xbmax.
-     +              and.t(j).ge.tbmin.and.t(j).le.tbmax.and.iout.eq.0)) 
+     +              and.t(j).ge.tbmin.and.t(j).le.tbmax.and.iout.eq.0))
      +                ipen=2
                   else
                     if(itxout.eq.1) then
-                      ib=ib+1 
+                      ib=ib+1
                     else
                       ib=ivraya(i)
                     end if
@@ -577,7 +577,7 @@ c
                       tw=(t(j)-orig)*tscale+tadj+abs(xsr-xw)*rvred
                       write(17,5) xw,tw,ttunc,ib
                     end if
-                    ih=j 
+                    ih=j
                   end if
                   if(itx.lt.3) call plot(x(j),t(j),ipen)
                   if(itxbox.ne.0) then
@@ -590,14 +590,14 @@ c
                   end if
 30             continue
                if((itxbox.eq.0.or.(x(npt).ge.xbmin.and.x(npt).le.
-     +         xbmax.and.t(npt).ge.tbmin.and.t(npt).le.tbmax)).and. 
-     +         ih.eq.npt.and.symht.gt.0..and.itx.lt.3) 
+     +         xbmax.and.t(npt).ge.tbmin.and.t(npt).le.tbmax)).and.
+     +         ih.eq.npt.and.symht.gt.0..and.itx.lt.3)
      +           call ssymbl(x(npt),t(npt),symht,4)
-             end if 
+             end if
              go to 1000
-           end if 
-         end if   
-10    continue    
+           end if
+         end if
+10    continue
 c
       t0=131.
       vrms=.95
@@ -617,16 +617,16 @@ c        call plot(xppl,tppl,ipen)
 c
       if(ipflag.eq.1) call empty
 c
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltdat(iszero,idata,xshot,idr,nshot,tadj,xshota,
      +                  xbmin,xbmax,tbmin,tbmax,itxbox,ida)
-c                 
-c     plot observed travel times 
-c                 
+c
+c     plot observed travel times
+c
       include 'rayinvr.par'
       real xshot(1)
       integer idr(1)
@@ -635,7 +635,7 @@ c
       npick=0
       nsfc=1
       isf=ilshot(nsfc)
-c                 
+c
 100   xp=xpf(isf)
       tp=tpf(isf)
       up=upf(isf)
@@ -643,7 +643,7 @@ c
 c
       if(ip.lt.0) go to 999
       if(ip.eq.0) then
-        xsp=xp    
+        xsp=xp
         idp=sign(1.,tp)
         do 10 i=1,nshot
            xdiff=abs(xshot(i)-xshota)
@@ -657,15 +657,15 @@ c
                isf=isf+1
                nsfc=nsfc+1
                icshot=i
-               go to 100 
-             end if 
+               go to 100
+             end if
            end if
-10      continue  
-        iplt=0   
+10      continue
+        iplt=0
         nsfc=nsfc+1
         isf=ilshot(nsfc)
         go to 100
-      else        
+      else
         if(abs(idata).eq.2) then
           npick=npick+1
           iflag=0
@@ -681,9 +681,9 @@ c
 30      if(iplt.eq.1.and.iflag.eq.1) then
           if(iszero.eq.0) then
             xplot=(xp-xmint)/xscalt+orig
-          else      
+          else
             xplot=((xp-xsp)*float(idp)-xmint)/xscalt+orig
-          end if    
+          end if
           if(itx.ne.4) then
             tplot=(tp-tadj)/tscale+orig
           else
@@ -692,7 +692,7 @@ c
           if(itcol.eq.1.or.itcol.eq.2) then
             if(itcol.ne.2) then
               ipcol=colour(mod(ip-1,ncol)+1)
-            else    
+            else
               ipcol=colour(mod(icshot-1,ncol)+1)
             end if
             call pcolor(ipcol)
@@ -707,22 +707,22 @@ c             call ssymbl(xplot,tplot,symht,1)
               call dot(xplot,tplot,symht,ifcol)
             end if
           end if
-        end if      
+        end if
       end if
       isf=isf+1
-      go to 100   
+      go to 100
 c
 999   continue
       if(itcol.ne.0) call pcolor(ifcol)
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltray(npt,nskip,idot,irayps,istep,anglew)
-c                 
+c
 c     plot one ray path
-c                 
+c
       include 'rayinvr.par'
       real x(ppray),z(ppray),xa(ppray),za(ppray),vra(ppray),vpa(ppray)
       character reply*1
@@ -736,7 +736,7 @@ c
          z(i)=(zr(i+nskip)-zmax)/zscale+sep
          vra(i)=vr(i+nskip,2)
          vpa(i)=vp(i+nskip,2)
-180   continue    
+180   continue
 c
       if(npskp.ne.1) then
         do 190 i=1,nbnd
@@ -783,7 +783,7 @@ c
         dash=xmm/250.
         na=0
         if(vra(1).eq.vpa(1)) then
-          ips=1 
+          ips=1
         else
           ips=-1
         end if
@@ -821,14 +821,14 @@ c
           call line(xa,za,na)
         else
           call dashln(xa,za,na,dash)
-        end if 
+        end if
       end if
 c
 100   if(idot.gt.0) then
         do 20 i=1,npts
            call ssymbl(x(i),z(i),symht,4)
-20      continue  
-      end if      
+20      continue
+      end if
 c
       if(ircol.ne.0) call pcolor(ifcol)
 c
@@ -843,5 +843,5 @@ c
         if(reply(1:1).eq.'0') istep=0
       end if
 c
-      return      
-      end         
+      return
+      end

@@ -24,8 +24,8 @@ XTRAMP_OBJS= main.o trc.o atrc.o adjpt.o rngkta.o plt.o misc.o amp.o hdw.o calmo
 #
 # Executable name
 #
-TRAMP_EXEC=$(EXEDIR)tramp 
-XTRAMP_EXEC=$(EXEDIR)xtramp 
+TRAMP_EXEC=$(EXEDIR)tramp
+XTRAMP_EXEC=$(EXEDIR)xtramp
 #
 tramp: $(TRAMP_EXEC)
 $(TRAMP_EXEC): ${TRAMP_OBJS}
@@ -50,11 +50,11 @@ blkdat.o   :  tramp.par tramp.com
 hdw.o      :  tramp.par tramp.com
 calmod.o   :  tramp.par tramp.com
 rngkta.o   :  tramp.par tramp.com
- 
+
 $(PLTLIB)/pltsub.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/pltlib.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:

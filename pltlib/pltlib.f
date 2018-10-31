@@ -3,14 +3,14 @@ c     version 1.3  Aug 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |           ***********  P L T L I B  ***********              |   
+c     |           ***********  P L T L I B  ***********              |
 c     |                                                              |
-c     |         Plot library to convert Calcomp-like calls           |   
-c     |          to Uniras or other local graphics system            |   
+c     |         Plot library to convert Calcomp-like calls           |
+c     |          to Uniras or other local graphics system            |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -20,15 +20,15 @@ c     statement.
 c
 c     The routine pcolor is required only if the local graphics allows
 c     colour plotting. The routine segmnt creates a Uniras device-
-c     independent plot metafile and can be ignored if Uniras is not 
+c     independent plot metafile and can be ignored if Uniras is not
 c     the local graphics system.
 c
 c     The following is a list and description of all Uniras plot calls:
 c
 c     groute - select graphics device
 c     gshmes - set Uniras error-message display mode
-c     gopen  - open uniras 
-c     grpsiz - inquire plot area size (for background colour only) 
+c     gopen  - open uniras
+c     grpsiz - inquire plot area size (for background colour only)
 c     rrect  - plot rectangle (for background colour only)
 c     gclear - erase screen
 c     gempty - empty graphics buffer
@@ -40,7 +40,7 @@ c     rtxang - set text angle
 c     rtxn   - plot floating point number
 c     rtx    - plot text
 c     gdot   - plot dot
-c     gsegcr - create segment file (device-independent plot metafile) 
+c     gsegcr - create segment file (device-independent plot metafile)
 c     gsegcl - close segment file (device-independent plot metafile)
 c     gclose - terminate Uniras
 c
@@ -58,7 +58,7 @@ c              5 creates a legal size postscript file
 c              6 creates an A3 postscript file
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       character*50 proute
 c
       x=x*sf
@@ -121,7 +121,7 @@ c
 c     erase the screen
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       if(iplot.ge.0) then
         if(ibcol.ne.0) then
 c         call rrect(0.,0.,xwndow,ywndow,ibcol,0.)
@@ -129,7 +129,7 @@ c         call rrect(0.,0.,xwndow,ywndow,ibcol,0.)
 c         call gclear
         end if
       end if
-      
+
 c
       if(iplot.le.0) write(19,5) -2
 5     format(i2)
@@ -144,7 +144,7 @@ c
 c     move to the point (x,y); pen up if ipen=3, pen down if ipen=2
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
 c     if(iplot.ge.0) call gvect(x*sf,y*sf,3-ipen)
 c
       if(iplot.le.0) write(19,5) 1,x,y,ipen
@@ -157,10 +157,10 @@ c     ----------------------------------------------------------------
 c
       subroutine number(x,y,ht,xnum,ang,ndeci)
 c
-c     plot the floating point number 
+c     plot the floating point number
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       if(iplot.ge.0) then
 c       call rtxhei(ht)
 c       call rtxang(ang)
@@ -168,7 +168,7 @@ c       call rtxn(xnum,ndeci,x*sf,y*sf)
       end if
 c
       if (iplot.le.0) write(19,5) 2,x,y,ht,xnum,ang,ndeci
-5     format(i2/5e15.5,i10) 
+5     format(i2/5e15.5,i10)
 c
       return
       end
@@ -181,7 +181,7 @@ c     plot the character string label; special symbols can be plotted
 c     with the routine ssymbol
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       character label(nchar)
 c
       if(iplot.ge.0) then
@@ -190,7 +190,7 @@ c       call rtxang(ang)
 c       call rtx(nchar,label,x*sf,y*sf)
       end if
 c
-      if(iplot.le.0) write(19,5) 
+      if(iplot.le.0) write(19,5)
      +  3,nchar,x,y,ht,ang,(label(i),i=1,nchar)
 5     format(i2/i10/4e15.5,<nchar>a1)
 c
@@ -227,7 +227,7 @@ c
       end if
 c
       return
-      end  
+      end
 c
 c     ----------------------------------------------------------------
 c
@@ -236,7 +236,7 @@ c
 c     flush the graphics buffer
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
 c     if(iplot.ge.0) call gempty
 c
       if(iplot.le.0) write(19,5) 4
@@ -274,7 +274,7 @@ c
 c     set the colour for polylines
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
 c     if(iplot.ge.0) call gwicol(-1.,icol)
 c     if(iplot.ge.0) call gwicol(.001,icol)
 c
@@ -291,7 +291,7 @@ c
 c     open and close Uniras segments
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       if(iplot.ge.0) then
         if(iseg.eq.0) return
 c       if(nseg.gt.0) call gsegcl(nseg)
@@ -308,13 +308,13 @@ c
       end
 c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine aldone
 c
-c     wait unitl the user is ready for the next plot 
+c     wait unitl the user is ready for the next plot
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       character reply*1
 c
       if(iplot.ge.0) then
@@ -324,7 +324,7 @@ c
 25      format(a1)
         if(reply(1:1).eq.'s') then
           call plotnd
-          stop   
+          stop
         end if
         if(reply(1:1).eq.'0') isep=0
         if(reply(1:1).eq.'1') isep=1
@@ -346,7 +346,7 @@ c
 c     terminate all Uniras plotting
 c
       common /cplot/ iplot,isep,iseg,nseg,xwndow,ywndow,ibcol,ifcol,sf
-c 
+c
       if(iplot.ge.0) then
         call segmnt(0)
 c       call gclose

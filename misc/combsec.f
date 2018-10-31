@@ -3,13 +3,13 @@ c     version 1.2  Mar 1992
 c
 c     ----------------------------------------------------------------
 c     |                                                              |
-c     |            ********   C O M B S E C   ********               |   
+c     |            ********   C O M B S E C   ********               |
 c     |                                                              |
-c     |           Combine two "sect.out" files into one              |   
+c     |           Combine two "sect.out" files into one              |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
@@ -49,7 +49,7 @@ c
           write(6,25)
 25        format(/'***  files are not consistent  ***'/)
           stop
-        end if  
+        end if
         if(abs(xshot1-xshot2).lt..001) then
           iflag=2
         else
@@ -82,11 +82,11 @@ c
              write(12,15) s1,s2,s3
 20        continue
         end if
-      end if 
+      end if
       go to 1000
 c
 991   iflag=3
-      go to 1001 
+      go to 1001
 c
 990   stop
       end

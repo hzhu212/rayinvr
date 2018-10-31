@@ -29,7 +29,7 @@ XVMODEL_EXEC=$(EXEDIR)xvmodel
 #
 vmodel: $(VMODEL_EXEC)
 $(VMODEL_EXEC): ${VMODEL_OBJS}
-	unilink ${VMODEL_OBJS} 
+	unilink ${VMODEL_OBJS}
 	mv main ${VMODEL_EXEC}
 #
 xvmodel: $(XVMODEL_EXEC)
@@ -43,19 +43,19 @@ main.o   :  vmodel.par vmodel.com
 plt.o    :  vmodel.par vmodel.com
 misc.o   :  vmodel.par vmodel.com
 blkdat.o :  vmodel.par vmodel.com
- 
+
 $(PLTLIB)/pltsub.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/pltlib.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/xpltlib.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:
- 
+
 $(PLTLIB)/xbuplot.o: FORCE
 	cd $(@D); $(MAKE) $(@F)
 FORCE:

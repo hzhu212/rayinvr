@@ -1,10 +1,10 @@
-c                 
+c
 c     version 1.2  Mar 1992
-c                 
+c
 c     common blocks for PLTSYN
 c
 c     ----------------------------------------------------------------
-c                 
+c
       common /blk1/ xmin,xmax,xtmin,xtmax,xmm,ntickx,ndecix,xscale,
      +              tmin,tmax,ttmin,ttmax,tmm,ntickt,ndecit,tscale,
      +              albht,iplots,orig

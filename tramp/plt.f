@@ -1,22 +1,22 @@
 c
 c     version 1.3  Aug 1992
-c                 
+c
 c     Plotting routines for TRAMP
 c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltmod(ncont,ibnd,imod,iaxlab,ivel,velht,idash,
      +                  idata,iroute)
-c                 
-c     plot the velocity model 
-c                 
+c
+c     plot the velocity model
+c
       include 'tramp.par'
       real xpc(pnsmth),xcp(pnsmth),zcp(pnsmth)
       integer ic(plcntr)
       include 'tramp.com'
-c        
-      data ic/plcntr*0/      
-      if(iplots.eq.0) then 
+c
+      data ic/plcntr*0/
+      if(iplots.eq.0) then
         if(isep.eq.0.and.(itx.gt.0.or.idata.ne.0)) sep=sep+orig+tmm
         call plots(xwndow,ywndow,iroute)
         call segmnt(1)
@@ -29,12 +29,12 @@ c
         call axis(orig,sep+zmm,xmin,xmax,xmm,xscale,0.,-1,
      +       xtmin,xtmax,ntickx,ndecix,'DISTANCE (km)',13,albht)
         call axis(orig,sep,zmin,zmax,zmm,zscale,90.,1,
-     +       ztmin,ztmax,ntickz,ndeciz,'DEPTH (km)',10,albht) 
-      end if      
-      call box(orig,sep,orig+xmm,sep+zmm)     
-c                 
+     +       ztmin,ztmax,ntickz,ndeciz,'DEPTH (km)',10,albht)
+      end if
+      call box(orig,sep,orig+xmm,sep+zmm)
+c
       if(imod.eq.1) then
-        if(icntr.eq.0) then 
+        if(icntr.eq.0) then
           do 10 i=1,ncont
              nptsc=nzed(i)
              if(nptsc.eq.1) then
@@ -57,7 +57,7 @@ c
              end if
 10        continue
           if(ibnd.eq.1) then
-c                 
+c
             do 30 i=1,nlayer
                if(nblk(i).gt.1) then
                  do 40 j=1,nblk(i)-1
@@ -75,34 +75,34 @@ c
                       end if
                     end if
 40               continue
-               end if 
+               end if
 30          continue
-          end if  
+          end if
           if(ibsmth.eq.2) then
-            do 600 i=1,npbnd 
+            do 600 i=1,npbnd
                x=xmin+float(i-1)*xsinc
                xcp(i)=(x-xmin)/xscale+orig
-600         continue 
+600         continue
             do 610 i=1,nlayer+1
                do 620 j=1,npbnd
                   zcp(j)=(cosmth(i,j)-zmax)/zscale+sep
 620            continue
                call line(xcp,zcp,npbnd)
 610         continue
-          end if  
-        else      
+          end if
+        else
           ncx=int((xmax-xmin)/xcinc+.5)+1
           if(ncx.gt.pnsmth) ncx=pnsmth
           xcinc=(xmax-xmin-.02)/float(ncx-1)
-          do 70 i=1,ncx 
+          do 70 i=1,ncx
              xcp(i)=xmin+.01+float(i-1)*xcinc
              xpc(i)=(xcp(i)-xmin)/xscale+orig
 70        continue
-          nl=0    
+          nl=0
           if(xclab(1).lt.-9998.) xclab(1)=(xmin+xmax)/2.
           do 150 i=1,plcntr
              if(xclab(i).gt.-9998.) then
-               nl=nl+1 
+               nl=nl+1
                do 160 j=1,ncx-1
                   if(xclab(i).ge.xcp(j).and.xclab(i).le.xcp(j+1)) then
                     ic(i)=j
@@ -115,7 +115,7 @@ c
           do 80 k=1,pcntr
              if(vcntr(k).lt.-998.) go to 80
              do 90 l=1,ncx
-                vc=abs(vcntr(k)) 
+                vc=abs(vcntr(k))
                 do 100 i=1,nlayer
                    do 110 j=1,nblk(i)
                       if(xbnd(i,j,1).le.xcp(l).and.xbnd(i,j,2).ge.
@@ -133,7 +133,7 @@ c
                         end if
                         if((vc.ge.vu.and.vc.le.vl).or.
      +                     (vc.le.vu.and.vc.ge.vl)) then
-                          z1=s(i,j,1)*xcp(l)+b(i,j,1) 
+                          z1=s(i,j,1)*xcp(l)+b(i,j,1)
                           z2=s(i,j,2)*xcp(l)+b(i,j,2)
                           if(vu.ne.vl) then
                             zcp(l)=z1+(vc-vu)/(vl-vu)*(z2-z1)
@@ -148,9 +148,9 @@ c
                 zcp(l)=zmax
 90           continue
              if(ncsmth.gt.0) then
-               do 120 i=1,ncsmth 
+               do 120 i=1,ncsmth
                   call smooth(zcp,ncx)
-120            continue 
+120            continue
              end if
              if(idump.eq.1) write(23,555) (xcp(i),i=1,ncx)
              if(idump.eq.1) write(23,555) (zcp(i),i=1,ncx)
@@ -160,12 +160,12 @@ c
 130          continue
              if(idash.ne.1) then
                call line(xpc,zcp,ncx)
-             else 
+             else
                dash=xmm/150.
                call dashln(xpc,zcp,ncx,dash)
              end if
              if(vcntr(k).gt.0..and.nl.gt.0) then
-               do 140 i=1,nl 
+               do 140 i=1,nl
                   if(ic(i).gt.0) then
                     call number(xpc(ic(i)),
      +              zcp(ic(i))+.1*ht,ht,abs(vcntr(k)),0.,2)
@@ -173,8 +173,8 @@ c
 140            continue
              end if
 80        continue
-        end if    
-      end if      
+        end if
+      end if
       if(ivel.ne.0.and.icntr.eq.0) then
         ht=albht*velht
         do 50 i=1,nlayer
@@ -232,37 +232,37 @@ c
                   call number(xp2-4.*htt,zp2,htt,v2,0.,2)
                 end if
               end if
-60         continue 
-50      continue  
-      end if      
+60         continue
+50      continue
+      end if
 c
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine plttx(ifam,npts,iszero,idata,iaxlab,xshot,
      +                 idr,nshot,itxout,ibrka,ttunc,itrev,iroute)
-c                 
+c
 c     plot the travel time curves for all rays reaching the surface -
 c     for each group of rays a separate curve is drawn for each
-c     ray code    
-c                 
+c     ray code
+c
       include 'tramp.par'
       real xh(pnrayf),th(pnrayf),rh(pnrayf),xs(pnrayf),f(pnrayf),
      +     x(pnrayf),t(pnrayf),xshot(1),xsh(pnrayf),fh(pnrayf)
-      character tlab*12 
+      character tlab*12
       integer npts(1),idr(1),ibrka(1)
       include 'tramp.com'
-c                 
+c
       if(vred.ne.0.) then
         rvred=1./vred
       else
         rvred=0.
       end if
       n=0
-      ib=0                
-      if(iplots.eq.0) then 
+      ib=0
+      if(iplots.eq.0) then
         call plots(xwndow,ywndow,iroute)
         call segmnt(1)
         iplots=1
@@ -281,7 +281,7 @@ c
         if(vred.eq.0.) then
           nchart=8
           tlab='TIME (s)'
-        else     
+        else
           i1=int(vred)
           id1=int((vred-float(i1))*10+.05)
           id2=int((vred-float(i1)-float(id1)/10.)*100.+.5)
@@ -289,42 +289,42 @@ c
             nchart=9
             tlab='T-D/  (s)'
             tlab(5:5)=char(i1+48)
-          else   
+          else
             if(id2.eq.0) then
               nchart=11
               tlab='T-D/    (s)'
               tlab(5:7)=char(i1+48)//'.'//char(id1+48)
-            else 
+            else
               nchart=12
               tlab='T-D/     (s)'
               tlab(5:8)=char(i1+48)//'.'//char(id1+48)//char(id2+48)
             end if
-          end if 
+          end if
         end if
         call axtick(tmin,tmax,ttmin,ttmax,ntickt,ndecit)
         call axis(orig,orig,tmin,tmax,tmm,tscale,90.,1,
      +       ttmin,ttmax,ntickt,ndecit,tlab,nchart,albht)
-      end if      
-      call box(orig,orig,orig+xmmt,orig+tmm)           
-c                 
+      end if
+      call box(orig,orig,orig+xmmt,orig+tmm)
+c
       if(idata.eq.1) call pltdat(iszero,xshot,idr,nshot,tadj)
-c                 
+c
       xshoth=-99999.
       fidh=0.
       do 10 i=1,ifam
-         nh1=n    
+         nh1=n
          if(npts(i).gt.0) then
            do 20 j=1,npts(i)
               xh(j)=range(j+nh1)
               th(j)=tt(j+nh1)
-              rh(j)=rayid(j+nh1) 
+              rh(j)=rayid(j+nh1)
               xsh(j)=xshtar(j+nh1)
               fh(j)=fidarr(j+nh1)
               n=n+1
 20         continue
-           nh2=0  
+           nh2=0
 1000       if(nh2.lt.npts(i)) then
-             k=0  
+             k=0
 100          k=k+1
              if((k+nh2).le.npts(i)) then
                x(k)=(xh(k+nh2)-xmint)/xscalt+orig
@@ -337,7 +337,7 @@ c
                else
                  if(rh(k+nh2).eq.rhc) go to 100
                end if
-             end if 
+             end if
              npt=k-1
              nh2=nh2+npt
              if(ibrka(i).eq.0.or.itx.gt.1.or.npt.lt.3) then
@@ -369,7 +369,7 @@ c
                else
                  if(symht.gt.0.) call ssymbl(x(1),t(1),symht,1)
                end if
-             else 
+             else
                ih=0
                if(itxout.gt.0) then
                  if(xs(1).ne.xshoth.or.f(1).ne.fidh) then
@@ -378,7 +378,7 @@ c
                    xshoth=xs(1)
                    fidh=f(1)
                  end if
-                 ib=ib+1 
+                 ib=ib+1
                  xw=(x(1)-orig)*xscalt+xmint
                  tw=(t(1)-orig)*tscale+tadj+abs(xshoth-xw)*rvred
                  write(17,5) xw,tw,ttunc,ib
@@ -386,7 +386,7 @@ c
                  tw=(t(2)-orig)*tscale+tadj+abs(xshoth-xw)*rvred
                  write(17,5) xw,tw,ttunc,ib
                end if
-               call plot(x(1),t(1),3) 
+               call plot(x(1),t(1),3)
                call plot(x(2),t(2),2)
                do 30 j=3,npt
                   if(((x(j)-x(j-1))*(x(j-1)-x(j-2))).ge.0.or.
@@ -397,42 +397,42 @@ c
                     call plot(x(j),t(j),2)
                   else
                     if(itxout.gt.0) then
-                      ib=ib+1 
+                      ib=ib+1
                       xw=(x(j)-orig)*xscalt+xmint
                       tw=(t(j)-orig)*tscale+tadj+abs(xshoth-xw)*rvred
                       write(17,5) xw,tw,ttunc,ib
                     end if
                     call plot(x(j),t(j),3)
-                    ih=j 
+                    ih=j
                   end if
 30             continue
-               if(ih.eq.npt.and.symht.gt.0.) 
+               if(ih.eq.npt.and.symht.gt.0.)
      +           call ssymbl(x(npt),t(npt),symht,1)
-             end if 
+             end if
              go to 1000
-           end if 
-         end if   
-10    continue    
+           end if
+         end if
+10    continue
       if(itxout.gt.0) write(17,5) 0.,0.,0.,-1
 c
       call empty
 c
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltdat(iszero,xshot,idr,nshot,tadj)
-c                 
-c     plot observed travel times 
-c                 
+c
+c     plot observed travel times
+c
       include 'tramp.par'
       real xshot(1)
       integer idr(1)
       include 'tramp.com'
       nsfc=1
       isf=ilshot(nsfc)
-c                
+c
 100   xp=xpf(isf)
       tp=tpf(isf)
       up=upf(isf)
@@ -440,7 +440,7 @@ c
 c
       if(ip.lt.0) go to 999
       if(ip.eq.0) then
-        xsp=xp   
+        xsp=xp
         idp=sign(1.,tp)
         do 10 i=1,nshot
            xdiff=abs(xshot(i)-xsp)
@@ -478,30 +478,30 @@ c
       end if
       isf=isf+1
       go to 100
-c          
+c
 999   continue
       if(itcol.ne.0) call pcolor(ifcol)
       return
       end
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltray(npt,nskip,idot,irayps,istep,anglew)
-c                 
+c
 c     plot one ray
-c                 
+c
       include 'tramp.par'
       real x(ppray),z(ppray),xa(ppray),za(ppray)
       character reply*1
       include 'tramp.com'
-c                 
+c
       npts=npt-nskip
-      if(npts.lt.2) return    
+      if(npts.lt.2) return
 c
       do 10 i=1,npts
          x(i)=(xr(i+nskip)-xmin)/xscale+orig
          z(i)=(zr(i+nskip)-zmax)/zscale+sep
-10    continue    
+10    continue
 c
       if(istep.eq.1) write(6,5) anglew
 5     format('take-off angle: ',f10.5$)
@@ -556,8 +556,8 @@ c
       if(idot.eq.1) then
         do 20 i=1,npts
            call ssymbl(x(i),z(i),symht,4)
-20      continue  
-      end if      
+20      continue
+      end if
 c
       if(istep.eq.1) then
         call empty
@@ -569,28 +569,28 @@ c
         end if
       end if
 c
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltamp(ifam,npts,iaxlab,ibrka,iamout,ampunc,iroute,
      +                  amp1,amp2)
-c                 
+c
 c     plot the amplitude-distance curves for all rays reaching the
-c     surface - for each group of rays a separate curve is drawn 
+c     surface - for each group of rays a separate curve is drawn
 c     for each ray code
-c                 
+c
       include 'tramp.par'
       real xh(pnrayf),ah(pnrayf),rh(pnrayf),xs(pnrayf),f(pnrayf),
      +     x(pnrayf),a(pnrayf),xsh(pnrayf),fh(pnrayf)
       integer npts(1),ibrka(1)
       include 'tramp.com'
-c        
+c
       ampmin=amp1
       ampmax=amp2
       ampunc=ampunc/100.
-      n=0         
+      n=0
       ib=0
       if(iplots.eq.0) then
         call plots(xwndow,ywndow,iroute)
@@ -608,13 +608,13 @@ c
      +       xtmint,xtmaxt,ntckxt,ndecxt,'DISTANCE (km)',13,albht)
         call axis(orig,orig,ampmin,ampmax,amm,ascale,90.,1,
      +       atmin,atmax,nticka,ndecia,'Log(Amplitude)',14,albht)
-      end if      
-      call box(orig,orig,orig+xmmt,orig+amm)           
-c                 
+      end if
+      call box(orig,orig,orig+xmmt,orig+amm)
+c
       xshoth=-99999.
       fidh=0.
       do 10 i=1,ifam
-         nh1=n    
+         nh1=n
          if(npts(i).gt.0) then
            nptsa=0
            do 20 j=1,npts(i)
@@ -622,7 +622,7 @@ c
                 nptsa=nptsa+1
                 xh(nptsa)=range(j+nh1)
                 ah(nptsa)=amp(j+nh1)
-                rh(nptsa)=rayid(j+nh1) 
+                rh(nptsa)=rayid(j+nh1)
                 xsh(nptsa)=xshtar(j+nh1)
                 fh(nptsa)=fidarr(j+nh1)
               end if
@@ -644,7 +644,7 @@ c
                  else
                    if(rh(k+nh2).eq.rhc) go to 100
                  end if
-               end if 
+               end if
                npt=k-1
                nh2=nh2+npt
                if(ibrka(i).eq.0.or.itx.gt.1.or.npt.lt.3) then
@@ -693,7 +693,7 @@ c
                    write(24,5) (x(2)-orig)*xscalt+xmint,ampf,
      +                         ampf*ampunc,ib
                  end if
-                 call plot(x(1),a(1),3) 
+                 call plot(x(1),a(1),3)
                  call plot(x(2),a(2),2)
                  do 30 j=3,npt
                     if(((x(j)-x(j-1))*(x(j-1)-x(j-2))).ge.0.or.
@@ -712,36 +712,36 @@ c
      +                              ampf*ampunc,ib
                       end if
                       call plot(x(j),a(j),3)
-                      ih=j 
+                      ih=j
                     end if
 30               continue
-                 if(ih.eq.npt.and.symht.gt.0.) 
+                 if(ih.eq.npt.and.symht.gt.0.)
      +             call ssymbl(x(npt),a(npt),symht,1)
-                end if 
+                end if
                 go to 1000
              end if
-           end if 
-         end if   
-10    continue    
+           end if
+         end if
+10    continue
       if(iamout.eq.1) write(24,5) 0.,0.,0.,-1
 c
       call empty
 c
-      return      
-      end         
-c                 
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltrms(xrinc,vrmstl,vrmsbl,nrsmth,iaxlab,ivrms,
      +                  iroute)
-c                 
+c
 c     plot rms velocity versus distance
-c                 
+c
       include 'tramp.par'
       real vprms(ppvrms),xprms(ppvrms),vrms(ppvrms),xrms(ppvrms),k
       integer vrmstl,vrmsbl
       include 'tramp.com'
-c      
+c
       if(iplots.eq.0) then
         call plots(xwndow,ywndow,iroute)
         call segmnt(1)
@@ -758,19 +758,19 @@ c
         call axis(orig,orig,vrmin,vrmax,vrmm,rscale,90.,1,
      +       vrtmin,vrtmax,ntckvr,ndecir,'RMS VELOCITY (km/s)',19,albht)
       end if
-      call box(orig,orig,orig+xmmt,orig+vrmm)           
-c                 
+      call box(orig,orig,orig+xmmt,orig+vrmm)
+c
       nrms=int((xmaxt-xmint)/xrinc+.5)+1
       if(nrms.gt.ppvrms) nrms=ppvrms
       xrinc=(xmaxt-xmint-.02)/float(nrms-1)
       do 100 ii=1,nrms
          xrms(ii)=xmint+.01+float(ii-1)*xrinc
-         tsum=0.  
-         vsum=0.  
+         tsum=0.
+         vsum=0.
          do 10 i=vrmstl,vrmsbl
             do 20 j=1,nblk(i)
                if(xbnd(i,j,1).le.xrms(ii).and.xbnd(i,j,2).ge.xrms(ii))
-     +         then 
+     +         then
                  z1=s(i,j,1)*xrms(ii)+b(i,j,1)
                  z2=s(i,j,2)*xrms(ii)+b(i,j,2)
                  h=z2-z1
@@ -783,52 +783,52 @@ c
                  if(ivrms.lt.0) vl=vl*vsvp(i,j)
                  if(vu.le..001.or.vl.le..001) then
                    vsum=0.
-                   tsum=1. 
+                   tsum=1.
                    go to 110
-                 end if 
+                 end if
                  k=abs((vl-vu)/h)
                  if(k.ne.0.) then
                    tsum=tsum+alog(1.+k*h/vu)/k
-                 else 
+                 else
                    tsum=tsum+h/vu
                  end if
                  vsum=vsum+vu*h+0.5*k*h**2
                  go to 10
                end if
 20          continue
-10       continue 
+10       continue
 110      xprms(ii)=(xrms(ii)-xmint)/xscalt+orig
          vrms(ii)=sqrt(vsum/tsum)
          vprms(ii)=(sqrt(vsum/tsum)-vrmin)/rscale+1
-100   continue    
+100   continue
       if(nrsmth.gt.0) then
         do 30 i=1,nrsmth
            call smooth(vprms,nrms)
-30      continue  
-      end if      
-c                 
+30      continue
+      end if
+c
       call line(xprms,vprms,nrms)
       call empty
-c                 
+c
       if(idump.eq.1) then
         write(23,5) (xrms(i),i=1,nrms)
         write(23,5) (vrms(i),i=1,nrms)
 5       format(10(50f7.2))
-      end if      
-c                 
-      return      
-      end         
-c                 
+      end if
+c
+      return
+      end
+c
 c     ----------------------------------------------------------------
-c                 
+c
       subroutine pltvz(xvz,iaxlab,ivz,ivzp,iroute)
-c                 
+c
 c     plot velocity versus depth at x=xvz
-c                    
+c
       include 'tramp.par'
       real v(player*2),z(player*2),xvz(1)
       include 'tramp.com'
-c                 
+c
       if(iplots.eq.0) then
         call plots(xwndow,ywndow,iroute)
         call segmnt(1)
@@ -854,16 +854,16 @@ c
              call axis(orig,orig,zmin,zmax,zmm,zscale,90.,1,
      +            ztmin,ztmax,ntickz,ndeciz,'DEPTH (km)',10,albht)
           end if
-          if(iflagp.eq.0) call box(orig,orig,orig+vmm,orig+zmm)       
-c                 
-          if(ivz.gt.0) then 
-            iw=1  
-          else    
-            iw=-1 
-          end if  
-          idash=0  
-          io=1    
-1000      np=0    
+          if(iflagp.eq.0) call box(orig,orig,orig+vmm,orig+zmm)
+c
+          if(ivz.gt.0) then
+            iw=1
+          else
+            iw=-1
+          end if
+          idash=0
+          io=1
+1000      np=0
           do 10 i=1,nlayer
              do 20 j=1,nblk(i)
                 if(xbnd(i,j,1).le.xvz(k).and.xbnd(i,j,2).ge.xvz(k))
@@ -879,15 +879,15 @@ c
                     if(iw.eq.-1) vu=vu*vsvp(i,j)
                     vl=(vm(i,j,4)-vm(i,j,3))*(xvz(k)-xbnd(i,j,1))/
      +                 (xbnd(i,j,2)-xbnd(i,j,1))+vm(i,j,3)
-                    if(iw.eq.-1) vl=vl*vsvp(i,j) 
+                    if(iw.eq.-1) vl=vl*vsvp(i,j)
                     v(np*2-1)=(vu-vmin)/vscale+orig
                     v(np*2)=(vl-vmin)/vscale+orig
-                    if(idump.eq.1.and.io.eq.1) 
+                    if(idump.eq.1.and.io.eq.1)
      +               write(23,15) i,z1,z2,vu,vl,
      +               vu*vsvp(i,j),vl*vsvp(i,j)
 15                   format('layer# ',i2,'   z1=',f7.2,'   z2=',f7.2,
-     +                 ' km'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s'/ 
-     +                       9x,'  vs1=',f7.2,'  vs2=',f7.2,' km/s') 
+     +                 ' km'/9x,'  vp1=',f7.2,'  vp2=',f7.2,' km/s'/
+     +                       9x,'  vs1=',f7.2,'  vs2=',f7.2,' km/s')
                   end if
                   go to 10
                 end if
@@ -901,13 +901,13 @@ c
           end if
           if(ivzp.eq.1) iflagp=1
           if(iw.eq.-1) go to 110
-          if(ivz.eq.2) then 
+          if(ivz.eq.2) then
             iw=-1
             dash=vmm/75.
             idash=1
-            io=0  
-            go to 1000 
-          end if  
+            io=0
+            go to 1000
+          end if
           call empty
 110       if(iflagp.eq.0) call aldone
         end if

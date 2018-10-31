@@ -1,6 +1,6 @@
-c                 
+c
 c     version 1.3  Apr 1993
-c                 
+c
 c     ----------------------------------------------------------------
 c     |                                                              |
 c     |            ************  U N C  ***************              |
@@ -10,26 +10,26 @@ c     |                       uncertainty                            |
 c     |                                                              |
 c     |                   Written by C. A. Zelt                      |
 c     |                                                              |
-c     |                Geological Survey of Canada                   |   
+c     |                Geological Survey of Canada                   |
 c     |                  Ottawa, Canada K1A 0Y3                      |
 c     |                                                              |
 c     ----------------------------------------------------------------
-c                 
-c                 
-c     I/O units:  
-c                 
+c
+c
+c     I/O units:
+c
 c        10 -- input:  initial pick (tx.in) file
 c
 c        11 -- output:  new pick file
-c                 
-c                 
+c
+c
 c     ----------------------------------------------------------------
-c                 
-c 
+c
+c
       program main
 c
       open(unit=10, file='tx.in', status='old')
-      open(unit=11, file='tx.out') 
+      open(unit=11, file='tx.out')
 c
       write(6,15)
 15    format(/

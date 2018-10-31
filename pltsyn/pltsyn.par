@@ -1,10 +1,10 @@
-c                 
+c
 c     version 1.2  Mar 1992
-c                 
+c
 c     parameter statement for PLTSYN
-c                 
+c
 c     ----------------------------------------------------------------
-c                 
+c
       integer pseis,ppseis,parriv,pwavlt
 c
       parameter (pseis=300, ppseis=3600, parriv=100, pwavlt=100)
