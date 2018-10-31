@@ -223,7 +223,8 @@ c
          read(iunit,15,end=999) ilyr,(xm(icont,j),j=j1,j2)
          read(iunit,15,end=999) icnt,(zm(icont,j),j=j1,j2)
          read(iunit,235,end=99) idum
-15       format(i2,1x,10f7.2)
+C 15       format(i2,1x,10f7.2)
+15       format(i2,1x,10f8.3)
 235      format(3x,10i7)
          nrz=nrz+1
          if(icnt.ne.1) go to 211

@@ -1,12 +1,12 @@
 #
 # makefile for TRAMP
 #
-EXEDIR=/elmore/sunbin/
-PLTLIB=/elmore/src/pltlib
+EXEDIR=../build/
+PLTLIB=../pltlib/
 #
 # compile flags
 #
-FFLAGS =  -O
+FFLAGS =  -O -fdollar-ok
 CFLAGS =  -O -I/usr/openwin/include
 #
 #rules for compiling .f files:
@@ -29,7 +29,8 @@ XTRAMP_EXEC=$(EXEDIR)xtramp
 #
 tramp: $(TRAMP_EXEC)
 $(TRAMP_EXEC): ${TRAMP_OBJS}
-	unilink ${TRAMP_OBJS}
+	# unilink ${TRAMP_OBJS}
+	f77 -o main ${TRAMP_OBJS}
 	mv main ${TRAMP_EXEC}
 #
 xtramp: $(XTRAMP_EXEC)
