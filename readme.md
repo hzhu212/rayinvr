@@ -12,7 +12,7 @@ apt install gfortran libx11-dev
 
 ## Patches for compiling on Ubuntu 18.04
 
-### 1. Makefile: unilink not found
+### Makefile: unilink not found
 
 We can just let `unilink` go, and use `f77` instead. Open the `Makefile` that throws this error, and replace the line:
 
@@ -26,7 +26,7 @@ with
 f77 -o main ${TRAMP_OBJS}
 ```
 
-### 2. Issue of fortran "Variable FORMAT expression"
+### Issue of fortran "Variable FORMAT expression"
 
 `gfortran` does not support "Variable FORMAT expression". For example, `pltlib.f:198` reads:
 
@@ -51,6 +51,22 @@ To fix this issue, there are 2 common ways:
     5     format(i2/i10/4e15.5,10000a1)
     ```
 
+### Issue of character '$'
+
+Using '$' in variable names is not allowed by default in gfortran. Or it will throw the following error:
+
+```txt
+# when building xrayinvr
+# in rayinvr/trc.f:498:17:
+Fatal Error: Invalid character ‘$’ at (1). Use ‘-fdollar-ok’ to allow it as an extension compilation terminated
+```
+
+To fix this error, you should add '-fdollar-ok' option to `f77` command. However, we don't use `f77` command directly; what we need to do is change the `Makefile` a bit:
+
+```make
+FFLAGS = -O -fdollar-ok
+```
+
 ### Change backgroud color of Xbuplot
 
 `pltlib/xbuplot.c` used `Xlib` to create window, the foreground and background settings are in line 99, 100:
@@ -65,16 +81,20 @@ To fix this issue, there are 2 common ways:
 
 ### Read v.in with higher precision
 
-The default precision of `v.in` is `f7.2`. If you want to read a higher precision version of `v.in`(say, `f8.3`), just open the `main.f` that reads the `v.in`, find and change the line
+The default precision of `v.in` is `f7.2`. If you want to read a higher precision version of `v.in`(say, `f8.3`), just open the `main.f` that reads the `v.in`, find and change the lines like
 
 ```fortran
 15       format(i2,1x,10f7.2)
+25       format(3x,10i7)
+25       format(3x,10(5x,i2))
 ```
 
 into
 
 ```fortran
 15       format(i2,1x,10f8.3)
+25       format(3x,10i8)
+25       format(3x,10(6x,i2))
 ```
 
 ### Some other syntax errors

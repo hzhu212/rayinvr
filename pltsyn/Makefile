@@ -2,7 +2,7 @@
 # makefile for PLTSYN
 #
 EXEDIR=../build/
-PLTLIB=../pltlib
+PLTLIB=../pltlib/
 #
 # compile flags
 #
