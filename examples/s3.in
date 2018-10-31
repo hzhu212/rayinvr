@@ -1,0 +1,10 @@
+ &pltpar  iplot=1, iscale=1, ishade=1, vred=0.0, rcor=0.,
+          iroute=1, scalef=0.75, amp=0.50, sps=250., clip=0.1,
+          ibcol=1, ifcol=0,
+          xwndow=292., ywndow=175.,
+ &end
+ &axepar  
+          albht=3.5, orig=20., itrev=1,
+          xmin=0., xmax=10., xmm=300., 
+          tmin=0.0, tmax=2.5, tmm=175.,
+ &end

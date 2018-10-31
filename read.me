@@ -1,0 +1,96 @@
+
+______________________________________________________________
+
+RAYINVR raytrace and inversion programs          March 5, 1996
+______________________________________________________________
+
+All programs in this package are written in Fortran 77 except 
+one program in the pltlib directory for x-windows graphics 
+which is written in C. The five main graphics programs, 
+rayinvr, tramp, vmodel, pltsyn and rayplot, are contained 
+in the directories of the same name. Inside each directory 
+there is a makefile (for unix users) to make two versions of 
+each program. The first is for users who have access to the 
+commercial graphics package called Uniras. The second version, 
+prefaced by the letter x (i.e., xrayinvr for rayinvr), is 
+made using the command, for example, make xrayinvr, and is 
+intended for users who have any sort of x-windows terminal 
+or workstation. This version of each program will allow 
+screen graphics and generation of black & white or colour
+postscript files. To attach your own local graphics package, 
+replace the subroutine calls inside the file pltlib.f 
+in the directory pltlib that presently call 
+Uniras subroutines. These are simple graphics calls 
+(e.g., draw a straight line between points, plot a number or 
+character string, erase the screen, etc.) and so there should 
+be an equivalent of some sort with the local system. 
+The only change necessary for each makefile should be the
+pathway for the executables and the plot library directory. 
+
+The directory pltlib contains the plot routines used by each of 
+the five main programs for both the uniras and x-windows versions. 
+There is a read.me file inside the pltlib directory explaining
+how to obtain a postscript file using the x-windows versions.
+The directory misc contains a number of simple utility programs
+that perform useful tasks in conjunction with the five main 
+programs. There is a read.me file in this directory to explain
+the purpose of each program. The directory examples contains all
+the necessary input files to run eight examples which are intended
+to demonstrate all the important features of rayinvr, tramp, vmodel
+and pltsyn. There is also a read.me file in this directory to explain
+the examples further. The directory documentation contains two 
+files which include the documentation for the programs rayinvr,
+vmodel and rayplot and tramp and pltsyn, as well as a few other
+programs contained in the misc directory.
+
+To get started started I suggest you run at least a few of the examples
+in the examples directory without changing any of the parameters to
+start with so as to see what these particular input files and parameters
+produce. Then, choose one or more of the examples that is most like
+the application you intend to work on and in a series of steps (i.e., not 
+changing everything at once) adjust the model and parameter files until 
+they are as you require them. This should minimize the need to refer to 
+the documentation, and in particular, eliminate the need to read
+through it completely at the outset. I think this procedure should bring
+you up to speed on using the programs as quickly as possible. Always run
+the program vmodel after each iteration of an inversion to ensure the
+model remains sensible, i.e., there are no boundaries crossing, or
+very large gradients, etc.
+
+There is a new version of dmplstsqr (called smoothlsqr) that uses smoothing 
+regularization that was written by Nigel Bruguier at Bullard Laboratories,
+Cambridge.
+ 
+Please keep me informed occasionally on your your progress with 
+these programs using e-mail. Also, if you have any questions, 
+comments, suggestions, or criticisms, do not hesitate to contact me. 
+Do not distribute the code to anyone outside your immediate group, 
+but refer interested persons to me directly. None of the programs in
+any form provided in this package are to be used by you, or transferred
+to someone, for financial gain or used in a private company as part
+of its business. 
+
+A paper in Geophysical Journal International (v. 108, p. 16-34, 1992) 
+describes the methodology and citing this would be appropriate. A paper 
+in JGR (v. 99, p. 11687-11704, 1994) presents many new features of the 
+programs (such as floating reflectors) as well as the practical aspects of 
+modelling real data including amplitudes.
+
+Please let me know if you take a copy of the rayinvr package. 
+I like to keep track of where it has gone. Thank you.
+
+Thanks.
+
+Colin Zelt
+
+Department of Geology & Geophysics, MS-126
+Rice University
+6100 Main Street
+Houston, TX 77005-1892
+
+(713) 527-4757 (office)
+(713) 527-4880 (messages)
+(713) 285-5214 (fax)
+czelt@geophysics.rice.edu
+http://zephyr.rice.edu/department/faculty/zelt/rayinvr.html
+

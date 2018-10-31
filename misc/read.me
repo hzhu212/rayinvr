@@ -1,0 +1,96 @@
+
+This directory contains the source codes for various utility programs
+to be used with rayinvr, tramp, pltsyn, vmodel and rayplot. They are all
+non-graphics fortran 77 codes with generally a very simple function
+and the input and output files are generally obvious, but can be
+determined by reading the comments at the top of each source code.
+Some of the programs are documented in the documentation files for
+rayinvr or tramp.
+
+This is a list of the name and purpose of each program:
+
+2PT:          Produce a bit-mask file using two output files generated
+              by RAYINVR to allow a two-point minimum-traveltime raypath
+              diagram to be produced by RAYPLOT (see documentation of
+              RAYPLOT for details)            
+
+COMBINE:      Combine the partial derivatives and           
+              traveltime residuals from two runs           
+
+COMBSEC:      Combine two "sect.out" files into one        
+
+DMPLSTSQR:    Damped least-squares solution of          
+              traveltime inversion problem            
+
+FTEST:        Compute the significance of two given      
+              chi-squared values using the F-test      
+
+ISEIS:        Interpolate traveltime picks at       
+              uniform or specified seismogram locations 
+
+ORDER_PICKS:  Re-order "tx.in" file in order of     
+              increasing x-coordinate within each phase
+              (use this program before running RECIPROCITY).
+
+PHERCOUNT:    Calculate number of arrivals for each phase     
+              and average uncertainties for "tx.in" file     
+
+RECIPROCITY:  Check traveltime reciprocity of "tx.in" file
+              (must run ORDER_PICKS before to order the tx.in file)
+
+REDUCE:       Change the reducing velocity applied to a "tx.in" file
+
+SECT2TX:      Obtain a "tx.in" file from a "sect.out" file 
+
+SMOOTHLSQR:   Least-squares solution of traveltime inversion problem
+              using smoothing regularisation. It uses the same d.in file 
+              as DMPLSTSQR but dmpfct now controls the smoothing. You must 
+              invert for all parameters in a given row at the same time.
+
+SMOOTH_PICKS: Smooth a "tx.in" file within each phase       
+
+SPREAD:       Select the receiver locations           
+              according to a specified geometry        
+
+TTNOISE:      Add Gaussian noise to traveltime picks      
+
+TX2POIS:      Calculate Poisson's ratio from P- and S-wave  
+              travel times in two separate tx.in files   
+
+TX2REC:       Obtain a "rec.in" file for input to TRAMP from    
+              a "tx.in" file                     
+
+TXMATCH:      select picks with the same positions for two    
+              different phases from two "tx.in" files      
+
+TXOFFSET:     Convert a "tx.in" file with a shot at 0 km to a
+              file with shots at any position         
+
+TXPHASE:      Select particular phases from a "tx.in" file   
+
+TXSHIFT:      Apply a bulk time shift to picks for selected
+              shots in a "tx.in" file. This program is primarily 
+              intended to be used after running reciprocity
+              which provides the bulk time shifts to minimize
+              the reciprocal traveltime discrepancies.
+
+UNC:          Assign an offset-dependent pick uncertainty                  
+
+VDEPTH:       Apply a bulk shift to the z-coordinates of a v.in file 
+
+VDIFF:        Take the difference of two velocity models       
+              with the same parameterization            
+
+VEX:          Extrapolate the constrained part of a model    
+              to the edges of the model           
+
+VPOIS:        Calculate Poisson's ratio given the P- and   
+              and S-wave velocity models in 2 separate files
+
+VS:           Convert a P-wave velocity model to an S-wave      
+              model using a constant Poisson's ratio 
+
+VZOOM:        Change the xmin and/or xmax of a velocity model  
+
+XSHOT:        Change the shot position and/or direction     
+              in a "tx.in" file                 

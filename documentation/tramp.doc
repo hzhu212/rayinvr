@@ -1,0 +1,1416 @@
+                                      
+
+            DOCUMENTATION FOR TRAMP AND RELATED PROGRAMS
+            ----------------------------------------------
+
+Date:       Nov 1992
+Version:    1.3
+
+Written by: C.A. Zelt
+Address:    Geological Survey of Canada
+            1 Observatory Crescent
+            Ottawa, Ontario, Canada  K1A 0Y3
+phone:      613-995-1257
+fax:        613-992-8836
+e-mail:     zelt@cg.emr.ca
+
+
+            Table of Contents
+            -----------------
+
+
+TRAMP
+     Program Description
+     Files
+     Input Parameters
+         Plotting Parameters
+         Axes Parameters
+         Ray tracing Parameters
+         Amplitude Parameters
+     Additional Notes
+     Array Sizes
+     Warning and Error Messages
+Other programs
+     PLTSYN
+     COMBSEC
+
+
+TRAMP: a program to  trace rays in  2-D media for  rapid forward 
+        modeling of refraction  and reflection travel  times and 
+        amplitudes
+
+                        Program Description
+  
+  A 2-D (x,z) isotropic medium is assumed. The velocity  model is 
+composed  of  a  sequence  of   layers  separated  by  boundaries  
+consisting of  linked  linear segments  of  arbitrary dip.  Layer  
+boundaries must  cross  the  model  from  left  to  right.  Layer  
+thicknesses may be reduced to zero to model pinchouts or isolated 
+bodies. The velocity within a layer is defined by velocity values 
+specified at arbitrary x-coordinates along the  top and bottom of 
+the layer. The x-coordinates at which  layer boundaries and upper 
+and lower velocities are specified can  be completely general and 
+independent within and  between layers.  Velocity discontinuities  
+across layer  boundaries are  allowed but  not required.  For the  
+purposes of ray tracing, the model is automatically broken up into 
+an irregular network of  trapezoids, each with  dipping upper and 
+lower  boundaries  and  vertical   left  and  right   sides.  The  
+velocities at  the four  corners  of the  trapezoid  are used  to  
+interpolate a  velocity field  within the  trapezoid so  that the  
+velocity  varies  linearly  along  its   four  sides.  Therefore,  
+horizontal as well as vertical velocity gradients may exist within 
+a trapezoid. A simulation of smooth  layer boundaries is possible 
+in which the incident and emergent ray angles are calculated using 
+the slope of the smoothed boundary.
+  The source(s) may be positioned anywhere in the model  and rays 
+may be directed any angle. The receivers are always assumed to be 
+at the top of  the model. Both  P- and S-wave  propagation can be 
+considered including (multiple)  conversions. A  unique Poisson's  
+ratio may be assigned to each trapezoid  of the model. Refracted, 
+reflected and head waves may be  traced, each possibly containing 
+multiple and/or surface reflections and conversions. Ray take-off 
+angles are determined automatically by the  program for those ray 
+groups specified by the user using an iterative shooting/bisection 
+search mode. Ray tracing is performed  by numerically solving the 
+ray tracing equations for 2-D media, a pair of first order ODE's, 
+using a Runge Kutta method. The ray  step length is automatically 
+adjusted at each  step to  maximize efficiency  while maintaining  
+accuracy. Travel  times are  calculated by  numerical integration  
+along ray  paths using  the  trapezoidal rule.  Travel times  and  
+amplitudes are linearly  interpolated to the  observed seismogram 
+locations since two-point ray tracing is not used.  A plot of the 
+model and all rays  traced may be  produced along with  a plot of 
+reduced  travel  time  versus  distance   for  the  observed  and  
+calculated data as well as other plots.
+  The  amplitudes  of  refracted  and  reflected  rays,  possibly  
+multiply reflected and/or converted, are  calculated according to 
+zero-order  asymptotic  ray  theory.   The  in-plane  geometrical  
+spreading is evaluated  by fitting  a cubic  spline to  the curve  
+defined by range  versus take-off angle  for each ray  group. The 
+amplitudes  of  head  waves  are   calculated  using  first-order  
+asymptotic ray theory assuming  the layer along the  top of which 
+the wave  propagates  has  zero  vertical velocity  gradient.  An  
+explosive source  with  uniform  directional  characteristics  is  
+assumed. Both  P- and  S-wave Q  values may  be assigned  to each  
+model layer and/or block to allow for an approximate Q attenuation 
+calculation. The receivers  may represent vertical  or horizontal 
+component geophones.
+  The model parameterization is  specifically suited to  modeling 
+crustal refraction/reflection data  since realistic  earth models  
+can be represented by a minimum number of model parameters, i.e.,. 
+the number and position of parameters specifying each layer can be 
+adapted to a data set's particular subsurface ray coverage. Layer 
+boundaries,  including  the  surface,  may   be  horizontal  (one  
+parameter) or consist of numerous straight line segments. A layer 
+may have  a constant  velocity  (one parameter)  or the  velocity  
+structure may be defined  by many upper and  lower layer velocity 
+points. Different  velocity  points may  be  specified above  and  
+below a layer  boundary if  a velocity discontinuity  is required  
+across the boundary, or  a single row  of velocity points  may be 
+specified if an interface with no discontinuity is needed.
+
+                              Files
+
+Executable file: TRAMP
+
+Input file: r.in contains program input parameters in five parts:
+   (1) the PLTPAR namelist contains arameters related to plotting
+   (2) the AXEPAR namelist contains parameters related to axes
+   (3) the  TRAPAR namelist  contains parameters  related  to ray  
+   tracing
+   (4)  the  AMPPAR  namelist  contains   parameters  related  to  
+   amplitudes
+   (5) after skipping three lines (column headings), the velocity 
+   model is specified as follows:
+     (a) the  layer number,  the x-coordinates  (km)  of a  layer 
+        boundary entered  from  left to  right  (format: I2,  1X,  
+        10F7.2)
+     (b) the z-coordinates (km) of a layer boundary corresponding 
+        to the x-coordinates listed above (format: 3X, 10F7.2)
+     (c) a blank line
+     (d) the layer number, the  x-coordinates (km) of the  points 
+        at which the  upper layer  velocity is  specified entered  
+        from left to right (format: I2, 1X, 10F7.2)
+     (e) the upper layer  P-wave velocities (km/s)  corresponding 
+        to the x-coordinates listed above (format: 3X, 10F7.2)
+     (f) a blank line
+     (g) the layer number, the  x-coordinates (km) of the  points 
+        at which the  lower layer  velocity is  specified entered  
+        from left to right (format: I2, 1X, 10F7.2)
+     (h) the lower layer  P-wave velocities (km/s)  corresponding 
+        to the x-coordinates listed above (format: 3X, 10F7.2)
+     (i) a blank line
+  The above sequence  of nine lines  is repeated  for each model  
+   layer, the  top-most layer  specified  first, the  bottom-most  
+   last, and is ended by specifying the  bottom layer boundary of 
+   the model as  in (a) and  (b) above.  If the number  of points  
+   defining a boundary or the upper or  lower velocity of a layer 
+   must exceed 10 then the points can be continued onto subsequent 
+   lines of the  file as  follows: line  (b), (e)  or (h)  of the  
+   particular parameter to be extended is modified to include a 1 
+   in the second column so the complete format of the line becomes 
+   I2, 1X, 10F7.2. The sequence of three lines (a)-(c), (d)-(f) or 
+   (g)-(i) is then repeated  as many times as  is necessary using 
+   the same format described above.
+
+Input file: v.in contains  the velocity model in  the same format  
+   as described in part (3) above for r.in.
+
+Input file:  tx.in  contains  the  observed travel  time-distance  
+    pairs in the following format:
+   (1) the  x-coordinate  (km)  of  the  shot  point,  1  if  the 
+      receivers are to the right of the  shot point or -1 if the  
+      receivers are to the left, 0, and 0 (format: 3F10.3, I10)
+   (2)  the  x-coordinate   (km)  of  the   observed  data,  the   
+      corresponding unreduced travel time (s), the estimated 
+      uncertainty of the travel time pick  (s), and a  non-zero 
+      integer used to  identify the type of arrival  to allow for 
+      the appropriate  comparison with the rays traced 
+      (format: 3F10.3, I10)
+   Line (2) is repeated for each  pick corresponding to the shot  
+   point in line (1).  The sequence (1) and  (2) is repeated  for 
+   each shot point of the data  set. The file is terminated with  
+   the following line:
+   (3) 0, 0, 0, -1 (format: 3F10.3, I10)
+
+Output file: tx.out contains the  calculated travel time-distance 
+    pairs in the same format as described above for tx.in.
+
+Output file: amp.out  contains the  calculated amplitude-distance  
+    pairs in the following format:
+   (1) the  x-coordinate  (km)  of  the  shot  point,  1  if  the
+      receivers are to the right of the  shot point or -1 if the
+      receivers are to the left, 0, and 0 (format: F10.3, 2E10.3,
+      I10)
+   (2)  the  x-coordinate   (km)  of  the   observed  data,  the
+      corresponding amplitude, the estimated  uncertainty of the
+      amplitude, and a non-zero integer used to identify the type
+      of arrival to allow for the appropriate comparison with the
+      rays traced (format: F10.3, 2E10.3, I10)
+   Line (2) is repeated for each  pick corresponding to the shot
+   point in line (1).  The sequence (1) and  (2) is repeated  for
+   each shot point of the data  set. The file is terminated with
+   the following line:
+   (3) 0, 0, 0, -1 (format: F10.3, 2E10.3, I10)
+
+Output file:  r1.out contains  summary information  for  each ray  
+    traced including  the  shot  number,  take-off and  emergent  
+    angle, range, reduced  travel time,  number of  points (step  
+    lengths) defining the ray and the ray code.
+
+Output  file:  r2.out  contains  detailed   parameters  for  each  
+    trapezoid of the velocity model, a one-dimensional equivalent 
+    (average) velocity  model and  summary information  for each  
+    point of each ray traced.
+
+Output file: a1.out contains the range,  amplitude, phase and ray 
+    code for rays reaching the surface.
+
+Output file:  a2.out  contains  the  deatails  of  the  amplitude  
+    calculations for each ray traced.
+
+
+Intput file: rec.in contains the observed receiver locations at
+    which the seismograms are to be calculated in the following 
+    format:
+   (1) the  x-coordinate  (km)  of  the  shot  point,  1  if  the 
+      receivers are for this shot point only, or 2 if these
+      receivers are for all shots (format: F10.3, I10)
+   (2)  the  x-coordinate   (km)  of  the   receiver locations, 0   
+      (format: F10.3, I10)
+   Lines (2) is repeated for each receiver location for that 
+   particular shot, and the sequence (1) and (2) is repeated for 
+   each shot point (if necessary). The file is terminated with  
+   the following line:
+   (3) 0, -1 (format: F10.3, I10)
+
+Output file: sect.out contains  the time, amplitude  and phase of  
+    each arrival of the synthetic sections to be used as input by 
+    the plotting program PLTSYN.
+
+Output file: p.out  contains all plot  commands for the  run used  
+    for input by the program RAYPLOT.
+
+Output file: n.out contains the namelist parameter values.
+
+Output file: m.out contains one or  more of the following: (1) 
+    isovelocity contours, (2)  velocity-depth profiles,  (3) RMS  
+    velocity variations across the model, (4) the velocity model 
+    sampled on  a uniform  grid, and/or  (5) the  velocity model  
+    converted to  density  for input  into  a  gravity modelling  
+    program.
+
+                         Input Parameters
+
+1) Plotting parameters (PLTPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iroute - equals 1 to plot to the screen, 2 to create a postscript
+   file, 3 to create a plot file for the VERSATEC plotter, or 4
+   to create a colour postscript file; if iroute does not equal 1 
+   there is no plotting to the screen  (default: 1)
+
+iseg - create a Uniras segment(s) (default: 0)
+
+iplot - generate the plot  during the run (1), or  write all plot 
+   commands to the file p.out (0), or do both (2) (default: 1)
+
+imod - plot model boundaries (default: 1)
+
+ibnd - plot vertical model boundaries (default: 1)
+
+idash - plot model boundaries as dashed lines (default: 0)
+
+ivel - plot the P-wave (1) or  S-wave (-1) velocity values (km/s) 
+   within each trapezoid of the model (default: 0)
+
+icntr -  plot  the velocity  structure  as  isovelocity contours,  
+   icntr=1 for  P-wave  velocity contours,  icntr=-1  for  S-wave 
+   velocty contours; the isovelocity contours join points of equal 
+   velocity at  the  minimum depth  at  which it  occurs  at any  
+   particular x-coordinate; therefore, low-velocity zones will not 
+   be contoured; the isovelocity contours are output to the file  
+   m.out if idump=1 (default: 0)
+
+iray - plot  all rays traced  (1) or  only those which  reach the  
+   surface (2) (default: 1)
+
+irays - plot the rays traced in the search mode (default: 0)
+
+irayps - plot  the P-wave  segments of  ray paths as  solid lines  
+   and the S-wave segments as dashed lines (default: 0)
+
+idot - plot a symbol at each point (step length) defining each ray 
+   path (default: 0)
+
+itx -  plot the calculated travel time-distance  values   as lines
+   (1) or symbols of height symht (2); no calculated travel times 
+   are plotted if itx=0 (default: 1)
+
+idata - plot the  observed travel times  from the file  tx.in with 
+   the calculated travel times; the observed data are represented 
+   by vertical  bars with  a  height of  twice  the corresponding  
+   uncertainty included in the file tx.in (default: 0)
+ 
+isep - plot the model and rays and travel times in the same plot
+   frame (0), separate plot frames (1), or plot the model and rays 
+   in separate plot frames for each shot followed by the travel times 
+   in a single plot frame all shots (3) (default: 0)
+   Note: the value of isep may be changed during a program run with
+         entry from the keyboard of the values 0, 1, or 3 between
+         plot frames when a <CR> is needed to continue; entering "s"
+         will terminate the program run
+
+iszero - plot the calculated and observed  travel times as if all 
+   shot points were at 0 km and  the rays traveled left to right  
+   (default: 0)
+
+itxout - write the  calculated travel time-distance  pairs to the  
+   file tx.out;  the  integer  code  identifying  each  pick  is  
+   determined by the array ibreak; itx=1 or 2 must be used
+   (default: 0)
+
+iamout -  write the  calculated amplitude-distance  pairs  to the  
+   file amp.out;  the  integer  code  identifying  each  pick is  
+   determined by the array ibreak; iamp=2 must be used if iamout=1 
+   is used (default: 0)
+
+ivz -  plot velocity-depth  profiles, ivz=1  for  P-wave velocity  
+   profiles, ivz=-1 for S-wave velocity profiles, ivz=2 for both  
+   P- and S-wave  velocity profiles;  the velocity  profiles are  
+   output to the file m.out if idump=1 (default: 0)
+
+ivzp - plot  all velocity-depth profiles  in a single  plot frame  
+   (default: 1)
+
+ivrms -  plot  the RMS  velocity  of the  model  versus distance,  
+   ivrms=1 for P-wave velocity, ivrms=-1 fro S-wave velocity; the 
+   RMS velocity profile is  output to the  file m.out if  idump=1 
+   (default:: 0)
+
+igrid - output the  velocity model sampled  on a uniform  grid to 
+   the file m.out; igrid=1 for P-wave velocity, igrid=2 for P-wave 
+   velocity gradient, igrid=-1 for S-wave velocity, igrid=-2 for  
+   S-wave  velocity  gradient,  igrid=-3   for  Poisson's  ratio   
+   (default: 0)
+
+idump  -   write  detailed   velocity  model   and   ray  tracing   
+   information to  the file  r2.out  and the  namelist parameter  
+   values to the file n.out; mainly for debugging (default: 0)
+   Note: using idump=1 will greatly slow down the run time
+
+isum -  write  a short  summary  about the  rays  traced  and the  
+   velocity model to the screen and to the file r1.out (default:  
+   1)
+
+istep - pause after each ray is plotted writing its take-off angle
+        to the screen and waiting until a <CR> is entered before
+        plotting the next ray; this is intended to be used in
+        conjunction with irays=1 to determine the cause of the
+        failure of the search mode for a particular ray group;
+        entering "s" will terminate the program run (default: 0)
+
+b) Other plotting parameters:
+
+symht - height of symbols (mm)  used when plotting each point 
+   defining a  ray path,  single  point travel  time  curves (if  
+   symht=0, single point travel time curves will not be plotted), 
+   and the calculated travel times if itx=2 (default: 0.5)
+
+velht - the maximum  height of the velocity  values (mm) when  
+   ivel=1 or -1 is equal to velht*albht (default: 0.7)
+
+nskip - the first nskip points  (step lengths) of all ray paths  are 
+   not plotted (default: 0)
+
+nrskip - plot every nrskip ray traced (default: 1)
+
+vred -  reducing  velocity  (km/s)  of  travel  time-distance  plot;  
+   observed data in the file  tx.in is assumed to be unreduced (a
+   value  of zero is  permitted for no  reduction; vred must be less 
+   than 10) (default: 8)
+
+ttunc - uncertainty  of the  calculated travel times  (s) written  
+   to the file tx.out if itxout=1 (default: 0.01)
+
+ampunc - relative  uncertainty of  the calculated  amplitudes (%)  
+   written to the file am.out if iamout=1 (default: 10)
+
+vcntr - an  array containing  the isovelocity contours  (km/s) to  
+   be plotted  if  icntr=1  or  -1; if  a  negative  velocity  is 
+   specified, the contour corresponding to the absolute value will 
+   be plotted but not labelled
+
+xcinc -  the  spacing (km)  of  points at  which  the isovelocity  
+   contours are calculated (default: (xmax-xmin)/100)
+
+xclab - an  array containing  the model  distances (km)  at which  
+   the   isovelocity    contours    are    labelled    (default:    
+   (xmin+xmax)/2, for the first element only)
+
+ncsmth - number of applications of  a 3-point smoothing filter to 
+   the isovelocity contours (default: 0)
+
+xvz -  an  array  containing  the  x-coordinates  (km)  at  which  
+   velocity-depth  profiles  are  plotted  if  ivz=1,  -1  or  2   
+   (default: (xmin+xmax)/2, for the first element only)
+
+vrmstl, vrmsbl  - the  top and  bottom layer,  respectively, over  
+   which the RMS velocity of the model is calculated if ivrms=1 or 
+   -1 (default: 1, number of model layers)
+
+xrinc - the spacing (km)  of points at which the  RMS velocity is 
+   calculated (default: (xmaxt-xmint)/100)
+
+nrsmth - number of applications of  a 3-point smoothing filter to 
+   the RMS velocity versus distance curve (default: 0)
+
+xgrid, zgrid - the distance  and depth spacing (km)  of points at 
+   which the velocity model is sampled  if igrid=1, 2, -1, -2, 3  
+   (default:: (xmax-xmin)/100, (zmax-zmin)/50)
+
+2) Axes parameters (AXEPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iaxlab - plot axes labels (default: 1)
+
+itrev -  draw the  time-distance  plot with  the  time increasing
+   downward (default: 0)
+
+b) Other axes parameters:
+
+albht - height of axes labels (mm) (default: 2.5)
+ 
+xmin, xmax - minimum and maximum distance (km) of velocity model
+xmm - length of distance axis (mm)
+xtmin, xtmax - minimum and maximum values (km) of tick marks
+ntickx - number of intervals separated by tick marks along distance axis
+ndecix - number of digits after decimal in distance axis annotation;
+   -1 for integer annotation (defaults: 0, none, 250; values for
+   xtmin, xtmax, ntickx and ndecix depend on values of xmin and xmax)
+
+zmin, zmax - minimum and maximum depth (km) of velocity model
+zmm - length of depth axis (mm)
+ztmin, ztmax - minimum and maximum values (km) of tick marks
+ntickz - number of intervals separated by tick marks along depth axis
+ndeciz - number of digits after decimal in depth axis annotation;
+    -1 for integer annotation (defaults: 0, 50, 75; values for
+   ztmin, ztmax, ntickz and ndeciz depend on values of zmin and zmax)
+ 
+xmint, xmaxt - minimum and maximum distance (km) of time-distance,
+               amplitude-distance and RMS velocity plots
+xmmt - length of distance axis (mm)
+xtmint, xtmaxt - minimum and maximum values (km) of tick marks
+ntckxt - number of intervals separated by tick marks along distance axis
+ndecxt - number of digits after decimal in distance axis annotation;
+   -1 for integer annotation (defaults: xmin, xmax, xmm; values for
+   xtmint, xtmaxt, ntckxt and ndecxt depend on values of xmint and xmaxt)
+ 
+tmin, tmax - minimum and maximum time (s) of time-distance plot
+tmm - length of time axis (mm)
+ttmin, ttmax - minimum and maximum values (s) of tick marks
+ntickt - number of intervals separated by tick marks along time axis
+ndecit - number of digits after decimal in time axis annotation;
+   -1 for integer annotation (defaults: 0, 10, 75; values for
+   ttmin, ttmax, ntickt and ndecit depend on values of tmin and tmax)
+ 
+ampmin, ampmax - minimum and maximum amplitude (log base 10) of amplitude-
+   distance plot
+amm - length of amplitude axis (mm)
+atmin, atmax - minimum and maximum values of tick marks
+nticka - number of intervals separated by tick marks along amplitude axis
+ndecia - number of digits after decimal in amplitude axis annotation; 
+   -1 for integer annotation (defaults: 0, 8, 75, values for 
+   atmin, atmax, nticka and ndecia depend on values of ampmin and ampmax) 
+ 
+vmin, vmax - minimum and maximum velocity (km/s) of 1-D velocity
+   profiles
+vmm - length of velocity axis (mm)
+vtmin, vtmax - minimum and maximum values (km/s) of tick marks (not
+               implemented yet)
+ntickv - number of intervals separated by tick marks along velocity axis
+ndeciv - number of digits after decimal in velocity axis annotation; 
+   -1 for integer annotation (defaults: 0, 8, 75, values for 
+   vtmin, vtmax, ntickv and ndeciv depend on values of vmin and vmax) 
+ 
+vrmin, vrmax - minimum and maximum velocity (km/s) of RMS 
+   velocity-distance plot
+vrmm - length of RMS velocity axis (mm)
+vrtmin, vrtmax - minimum and maximum values (km/s) of tick marks (not
+                 implemented yet)
+ntckvr - number of intervals separated by tick marks along RMS velocity axis
+ndecir - number of digits after decimal in RMS velocity  axis annotation; 
+   -1 for integer annotation (defaults: 2, 7, 75, values for 
+   vrtmin, vrtmax, ntckvr and ndecir depend on values of vrmin and vrmax)
+
+orig - lower left origin of plot is (orig,orig) mm (default: 12.5)
+
+sep - separation (mm) between the model and travel time digrams
+   if isep=0 (default: 7.5)
+
+3) Ray tracing parameters (TRAPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+ishot - an array specifying the directions rays are to be
+traced
+ from the shot points listed in the arrays xshot and zshot; the
+  following code is used:
+   (1) 0 - no rays are traced
+   (2) -1 - rays are traced to the left only
+   (3) 1 - rays are traced to the right only
+   (4) 2 - rays are traced to the left and right
+   (default: 0)
+
+iraysl - use the  array irayt to  select which ray  groups listed 
+   in the array ray are to be traced for a particular shot point  
+   (default: 0)
+
+irayt - an array selecting  those ray groups listed  in the array 
+   ray which are active for a particular shot point listed in the 
+   arrays xshot and zshot.  If there are n  ray groups listed  in 
+   the array ray,  then the  jth ray group  for the  ith shot is  
+   referred to in  the ((n-1)*i+j)th element  of irayt (default:  
+   1)
+
+ifast - use a Runge-Kutta routine without error control to solve
+   the ray tracing equations and a look-up/interpolation routine
+   to evaluate certain trigonometric functions; with ifast=0, a
+   Runge-Kutta method with error control and the intrinsic
+   trigonometric functions are used. Using ifast=1 is about 30-40%
+   faster and provides essentially the same accuracy as ifast=0
+   (default: 1)  
+   Note: ifast=1 is intended to be used for all routine modelling
+         and ifast=0 only to test a final model or if ifast=1 
+         obviously fails
+
+iturn - an array  corresponding to the  ray groups listed  in the 
+   array ray to trace  rays only to  their turning or  reflection 
+   point in the search mode; if a refracted or head wave ray group 
+   is to contain a reflection(s) before it turns (specified using 
+   nrbnd and rbnd), then iturn=0 must be used (default: 1)
+
+isrch - search again  for the take-off  angles of a  ray group if 
+   the same ray code is listed more than once for the same shot in 
+   the array ray; isrch=1 must be used if the take-off angles of 
+   two or more ray  groups with the same  ray code are  different 
+   because of multiple reflections and/or conversions specified by 
+   nrbnd, rbnd, ncbnd,and cbnd (default: 0)
+
+istop - stop  tracing any  ray which reflects  off a  boundary not
+   specified in the arrays ray or rbnd; if istop=2, rays are also
+   stopped if they enter a layer deeper than that specified by the
+   ray code in the array ray, i.e., the layer number is greater
+   than L and the ray code is L.n, where n=0, 1, 2, or 3
+   (default: 1)
+
+ibsmth - apply  a simulation  of smooth  layer boundaries  (1) or  
+   apply the  simulation and  plot  the smoothed  boundaries (2);
+    ibsmth=2 cannot be used if isep>1 (default: 0)
+
+imodf - use the velocity  model in the file v.in  instead of the 
+   model in part (3) of the file r.in (default: 0)
+
+b) Other ray tracing parameters:
+
+xshot - an  array containing  the x-coordinates  (km) of the  shot 
+   points (default: xmin, for the first element only)
+
+zshot - an  array containing  the z-coordinates  (km) of the  shot 
+   points (default: a very small distance below the model surface)
+
+ray -  an  array  containing the  ray  groups  to be  traced;  the  
+   following code is used:
+   (1) L.1 - rays which refract (turn) in the Lth layer
+   (2) L.2 - rays which reflect off the bottom of the Lth layer
+   (3) L.3 -  rays which  travel as  head waves along  the bottom  
+   of the Lth layer
+   (4) L.0  - ray  take-off angles  supplied by  the user  in the  
+   arrays amin and amax
+
+nray - an  array containing the  number of rays  to be  traced for 
+   each ray group  in the  array ray  (default: 10;  however, the  
+   default is the first element of nray for all ray groups if only 
+   one value is specified)
+
+space - an array which  determines the spacing of  take-off angles 
+   between the minimum and  maximum values for each  ray group in 
+   the array  ray.  For  space=1,  the  take-off  angles will  be  
+   equally spaced;  for  space>1,  the  take-off angles  will  be  
+   concentrated  near  the  minimum  value;  for  0<space<1,  the  
+   take-off angles will  be concentrated  near the  maximum value  
+   (default: 1;  however, space=2  for a  reflected ray  group if  
+   specified as L.2 in the array ray)
+
+amin, amax  -  arrays  containing  minimum  and  maximum  take-off  
+   angles  (degrees);  measured  from  the  horizontal,  positive  
+   downward and negative upward (for rays traveling left to right 
+   or right to left); used for ray groups in which ray=1.0
+
+nsmax -  an array  containing the  maximum number  of rays  traced 
+   when searching for the take-off angles of the ray groups in the 
+   array ray  (default: 10;  however,  the default  is  the first  
+   element of  nsmax for  all  ray groups  if only  one  value is  
+   specified)
+
+crit - head waves are generated if a down-going  ray in the search 
+   mode has an angle of incidence at the  bottom of the Lth layer 
+   within  crit  degrees  of  the  critical  angle  when  ray=L.3  
+   (default: 1)
+
+hws - the spacing (km) of rays emerging upward  from the bottom of 
+   the Lth layer when ray=L.3 (default: (xmax-xmin)/25)
+
+angbnd - maximum  allowable angular  difference (degrees)  between 
+   the angle of the boundary along which head waves originate and 
+   emerge (default: 20)
+
+dbnd - an array  containing the layers  along the bottom  of which 
+   diffracted waves are to be generated  if a downward travelling 
+   ray  intersects  the   lower  layer  boundary;   each  element   
+   corresponds to the ray groups in the array ray; the spacing of 
+   emerging rays along the boundary is hws  (km) and the angle of 
+   emergence equals the angle of incidence of the generating ray; 
+   the velocity  of  propagation along  the  boundary equals  the  
+   velocity directly beneath  the boundary; amplitudes  cannot be  
+   calculated for this type of ray
+
+aamin - minimum  take-off angle  (degrees) for  the refracted  ray 
+   group in the first layer (default: 5)
+
+aamax - maximum take-off angle (degrees) for  reflected ray groups 
+   specified as L.2 in the array ray (default: 85)
+
+stol - if a ray traced in  the search mode is of the  correct type 
+   and its  end point  is within  stol (km)  of the  previous ray  
+   traced in the search mode, then the search for that ray type is 
+   terminated; a value of stol=0 will ensure  that nsmax rays are 
+   always traced in the search mode (default: (xmax-xmin)/3500)
+
+nrbnd - an  array containing the  number of  reflecting boundaries 
+   for each ray group in the array ray (default: 0)
+
+rbnd - an array containing the reflecting  boundaries specified in 
+   the array nrbnd; the following code is used:
+   (1) L -  ray traveling  downward is  reflected upward  off the  
+   bottom of the Lth layer
+   (2) -L -  ray traveling upward  is reflected downward  off the  
+   top of the Lth layer
+
+ncbnd - an array containing the number of converting (P  to S or S 
+   to P) boundaries for each ray group in the array ray (default: 
+   0)
+
+cbnd - an array containing the converting  boundaries specified in 
+   the array ncbnd; the following code is used:
+   (1) i   - ray will  convert from its  present wave type  (P or  
+   S) at the ith layer boundary encountered
+   (2) 0 - ray will leave the source as an S-wave
+
+pois - an array containing  the value of Poisson's ratio  for each 
+   model layer; a  value of  0.5 signifies  a water layer  with a  
+   corresponding  S-wave   velocity  of   zero   (default:  0.25;   
+   however, the  default is  the first  element of  pois  for all  
+   layers if only one value is specified)
+
+poisl, poisb -  arrays specifying  the layers  and block  numbers, 
+   respectively, of model trapezoids within which Poisson's ratio 
+   is modified over that given by pois using the array poisbl; for 
+   poisb, the trapezoids with  a layer are numbered  from left to 
+   right
+
+poisbl - an array containing the value of Poisson's  ratio for the 
+   model trapezoids  specified  in  the  arrays poisl  and  poisb  
+   overriding the values assigned using the array pois
+
+npbnd  -  number  of  points  at  which  each  layer  boundary  is  
+   uniformly sampled  for smoothing  if ibsmth=1  or  2 (default:  
+   100)
+
+nbsmth - number of applications of a  three-point smoothing filter 
+   to each layer boundary if ibsmth=1 or 2 (default: 10)
+
+step - controls  the ray step  length in the  solution of  the ray 
+   tracing equations according to the relationship
+
+             step length (km) = step*v/(|vx|+|vz|) 
+
+  where   v   is  velocity   and   vx   and  vz   are   its   partial  
+   derivatives with respect to x and z (default: 0.05)
+
+smin, smax -  minimum and maximum  allowable ray step  length (km) 
+   (default: (xmax-xmin)/4500 and (xmax-xmin)/15)
+
+4) Amplitude parameters (AMPPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iamp  -  calculate  ray  theoretical   amplitudes  if  iamp=1  or  
+   calculate amplitudes  and plot  amplitude-distance  curves if  
+   iamp=2 (default: 0)
+
+isect - calculate the  time, amplitude and phase  of each arrival  
+   of the  synthetic  sections by  interpolating  the  calculated 
+   travel time- and amplitude-distance curves and write these to  
+   the file sect.out for input to the plotting program PLTSYN; the 
+   seismogram locations are specified by xmins, xmaxs and xincs if 
+   isect=1 or contained in the  file rec.in if isect=2 (default:  
+   0)
+
+ibreak - an array corresponding  to the ray groups  listed in the 
+   array ray to split into prograde and retrograde segments when  
+   (1) plotting travel time- and ampltude-distance curves (itx=1),
+   (2) fitting cubic splines to the range versus take-off angle values 
+   to evaluate the in-plane spreading,  and (3) interpolating to  
+   obtain an arrival at  a seismogram location  if isect=1 or  2; 
+   also to increment the integer code  by one in the file tx.out  
+   when changing from a  prograde to retrograde  segment or vice  
+   versa if itxout=1 (default: 1)
+
+iint - an  array corresponding  to the  ray groups  listed in  the 
+   array ray  to  use  all arrivals  in  a  particular ray  group  
+   regardless or  their calculated  ray code  when (1)  fitting a  
+   cubic spline  to the  range  versus take-off  angle  values to  
+   determine the  in-plane spreading,  and  (2) interpolating  to  
+   calculate the arrivals of the  synthetic sections; iint=0 will 
+   ensure that  cubic  splines  will  involve  rays  of the  same  
+   calculated ray code and  that interpolation will  be performed 
+   across two successive arrivals of the  same ray code (default: 
+   0)
+
+icaust -  add a 90 degree phase  shift  to  a  retrograde  branch  of  
+   refracted arrivals  (ray code  L.1) to  represent  the passage  
+   through a single caustic (default: 1)
+
+icomp - seismometer type: icomp=1 for  vertical component, icomp=0 
+   for horizontal component (default: 1)
+
+icmp - measure  the receiver  locations with  respect to the  shot 
+   points (positive to the right, negative to the left) and output 
+   the mid-point  and  half-offset  of  each  trace  to the  file  
+   sect.out; icmp=0 will ensure that  the receivers are specified 
+   with respect to model distance if iszero=0, or with respect to 
+   the shot  points  and  the  directions  specified  by  idr  if  
+   iszero=1 (default: 0)
+
+iden - convert the  velocity model to constant-density  blocks and 
+   output to  the  file  m.out for  use  as  input  to a  gravity  
+   modelling program (default: 0)
+
+surcon - calculate  the surface  conversion coefficient  (default: 
+   1)
+
+amprev - calculate the amplitudes of refracted  and reflected rays 
+   in the reverse direction  to which they  were traced (default:  
+   0)
+
+b) Other amplitude parameters:
+
+ampsmt - number of applications, N, of a  3-point smoothing filter 
+   to amplitude curves is given by
+
+                         N = ampsmt (n-2)
+
+   where n is  the number of  arrivals in  the corresponding  
+   cubic spline used  to determine  the in-plane  spreading for
+   refracted and reflected ray groups, or the number of arrivals in
+   the ray group for a head wave ray group; this smoothing can be 
+   used  to remove some of  the artificial highs and lows often 
+   associated with ray amplitudes (default: 0.1)
+
+spamp -  ratio of  S-wave  to P-wave  displacement  at the  source  
+   (default: 1)
+
+denc -  an  array  containing  the  coefficients  of  a  4th-order  
+   polynomial relating P-wave velocity, vp  (km/s), to density, r 
+   (g/cm3), where
+   
+  r  = denc(1) + denc(2)vp + denc(3)vp2 + denc(4)vp3 + denc(5)vp4;
+   
+   if poisson's ratio equals  0.5, the material is  assumed to be 
+   water and  r=1.0; this  relationship fits  empirical  data for  
+   1<vp<9 (default: -.6997, 2.2302, -.598, .07036, -.0028311)
+   
+denmin  -  minimum  density  (g/cm3)  for   a  non-water  material  
+   (default: 1.25)
+
+ncaust - an array to  add a phase shift equal  to 90x(ncaust) degrees 
+   to the ray groups in the array ray (default: 0)
+
+omega  -  dominant  fequency   (Hz)  used  in  calculation   of  Q  
+   attenuation and head wave amplitudes (default: 5)
+
+hedcut -  the amplitude  of  all head  waves  that have  travelled  
+   along the head wave boundary less than  Hmin (km) will have an 
+   amplitude equal to that ray which travelled exactly Hmin along 
+   the boundary where Hmin equals hedcut  percentage of the first 
+   head wave  of the  group, i.e.,  the minimum-range  head wave;  
+   hedcut is used to avoid an infinite  amplitude at the critical 
+   point predicted by asymptotic ray theory (default: 25)
+
+qp,  qs  -  arrays  containing   the  P-  and  S-wave   Q  values,  
+   respectively, for each layer  of the velocity  model (default: 
+   infinite, infinite; however, the default  is the first element 
+   of qp (or qs) for all layers if only one value is specified)
+
+ql,  qb  -  arrays  containing  the  layers   and  block  numbers,  
+   respectively, of  model  trapezoids within  which  the P-  and  
+   S-wave Q values are modified over that given by qp and qs using 
+   the array qpbl first, followed by qsbl
+
+qpbl, qsbl  -  arrays  containing  the  P- and  S-wave  Q  values,  
+   respectively, for model trapezoids specified  by the arrays ql 
+   and qb overriding the values assigned using  the arrays qp and 
+   qs
+
+xmins, xmaxs  -  minimum  and  maximum seismogram  location  (km),  
+   respectively,  if   isect=1   (default:   xmin+(xmax-xmin)/50,   
+   xmax-(xmax-xmin)/50)
+
+xincs   -   seismogram   spacing   (km)   if   isect=1   (default:   
+   (xmaxs-xmins)/48)
+
+                         Additional Notes
+
+Array defaults: if  a single  default value is  indicated for  an 
+   array parameter, all elements of the array  have that default 
+   value.
+
+Layer boundaries: must begin at xmin and end at xmax even  if the 
+   layer above and/or below is pinched out  (unless the boundary 
+   is defined by only one point, then it is specified at xmin).
+
+Bottom layer boundary: should consist of at most ten points.
+
+Near-vertical layer boundaries:  should be  avoided because  they 
+   may result in large velocity gradients  nearby. If necessary, 
+   the adjacent trapezoids should have zero velocity gradient.
+
+Shot point locations: may be anywhere in the model,  but locating 
+   them directly on a model boundary may cause problems.
+
+Ray group: is defined as a set of rays specified by a ray code in 
+   the  array  ray,   possibly  modified  to   include  multiple  
+   reflections and/or  conversions,  whose take-off  angles  are  
+   determined by an  iterative search mode  or specified  by the 
+   user using ray=1.0 and the arrays amin and amax.
+
+Zero velocity gradient: if the four corner velocities of  a model 
+   trapezoid are equal, then  there is a zero  velocity gradient 
+   inside and no  ray bending  will occur.  It is preferable  to 
+   have a zero gradient in all or part of a  layer rather than a 
+   very small gradient  so that the  Runge Kutta routine  can be 
+   avoided and straight ray paths are used.
+
+Large velocity gradients: ray  tracing becomes inaccurate if  the 
+   velocity gradient is  large and  the ray  step length is  not 
+   small enough. In this case a warning message is given and the 
+   value of smin and/or step should be reduced.
+
+Ray code:  listed in  the  file r1.out  for  each ray  traced  is 
+   supplied as an internal check to ensure that the correct rays 
+   specified in the array ray  or the arrays amin and  amax have 
+   been traced. This  ray code is  determined by the  program as 
+   follows: the number to the left of the decimal  refers to the 
+   deepest layer encountered by the ray; the number to the right 
+   of the decimal will be one, unless (1) the  ray was reflected 
+   upward from a layer boundary, in which case it will be two, or 
+   (2) the ray traveled as a head wave, in which case it will be 
+   three (assuming the ray was not reflected upward from a layer 
+   boundary after traveling as a head wave).
+
+Shot point located at depth: in  this case, the array ray  should 
+   not contain ray codes corresponding to layers  above the shot 
+   point.
+
+Ray step length:  a very small  value of step  may not result  in 
+   increased ray tracing accuracy due to round-off error
+
+Ray changes direction: a ray traveling left to right  can reflect 
+   or refract and change direction and travel right  to left, or 
+   vice versa.
+
+Terminating a ray:  if istop=0,  a ray  will be  traced until  it 
+   encounters the top, bottom, left or right of the model, unless 
+   it is reflected off the top of the model using nrbnd and rbnd.
+
+Ray stopped warning: the warnings  which begin ray stopped -  are 
+   included in  the  file  r1.out  directly before  the  summary  
+   information for that ray is listed.
+
+Failure of ray  search mode:  it is possible  that the  iterative 
+   shooting/bisection algorithm used in the ray  search mode may 
+   fail, or find  a limited range  of take-off angles  that only 
+   sample a part of a  layer, if either (1) the  model has large 
+   lateral variations, (2) the range of take-off angles defining 
+   the desired ray group is very small, (3) the value of nsmax is 
+   too small or stol is too large, or (4) it  is not possible to 
+   trace the desired type of  rays through a particular  part of 
+   the model (i.e., violates Snell's law). In any case, increase 
+   the value of nsmax first and then decrease the  value of stol 
+   if necessary and this should work (unless the problem is case 
+   4). If this fails,  take-off angles can be  supplied manually 
+   using ray=1.0 and  the arrays amin  and amax. Use  irays=1 to 
+   see why the search mode is failing.
+
+Travel  time-  and  amplitude-distance  curves:  join  successive  
+   points of the same ray  code in the same ray  group. Prograde 
+   and retrograde branches will be separated if ibreak=1.
+
+Ray  search  mode  and  multiple  reflections:  for   ray  groups  
+   specified by  L.2  in  the  array ray,  the  take-off  angles  
+   determined in the search  mode will correspond to  rays which 
+   reflect off the Lth  layer boundary only  and may or  may not 
+   give rise to the multiple reflections specified  by nrbnd and 
+   rbnd .
+
+Integer code in the file tx.out: is used to identify  each travel 
+   time to allow  for the appropriate  comparison with  the rays 
+   traced  during  inversion.  It  will  begin  at   one  and  be  
+   incremented one for each ray group if  itxout=1. In addition, 
+   the integer will be  incremented by one  for a change  from a 
+   prograde to retrograde branch or vice versa if ibreak=1. 
+
+Laterally homogeneous  layer:  if  a  layer  boundary  is  to  be  
+   horizontal or the upper or lower velocity of a layer is to be 
+   constant, then only a single point is required in the velocity 
+   model and it should be specified at an  x-coordinate equal to 
+   xmin. If two or more points are required, then  the first and 
+   last point must be specified at xmin and xmax, respectively.
+
+Constant  velocity  layer:  to  specify  a  layer  with  constant  
+   velocity, assign a  single upper layer  velocity at  xmin and 
+   assign a lower layer velocity of zero at xmin.
+
+Zero vertical velocity  gradient layer: to  specify a layer  with 
+   zero vertical  velocity gradient,  assign one  or more  upper 
+   layer velocities as usual and assign a lower layer velocity of 
+   zero at xmin.
+
+Zero velocity discontinuity across  layer boundary: to specify  a 
+   layer boundary  with  no associated  velocity  discontinuity,  
+   assign an upper layer velocity of zero at xmin  for the layer 
+   directly beneath the boundary.
+
+Head waves:  if  the  velocity  contrast  across  the  head  wave  
+   boundary away from the critical point is zero or negative, the 
+   angle of emergence from the boundary is 90 degree (grazing). Head 
+   wave amplitudes will be incorrect if any part of the ray path 
+   contains a reflection or conversion.
+
+In-plane spreading/cubic spline: a  non-head wave ray group  must 
+   consist of  at  least  two  rays to  calculate  the  in-plane  
+   spreading. The slope  of the cubic  spline used  to calculate 
+   the in-plane spreading may be sensitive to the number of rays 
+   traced for  a particular  ray group  if the  model has  large 
+   lateral variations; therefore, the number of rays traced will 
+   determine the amount of lateral heterogeneity that is sampled.
+
+Q attenuation: is calculated at a single frequency, omega, and is 
+   applied    equally    at    all    frequencies,     i.    e.,    
+   frequency-independent attenuation;  therefore,  there  is  no  
+   waveform distortion due to dispersion.  This approximation is 
+   valid for narrow-band data or if the  total attenuation along 
+   any given ray path is not too large.
+
+ 
+External plot routines: TRAMP is self-contained except  for the
+   graphics calls inside the following CALCOMP or CALCOMP-like plot 
+   routines: PLOTS, PLOT, NUMBER, SYMBOL, LINE, EMPTY, ERASE, PLOTND. 
+   The file pltlib.f contains ALL these routines (and a few other 
+   less important ones used by the graphics system where the 
+   code was developed) and it will be necessary to replace the "call" 
+   statements within each of these with their equivalents in the 
+   local graphics package.
+
+                           Array Sizes
+
+The parameters specifying the size of all arrays within TRAMP are 
+contained in the  file tramp.par  and may  be altered  to suit  a 
+particular problem and memory requirements.
+
+model layers - player
+
+points defining a single layer boundary (must be a multiple of 10) 
+   - ppcntr
+
+points at which the upper or lower layer velocity is defined (must 
+   be a multiple of 10) - ppvel
+
+trapezoids within a layer - ptrap
+
+shot points - pshot
+
+ray codes for a single shot - prayf
+
+ray groups for all shots combined - ptrayf
+
+rays in a single group - pnrayf
+
+rays reaching the surface (not including the search mode) - pray
+
+points defining a single ray - ppray
+
+intersections with model boundaries for a single ray - piray
+
+reflecting boundaries for a single ray - prefl
+
+reflecting boundaries for all ray groups - preflt
+
+converting boundaries for a single ray - pconv
+
+converting boundaries for all ray groups - pconvt
+
+points defining smooth layer boundary or isovelocity contour - 
+   pnsmth
+
+trapezoids within which Poisson's ratio is modified - papois
+
+velocity-depth profiles - pnvz
+
+arrivals in a single seismogram - parriv
+
+seismograms - pseis
+
+                    Warning and Error Messages
+
+The following is a list  and explanation of all possible  warning 
+and error messages generated by TRAMP:
+
+*** error  in velocity  model ***  - an  error in  the format  of 
+   the velocity model in the file r.in or v.in has been detected. 
+   One of the following problems exists:
+      (1) the  x-coordinates  of a  boundary  or upper  or  lower 
+         velocity have not been listed from left to right
+      (2) the  x-coordinate  of the  first  or last  point  of  a 
+         boundary or upper or lower velocity (comprised of two or 
+         more points) does not equal xmin or xmax, respectively
+      (3) a model block has a P-wave velocity less than or equal 
+         to zero
+      (4) a line  specifying the  model (x-  or z-coordinates or  
+         upper or lower  velocity) or a  blank line  in the file  
+         r.in or  v.in  has  been  omitted  (i.e.,  the file  is  
+         incomplete)
+
+*** array size error  for number of model  points *** - the  size 
+   of the arrays specifying the maximum number of points defining 
+   a layer boundary and/or the upper or lower  layer velocity is 
+   not a multiple of 10
+
+*** maximum number of  blocks in layer _  exceeded *** - a  layer 
+   in the velocity model will  consist of more than  the maximum 
+   number of trapezoids  allowed for  a single  layer given  the 
+   current form  of  the  model.  Reduce the  number  of  points  
+   defining the upper and/or lower boundary or  velocity for the 
+   particular layer.
+
+*** location of shot  point outside model ***  - a shot point  is 
+    located outside the model.
+
+*** error  in specification  of  amin or  amax  *** -  values  of 
+   amin or amax have not been specified or are  greater than 180 
+   in absolute value.
+
+*** max  reflecting  boundaries  exceeded  *** -  the  number  of  
+   reflecting boundaries in nrbnd  is greater than  that allowed 
+   for one or more ray groups.
+
+*** max  converting  boundaries  exceeded  *** -  the  number  of  
+   converting boundaries in ncbnd  is greater than  that allowed 
+   for one or more ray groups.
+
+*** reflecting  boundary  greater  than  #  of  layers  ***  -  a  
+   boundary in rbnd is  greater than or  equal to the  number of 
+   model layers.
+
+*** no  ray  codes  specified  ***  -  no  ray  codes  have  been  
+   specified in the array ray.
+
+*** shot# _  ray code  _ no  rays traced  *** -  the search  mode 
+   was unable  to find  rays for  the  shot point  and ray  code 
+   specified.
+
+*** shot# _ ray  code _ 1  ray traced *** -  the search mode  was 
+   unable to find the maximum take-off angle of  a refracted ray 
+   group for the shot point and ray code specified; only a single 
+   ray with  a take-off  angle  equal to  the  minimum value  is  
+   traced.
+
+*** less  than  nray rays  traced  for _  ray  groups ***  -  the 
+   search mode was unable to find rays (or traced less than nray 
+   rays) for the number of ray groups specified.
+
+*** possible  inaccuracies  in  rngkta  ***  -  the  Runge  Kutta  
+   routine has detected possible inaccuracies in  its attempt to 
+   solve the ray tracing equations. The exact  point(s) at which 
+   the problem  occurred can  be  found in  the  file r2.out  if  
+   idump=1 is  used. The  problem  can be  eliminated by  either  
+   reducing the velocity gradient in the appropriate location of 
+   the model or reducing the value of step and/or smin.
+
+*** ray stopped  - consists  of too many  points ***  - a ray  is 
+   composed of  more than  the  maximum number  of points  (step  
+   lengths) allowed. Tracing of this ray is terminated.
+
+*** ray stopped  - intersected too  many boundaries ***  - a  ray 
+   intersected more than the maximum number  of model boundaries 
+   allowed. Tracing of this ray is terminated.
+
+*** ray stopped -  illegal reflection ***  - a ray has  reflected 
+   off a  boundary not  specified in  ray or  rbnd and  istop=1. 
+   Tracing of this ray is terminated.
+
+*** ray stopped - converted ray  cannot reflect/refract  *** -  a 
+   ray is at a point of conversion from S to P and is beyond the 
+   critical angle. Tracing of this ray is terminated.
+
+***  ray  stopped  -  s-wave   cannot  propagate  ***  -  a   ray  
+   propagating as an S-wave has  entered a model block  in which 
+   the  S-wave  velocity  is  zero.  Tracing  of   this  ray  is  
+   terminated.
+
+*** ray  stopped -  reflected  from pinchout    *** -  the  layer 
+   from which  a ray  is  to be  reflected  has zero  thickness.  
+   Tracing of this ray is terminated.
+
+*** ray  refl.  from  zero  vel.  contrast  boundary  ***  -  the  
+   amplitude of a  ray reflected from  a zero  velocity contrast 
+   boundary has been set to zero. If ampsmt>0,  the amplitude of 
+   this ray may become greater than zero after smoothing.
+
+*** ray attenuated  to zero amplitude  *** - the  amplitude of  a 
+   ray is zero because of large Q attenuation.  If ampsmt>0, the 
+   amplitude of  this ray  may  become greater  than zero  after  
+   smoothing.
+
+*** block  undetermined ***  -  this is  the most  serious  error 
+    since it implies  that TRAMP  has lost  track of  what model  
+    block a ray is supposed to be in and therefore implies there 
+    is probably a bug in the code. The problem may be avoided if 
+    the ray  step  length  is  reduced.  Also  check that  layer  
+    boundaries do  not  cross  or  that  a  deeper  boundary  is  
+    specified before a  shallower boundary  in the  file r.in or  
+    v.in.
+
+*** max  number  of rays  reaching  surface  exceeded ***  -  the 
+    maximum allowable number  of rays reaching  the surface (not  
+    including those traced in the search mode) has been reached.
+
+*** problem with  cubic spline  *** - the  cublic spline  routine 
+    was unable to  fit a  spline to  the values of  range versus  
+    take-off angle, used in  determining the in-plane spreading,  
+    for a particular set  of.rays. The amplitudes  of these rays  
+    will be set to zero.
+
+***  error  in  specification  of  seismogram  parameters  ***  -  
+    either (1) xmins is greater than or equal to xmaxs, (2) xincs 
+    is less than or  equal to zero,  or (3) the  total number of  
+    seismograms is less than one or greater than pseis.
+
+*** rec.in  is  empty  ***  -  the  file  rec.in  containing  the  
+    seismogram locations is empty and isect=2.
+
+*** too many  arrivals for seismogram  at _ km  *** - the  number 
+    of arrivals  for  the seismogram  specified  exceeds parriv.  
+    Only the first parriv  arrivals will be  written to the file  
+    sect.out.
+
+                          Other Programs
+
+PLTSYN: a program  to plot synthetic  seismic sections given  the 
+        source and trace locations  and the time,  amplitude and 
+        phase of each arrival as output by the program TRAMP
+
+                       Program Description
+   
+   Given the time, amplitude  and phase of  each arrival, PLTSYN  
+plots the corresponding synthetic  seismic sections. The time  and 
+distance window, reduction velocity and sample rate are specified 
+by the user. The source wavelet may also be input by the user  or 
+there  are  two  default  wavelets.  The  trace  spacing  may  be  
+completely general. There  are three  types of amplitude  scaling 
+allowed: (1)  trace normalized,  (2) distance  corrected with  an 
+overall scale  factor  supplied  by  the user,  or  (3)  distance  
+corrected with an  overall scale factor  determined by PLTSYN.  A 
+time-saving feature  is available  whereby the  zero portions  of 
+traces, common in ray synthetics, are plotted as 2-point straight 
+line segments. The  time axis may  increase upwards or  downwards 
+and trace shading (aka "variable area") is  also possible.  A 
+constant velocity NMO correction may be applied.
+
+                              Files
+
+Input file: s.in contains program input parameters in  the PLTPAR 
+   namelist
+
+Input file: sect.out  is the  output file  sect.out generated  by 
+   TRAMP in the following format:
+(1) the  x-coordinate  (km)  of  the shot, -1 (format: F10.3, I10)
+(2) the distance  (km) and  number of arrivals  for a  particular 
+   trace (format: F10.3, I10)
+(3) the  travel time  (s),  ampltude and  phase (radians)  of  an 
+   arrival (format: 3E12.5)
+Line (3) is repeated for each arrival of a  particular seismogram 
+   and lines (2) and (3) are repeated for each trace of the section,
+   and lines (1), (2) and (3) are repeated for each shot
+
+Output  file:  syn.out   contains  the  constructed   seismograms  
+   (format: 36(100A4))
+
+Input file:  w.in contains  the source  wavelet.  The points  are 
+   listed in  order,  each point  on  a  separate line  (format:  
+   F10.3)
+
+Output file: p.out  contains all plot  commands for the  run used  
+    for input by the program RAYPLOT.
+
+                         Input Parameters
+
+1) Plotting parameters (PLTPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iplot - generate the plot  during the run (1), or  write all plot 
+   commands to the file p.out (0), or do both (2); if iplot=-1,
+   no plot is generated and no commands written to the file p.out
+   (this option my be useful if iamp=1 and no plot is required)
+    (default: 1)
+
+iconv - convolve  impulse response with  source wavelet (default:  
+   1)
+
+iwavlt - source  wavlet is  a 29-point low-passed  Ricker wavelet  
+   if iwavlt=0,  a single-cycle  sine  wave consisting  of nptsw  
+   points if iwavlt=1, or obtained from the file w.in if iwavlt=2 
+   (default: 0)
+
+ipol -  reverses the  polarity  of the  source  wavelet (default:  
+   0)
+
+iscale -  scale  all  traces to  a  common  maximum amplitude  if  
+   iscale=0, apply  a user-specifed  global  scale factor  and a  
+   distant correction factor if iscale=1, or apply a global scale 
+   factor determined by PLTSYN and a distance corrector factor if 
+   iscale=2 (default: 0)
+
+ishade -  equals 1 for trace shading (default: 0)
+
+ifill -  shade  the  positive  (ifill=1)  or negative  (ifill=-1)  
+   portion of the traces if ishade=1 (default: 1)
+
+inmo -  apply a  constant RMS  velocity NMO  correction (default:  
+   0)
+
+iamp - calculate the amplitude of the seimograms at the times
+   specified in the file tx.out and output to amp.out; the 
+   x-coordinates of the traveltimes in tx.out must be equal to
+   the x-coordinates of the seismograms (default: 0)
+
+idump -  write the  constructed seismograms  to the  file syn.out  
+   (default: 0)
+
+b) Other plotting parameters:
+
+vred - reducing velocity  (km/s); vred need  not be equal  to the 
+   reducing velocity used  when running  TRAMP (a  zero value is  
+   permitted for  no  reduction;  vred  must  be  less  than 10)  
+   (default: 8)
+
+sps - digitization rate in samples per second (default: 60)
+
+nsmth - number of applications  of a 3-point smoothing filter  to 
+    the impulse response (default: 0)
+
+scalef -  global  scale factor  applied  to  all traces  if  iscale=1 
+    (default: 100)
+
+rcor - power of the distance correction factor if iscale=1  or 2; 
+    traces will be multiplied  by their source-receiver distance  
+    raised to the rcor power (default: 1)
+
+xnorm - the  source-receiver distance  is divided  by xnorm  (km) 
+    before raising to the rcor power  if iscale=1 or 2 (default:  
+    100)
+
+amp - maximum  amplitude of a  trace (km) if  iscale=0 or 2;  all 
+    traces are scaled to a maximum amplitude of amp if iscale=0; 
+    the scale factor scalef  is determined by  PLTSYN (and output to  
+    the sreen)  so  that  the maximum  amplitude  of  the entire  
+    section is amp if iscale=2; if amp  equals half of the trace 
+    spacing, no overlap will occur (default: (xmax-xmin)/100)
+
+clip - the amplitude (km) at which clipping is done  if iscale=1; 
+    if clip=0, no clipping is done  (default: 0)
+
+nptsw -  number  of  points  comprising  the  source  wavelet  if  
+    iwavlt=1  (default: 19)
+
+nskip - plot every nskip seismogram  (default: 1)
+
+spmin - zero portions of traces that are less than spmin  (km) in 
+    amplitude will be plotted as a single straight line segement 
+    consisting of two points to decrease  the plot time; a value  
+    of zero will  ensure that  all points  are plotted (default:  
+    (xmax-xmin)/100000)
+
+xomit - an array containing the  locations (km) of traces not  to 
+    be plotted
+
+dens -  points  per mm  for  trace shading  (default: 5)
+
+vrms -  RMS  velocity (km/s)  used  in NMO  correction  (default: 
+    2.5)
+
+imeth - method of trace amplitude calculation if iamp=1 within a   
+   window of length twin (s) following each traveltime in the file
+   tx.out; if imeth=1, the average of the absoulte values of the 
+   seismogram is calculated; if imeth=2, the average of the 
+   maximum and minimum values of the seismogram is calculated 
+   (default: 1)
+
+twin - window length (s) following each arrival used if iamp=1
+   (default: 0.25)
+
+2) Axes parameters (AXEPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+itrev - plot the  time axis with time  increasing downwards 
+   (default: 0)
+
+b) Other axes parameters:
+
+albht - height of axes labels (mm) (default: 2.5)
+ 
+xmin, xmax - minimum and maximum distance (km) of distance axis
+xmm - length of distance axis (mm)
+xtmin, xtmax - minimum and maximum values (km) of tick marks
+ntickx - number of intervals separated by tick marks along distance axis
+ndecix - number of digits after decimal in distance axis annotation;
+   -1 for integer annotation (defaults: 0, 300, 250; values for
+   xtmin, xtmax, ntickx and ndecix depend on values of xmin and xmax)
+
+tmin, tmax - minimum and maximum time (s) of time axis
+tmm - length of time axis (mm)
+ttmin, ttmax - minimum and maximum values (s) of tick marks
+ntickt - number of intervals separated by tick marks along time axis
+ndecit - number of digits after decimal in time axis annotation;
+   -1 for integer annotation (defaults: 0, 10, 125; values for
+   ttmin, ttmax, ntickt and ndecit depend on values of tmin and tmax)
+
+                         Additional Notes
+
+User-specified source wavelet: contained in the file w.in will be 
+   adjusted to have zero mean and a maximum amplitude of one.
+
+ 
+External plot routines: PLTSYN is self-contained except  for the
+   graphics calls inside the following CALCOMP or CALCOMP-like plot 
+   routines: PLOTS, PLOT, NUMBER, SYMBOL, LINE, EMPTY, ERASE, PLOTND. 
+   The file pltlib.f contains ALL these routines (and a few other 
+   less important ones used by the graphics system where the 
+   code was developed) and it will be necessary to replace the "call" 
+   statements within each of these with their equivalents in the 
+   local graphics package.
+
+                           Array Sizes
+
+The parameters specifying the size of all arrays within PLTSYN are 
+contained in the  file pltsyn.par and  may be altered  to suit  a 
+particular problem and memory requirements.
+
+arrivals in a single seismogram - parriv
+
+seismograms - pseis
+
+points comprising a single trace - ppseis
+
+points comprising the source wavelet - pwavlt
+
+                    Warning and Error Messages
+
+The following  is a  list and  explanation of  warning and  error 
+messages generated by PLTSYN:
+
+***  insufficient   data   in   sect.out  ***   -   a   premature  
+   end-of-file has been reached  in the file  sect.out, probably 
+   because the file is empty or there are  less lines containing 
+   arrivals than  specified  for one  or  more  traces (see  the  
+   description of the file sect.out).
+
+*** w.in is  empty *** -  the file containing  the source  wavelt 
+   is empty and iwavlt=2
+
+*** source  wavelet is  zero  *** -  the  source wavelet  in  the 
+   file w.in has zero maximum amplitude
+
+*** max # of arrivals  exceeded on seismogram at  _ km *** -  the 
+   number of arrivals on the seismogram specified exceeds parriv. 
+   Edit the file sect.out to  reduce the number of  arrivals for 
+   this seismogram.
+
+*** interpolated trace for shading too long ***  - the number  of 
+   points in the interpolated trace used for shading if ishade=1 
+   is greater than ppseis. Decrease the value of dens.
+
+COMBSEC: a program  to combine  two sect.out  files generated  by 
+         TRAMP in two separate  runs into one  file of the  same 
+         format for use by PLTSYN
+
+                              Files
+
+Input file: sect1.in  is the  output file  sect.out generated  by 
+   TRAMP
+
+Input file: sect2.in  is the  output file  sect.out generated  by 
+   TRAMP
+
+Output file: sect.out  contains the  combined information in  the 
+   files sect1.in and  sect2.in in  the same  format for use  as 
+   input to the program PLTSYN
+
+Note: the files sect1.in and sect2.in must have been generated by 
+    TRAMP using the same values of xmins, xmaxs and xincs (isect=1) 
+    or the same rec.in file (isect=2).

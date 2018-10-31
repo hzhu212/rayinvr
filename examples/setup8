@@ -1,0 +1,6 @@
+cp r8.in r.in
+cp tx8.in tx.in
+cp d8.in d.in
+cp v8_s.in v.in
+cp vm8.in vm.in
+cp s8.in s.in

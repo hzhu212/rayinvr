@@ -1,0 +1,35 @@
+Within the Rayinvr Pltpar namelist, add the following line
+of parameters (for example):
+
+ modout=1, dxmod=5., dzmod=0.25, modi=1,2,5, xmmin=0., xmmax=260.,
+
+modout - switch to out the model on a unifrom grid.
+dxmod, dzmod - grid spacing in x and z directions
+modi - sample these layer boundaries (counting from th top) and output
+       them (spaced at dxmod) after the model in the output file
+xmmin, xmmax - min and max x coord (can be different from xmin and xmax)
+               note: zmin and zmax determine limits in z direction
+
+Output file: "v.out". There are two header lines at the top containing,
+xmmin, xmmax, zmin, zmax, zmin (again), dxmod, dzmod, and then on the
+next line is the number of cells in the x and z directions (equals the number
+of nodes-1). Then the model follows using the format:
+10f10.3
+The layer boundaries are preceeded by 3 header lines containing:
+1. the number of boundaries output
+2. the number of points
+3. xmmin (once for each boundary)
+Then the boundaries follow using the same format as for the model
+
+Output file: "fort.35". An "x,y,z" file suitable for plotting using gmt.
+first column is x position, second column is z position, third column
+is velocity. 
+ 
+note: using modout=2 and tracing rays will cause the v.out file to
+have velocities of 9.999 where there is no ray coverage around the edges
+of the model, and the fort.35 file will omit the unsampled nodes as well.
+This allows plots of the model with the unsample portion of the model 
+(around the edges) omitted. Also, fort.63 is a "x,y,z" file where
+first column is x position, second column is z position, third column
+is ray hits. 
+

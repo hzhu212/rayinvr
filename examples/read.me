@@ -1,0 +1,25 @@
+
+This directory contains the input files for 8 examples designed to
+illustrate all the important features of rayinvr, tramp, pltsyn and vmodel.
+The v.in, r.in, tx.in, s.in, d.in and vm.in files for the i'th example are
+called vi_s.in, ri.in, txi.in, si.in, di.in and vmi.in. For each example
+there are also ri_0.in and vi_0.in files which were used to create the
+synthetic traveltime data (not applicable to examples 4, 6, 7 and 8). There
+is also an f.in file for the 7th examples (called f7.in). Script files
+called setupi are provided to setup the input files to start the i'th
+example. The following table describes each example and the programs 
+intended to be run for each (ri=rayinvr, tr=tramp, pl=pltsyn, vm=vmodel, 
+dmp=dmplstsqr). For examples 1, 2, 3 and 5 it is instructive to run the 
+3 programs in succession for a few iterations to examine the convergence 
+to the true models.
+
+Example   Description                                         Programs
+-------------------------------------------------------------------------
+   1      crustal example                                     vm,ri,dmp
+   2      refraction statics example using head waves         vm,ri,dmp
+   3      reflector example                                   vm,ri,dmp
+   4      synthetics for example 3                            tr,pl
+   5      refraction statics example using turning rays       vm,ri,dmp
+   6      synthetics for example 1                            tr,pl
+   7      real crustal data example with floating reflectors  vm,ri
+   8      s-waves (Sg) and conversions (PmS) for example 1    vm,ri,tr,pl

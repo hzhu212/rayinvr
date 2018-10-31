@@ -1,0 +1,23 @@
+  &pltpar  isep=0, itx=1, idata=0, 
+           imod=1, iray=2, irayps=1, ibnd=0,
+           xwndow=292., ywndow=175.,
+  &end
+  &axepar  xmax=300., xmm=265.,
+           zmax=40.,  zmm=60., 
+           tmax=45.,  tmm=60., 
+           albht=3.5, orig=15., sep=10., 
+  &end   
+  &trapar  imodf=1, ibsmth=1, i2pt=0,
+           ishot=1,0, xshot=0.,300.,
+           ray=1.1,2.1,3.2,1.1,2.1,3.2,
+           nsmax=15,
+           nray=25,
+           ncbnd=0,0,0,1,1,1, cbnd=0,0,3,
+           space=1.,1.5,2.,1.,1.5,2., 
+           aamin=0.01, aamax=75.,
+  &end
+  &invpar  invr=0,
+  &end
+  &amppar iamp=1, isect=1,
+          xmins=5., xmaxs=295., xincs=10.,
+  &end

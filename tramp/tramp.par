@@ -1,0 +1,91 @@
+c
+c     version 1.3  Aug 1992
+c
+c     parameter statement for TRAMP
+c
+c     ------------------------------------------------------------
+c
+      integer player,ppcntr,ptrap,pshot,prayf,ptrayf,ppray,pnrayf,
+     +        pray,piray,prefl,preflt,pconv,pconvt,pnvz,parriv,
+     +        pseis,pnsmth,papois,paqpqs,pcntr,plcntr,pshvel,
+     +        ppvrms,ppvel,pncntr,pinvel,prayt,pshot2,prayi,pcol,
+     +        pzff,ppzff,pitan,pitan2
+c
+      parameter(pi=3.141592654, pi4=.785398163, pi2=1.570796327,
+     +     pi34=2.35619449, pi18=57.29577951, pit2=-6.283185307)
+c
+      parameter(player=12,   ppcntr=40,  ptrap=100,   pshot=40,  
+     +          prayf=30,    ptrayf=500, ppray=500,  pnrayf=500, 
+     +          pray=10000,  piray=100,   prefl=20,   preflt=150,
+     +          pconv=10,    pconvt=100, pnvz=10,    parriv=100, 
+     +          pseis=300,   pnsmth=500, papois=50,  paqpqs=50,
+     +          pcntr=100,   plcntr=10,  pshvel=50,  ppvrms=1000, 
+     +          prayi=3000,  ppvel=40, pcol=20, pzff=5, ppzff=20,
+     +          pitan=1000) 
+c
+      parameter(pncntr=player+1, pinvel=player*2, pitan2=pitan*2,
+     +          pshot2=pshot*2, prayt=pshot2*prayf)
+c
+c
+c     player - model layers
+c
+c     ppcntr - points defining a single layer boundary
+c              (must be a multiple of 10)
+c
+c     ppvel - points at which upper and lower layer velocities defined
+c             (must be a multiple of 10)
+c
+c     ptrap - trapezoids within a layer
+c
+c     pshot - shot points
+c
+c     prayf - ray groups for a single shot
+c
+c     ptrayf - ray groups for all shots
+c
+c     ppray - points defining a single ray
+c
+c     piray - intersections with model boundaries for a single ray
+c
+c     pnrayf - rays in a single group
+c
+c     pray - rays reaching the surface (not including the search mode)
+c
+c     prefl - reflecting boundaries for a single group
+c
+c     preflt - reflecting boundaries for all groups    
+c
+c     pconv - converting boundaries for a single group 
+c
+c     pconvt - converting boundaries for all groups
+c
+c     pnvz - velocity-depth profiles
+c
+c     parriv - arrivals in a single seismogram
+c
+c     pseis - seismograms
+c
+c     pnsmth - points defining smooth layer boundary and 
+c              isovelocity contour
+c
+c     papois - blocks within which Poisson's ratio is altered
+c
+c     paqpqs - blocks within which Qp and Qs is altered
+c
+c     pcntr - isovelocity contours
+c
+c     plcntr - labels of isovelocity contours
+c
+c     ppvrms - points defining RMS velocity profile
+c
+c     prayi - observed travel time picks
+c
+c     pcol - colours for observed travel times
+c
+c     pzff - boundaries defining zoeppritz fudge factor
+c
+c     ppzff - points defining zoeppritz fudge factor along reflecting 
+c             boundary
+c
+c     pitan - number of intervals at which tangent function is pre-evaluated
+c             and used for interpolation

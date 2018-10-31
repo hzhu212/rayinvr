@@ -1,0 +1,27 @@
+  &pltpar  isep=0, itx=2, vred=0., 
+           imod=1, iray=1, ibnd=0, isum=2,
+           xwndow=290., ywndow=175.,
+           ibcol=0, ifcol=1, ircol=1, itcol=1,
+  &end
+  &axepar  xmax=10., xmm=270., 
+           zmax=3.,  zmm=70., 
+           tmax=2.5, tmm=70.,
+           itrev=1, albht=3.,
+  &end   
+  &trapar  imodf=1, 
+           ishot=1,2,2,2,2,2,2,2,2,2,-1,
+           xshot=0.01,1.01,2.01,3.01,4.01,5.01,
+                 6.01,7.01,8.01,9.01,9.99,
+           ray=1.2,2.2,3.2, 
+           nsmax=25, 
+           nray=25,50,50,
+           ibsmth=1, npbnd=250, nbsmth=100,
+           aamax=90.,
+           xsmax=3.1, iturn=0,0,0, 
+  &end
+  &invpar  invr=0,
+           ivray=1,2,3,
+  &end
+  &amppar iamp=1, isect=1, icmp=1.
+          xmins=-3., xmaxs=3., xincs=.05,
+  &end

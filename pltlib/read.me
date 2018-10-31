@@ -1,0 +1,18 @@
+
+Generating Postscript files using the x-windows versions
+________________________________________________________
+
+
+To generate Postscript files directly using the x-windows 
+library (xpltlib.f), set iplot=0 or 2 in the pltpar namelist. 
+The file is a colour Postscript file if iroute=4 in the pltpar
+namelist, and a black and white plot otherwise. So this means,
+only the uniras versions of the programs will generate the plot 
+meta-file called p.out used by the program rayplot. The file 
+produced by the x-windows versions will also be called 
+p.out if iplot=0 or 2, but will be a postscript file. The 
+program rayplot will also produce a postscript file if iplot=0 
+or 2 is used, and the postscript file will be called post.out
+in this case.
+
+Postscript plotting added by D. Demanet (Liege Univ, Belgium)

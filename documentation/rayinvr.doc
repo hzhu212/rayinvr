@@ -1,0 +1,1751 @@
+
+
+            DOCUMENTATION FOR RAYINVR AND RELATED PROGRAMS
+            ----------------------------------------------
+
+Date:       Dec 1993
+Version:    1.3
+
+Written by: C.A. Zelt
+Address:    Geological Survey of Canada
+            1 Observatory Crescent
+            Ottawa, Ontario, Canada  K1A 0Y3
+phone:      613-995-1257   
+fax:        613-992-8836
+e-mail:     zelt@cg.emr.ca
+
+
+            Table of Contents
+            -----------------
+
+
+RAYINVR              
+     Program Description            
+     Files                         
+     Input Parameters             
+         Plotting parameters     
+         Axes parameters        
+         Ray tracing parameters
+         Inversion parameters 
+     Additional Notes        
+     Array Sizes            
+     Warning and Error Messages 
+Other Programs                 
+     VMODEL 
+     DMPLSTSQR               
+     RAYPLOT
+
+
+RAYINVR: a program to trace rays in 2-D  media for rapid forward 
+         modelling and  inversion of  refraction and  reflection  
+         travel times
+
+                        Program Description
+  
+  A 2-D (x,z) isotropic medium is assumed. The velocity  model is 
+composed  of  a  sequence  of   layers  separated  by  boundaries  
+consisting of  linked  linear segments  of  arbitrary dip.  Layer  
+boundaries must  cross  the  model  from  left  to  right.  Layer  
+thicknesses may be reduced to zero to model pinchouts or isolated 
+bodies. The velocity within a layer is defined by velocity values 
+specified at arbitrary x-coordinates along the  top and bottom of 
+the layer. The x-coordinates at which  layer boundaries and upper 
+and lower velocities are specified can  be completely general and 
+independent within and  between layers.  Velocity discontinuities  
+across layer  boundaries are  allowed but  not required.  For the  
+purposes of ray tracing, the model is automatically broken up into 
+an irregular network of  trapezoids, each with  dipping upper and 
+lower  boundaries  and  vertical   left  and  right   sides.  The  
+velocities at  the four  corners  of the  trapezoid  are used  to  
+interpolate a  velocity field  within the  trapezoid so  that the  
+velocity  varies  linearly  along  its   four  sides.  Therefore,  
+horizontal as well as vertical velocity gradients may exist within 
+a trapezoid. A simulation of smooth  layer boundaries is possible 
+in which the incident and emergent ray angles are calculated using 
+the slope of the smoothed boundary.
+  The source(s) may be positioned anywhere in the model  and rays 
+may be directed any angle. The receivers are always assumed to be 
+at the top of  the model. Both  P- and S-wave  propagation can be 
+considered including (multiple)  conversions. A  unique Poisson's  
+ratio may be assigned to each trapezoid  of the model. Refracted, 
+reflected and head waves may be  traced, each possibly containing 
+multiple and/or surface reflections and conversions. Ray take-off 
+angles are determined automatically by the  program for those ray 
+groups specified by the user using an iterative shooting/bisection 
+search mode. Ray tracing is performed  by numerically solving the 
+ray tracing equations for 2-D media, a pair of first order ODE's, 
+using a Runge Kutta method. The ray  step length is automatically 
+adjusted at each  step to  maximize efficiency  while maintaining  
+accuracy. Travel  times are  calculated by  numerical integration  
+along ray paths using the  trapezoidal rule. A plot  of the model 
+and all rays traced may be produced along  with a plot of reduced 
+travel time versus distance for the observed and calculated data.
+  The partial derivatives  of travel time  with respect to  those 
+model  parameters   selected   for   adjustment  are   calculated   
+analytically  during  ray   tracing;  these   parameters  include   
+velocities and  the  vertical  position  of boundary  nodes.  The  
+travel times  correspond to  any ray  paths which  can be  traced  
+through the  model, being  either  first or  later arrivals.  The  
+travel time residuals with respect to the  observed data are also 
+calculated. The travel times and partial derivatives are linearly 
+interpolated to the observed seismogram locations since two-point 
+ray tracing is not required. The partial derivatives  and  travel
+time residuals are output and used later as input to the  program
+DMPLSTSQR which  updates  the model  parameters  by applying  the  
+method of damped least-squares to the linearized inverse problem.
+  The model parameterization is well  suited to the inversion  of 
+refraction/reflection data  since realistic  earth models  can be  
+represented by a minimum  number of model  parameters, i.e.,. the 
+number and position  of parameters  specifying each layer  can be  
+adapted to the data's subsurface  ray coverage. Layer boundaries, 
+including the  surface,  may  be  horizontal (one  parameter)  or  
+consist of numerous  straight line segments.  A layer may  have a 
+constant velocity (one parameter) or the velocity structure may be 
+defined by many upper and lower  layer velocity points. Different 
+velocity points may be specified above and below a layer boundary 
+if a velocity discontinuity is required across the boundary, or a 
+single row of  velocity points may  be specified if  an interface 
+with no discontinuity is  needed. The vertical  velocity gradient 
+or layer thickness may be fixed in all or  part of a layer during 
+the  inversion  if   there  is   insufficient  ray   coverage  to   
+independently determine an upper and lower layer velocity or layer 
+thickness.
+                              Files
+
+Executable file: RAYINVR
+
+Input file: r.in contains program input parameters in five parts:
+   (1)  the  PLTPAR  namelist  contains   parameters  related  to  
+   plotting
+   (2) the AXEPAR namelist contains parameters related to axes
+   (3) the  TRAPAR namelist  contains parameters  related  to ray  
+   tracing
+   (4)  the  INVPAR  namelist  contains   parameters  related  to  
+   inversion
+   (5) after skipping three lines (column headings), the velocity 
+   model is specified as follows:
+     (a) the  layer number,  the x-coordinates  (km)  of a  layer 
+        boundary entered  from  left to  right  (format: I2,  1X,  
+        10F7.2)
+     (b) the z-coordinates (km) of a layer boundary corresponding 
+        to the x-coordinates listed above (format: 3X, 10F7.2)
+     (c) a  0,  1  or  -1  for  each  z-coordinate  listed  above  
+        depending on whether (1)  or not (0)  partial derivatives 
+        are to be calculated for a particular boundary node or the 
+        boundary depth is to be determined by fixing the thickness 
+        of the  layer above  at that  x-coordinate  (-1) (format:  
+        3X, 10I7)
+     (d) the layer number, the  x-coordinates (km) of the  points 
+        at which the  upper layer  velocity is  specified entered  
+        from left to right (format: I2, 1X, 10F7.2)
+     (e) the upper layer  P-wave velocities (km/s)  corresponding 
+        to the x-coordinates listed above (format: 3X, 10F7.2)
+     (f) a 0  or 1 for  each velocity listed  above depending  on 
+        whether (1)  or not  (0)  partial derivatives  are  to be  
+        calculated for a particular velocity (format: 3X, 10I7)
+     (g) the layer number, the  x-coordinates (km) of the  points 
+        at which the  lower layer  velocity is  specified entered  
+        from left to right (format: I2, 1X, 10F7.2)
+     (h) the lower layer  P-wave velocities (km/s)  corresponding 
+        to the x-coordinates listed above (format: 3X, 10F7.2)
+     (i) a 0, 1 or -1 for each velocity listed above depending on 
+        whether (1)  or not  (0)  partial derivatives  are  to be  
+        calculated for a particular velocity or the lower velocity 
+        is to  be  determined  be  fixing the  vertical  velocity  
+        gradient at that x-coordinate (-1) (format: 3X, 10I7)
+  The above sequence  of nine lines  is repeated  for each model  
+   layer, the  top-most layer  specified  first, the  bottom-most  
+   last, and is ended by specifying the  bottom layer boundary of 
+   the model as  in (a) and  (b) above.  If the number  of points  
+   defining a boundary or the upper or  lower velocity of a layer 
+   must exceed 10 then the points can be continued onto subsequent 
+   lines of the  file as  follows: line  (b), (e)  or (h)  of the  
+   particular parameter to be extended is modified to include a 1 
+   in the second column so the complete format of the line becomes 
+   I2, 1X, 10F7.2. The sequence of three lines (a)-(c), (d)-(f) or 
+   (g)-(i) is then repeated  as many times as  is necessary using 
+   the same format described above.
+
+Input file: v.in contains  the velocity model in  the same format  
+   as described in part (5) above for r.in.
+
+Input file: f.in contains  the "floating" reflecting boundaries;
+   these are interfaces with no associated velocity discontinuity
+   (hence the word "floating") at which rays can reflect in 
+   addition to the layer boundaries; the file format is similar to 
+   that for v.in:
+   (1) the number of nodes defining the floating reflector
+       (format: I2)
+   (2) the x-coordinates (km) of the nodes defining the floating
+       reflector (format: 3X, <number of nodes>F7.2)
+   (3) the z-coordinates (km) of the nodes defining the floating
+       reflector (format: 3X, <number of nodes>F7.2)
+   (4) a 0 or 1 for each node listed above depending on whether (1)  
+       or not  (0) partial derivatives  are  to be  calculated for 
+       this particular node (format: 3X, <number of nodes>I7)
+   Lines (1) through (4) are repeated for each floating reflector 
+
+Input file:  tx.in  contains  the  observed travel  time-distance  
+    pairs in the following format:
+   (1) the  x-coordinate  (km)  of  the  shot  point,  1  if  the 
+      receivers are to the right of the  shot point or -1 if the  
+      receivers are to the left, 0, and 0 (format: 3F10.3, I10)
+   (2)  the  x-coordinate   (km)  of  the   observed  data,  the   
+      corresponding unreduced travel time (s), the estimated 
+      uncertainty of the travel time pick  (s), and a  non-zero 
+      integer used to identify the type of arrival  to allow for 
+      the appropriate comparison with the rays traced 
+      (format: 3F10.3, I10)
+   Line (2) is repeated for each  pick corresponding to the shot  
+   point in line (1).  The sequence (1) and  (2) is repeated  for 
+   each shot point of the data  set. The file is terminated with  
+   the following line:
+   (3) 0, 0, 0, -1 (format: 3F10.3, I10)
+
+Output file: tx.out contains the  calculated travel time-distance 
+    pairs in the same format as described above for tx.in.
+
+Output file:  r1.out contains  summary information  for  each ray  
+    traced including  the  shot  number,  take-off and  emergent  
+    angle, range, reduced  travel time,  number of  points (step  
+    lengths) defining the ray and the ray code.
+
+Output  file:  r2.out  contains  detailed   parameters  for  each  
+    trapezoid of the velocity model, a one-dimensional equivalent 
+    (average) velocity  model and  summary information  for each  
+    point of each ray traced.
+
+Output file: i.out contains the  partial derivatives, travel time 
+    residuals and travel time uncertainties used for input by the 
+    program  DMPLSTSQR.  The  top  of   the  file  contains  the  
+    following information:
+       (1) the number of travel time picks used and the number of 
+         model parameters  for  which  partial derivatives  were  
+         calculated
+       (2)  for  each  model   parameter  involved,  an   integer  
+         identifying the type of model parameter (1 for boundary 
+         or 2  for velocity),  the  current value  of  the model  
+         parameter, and the  estimated uncertainty of  the model  
+         parameter
+       (3) the  partial derivatives,  travel  time residuals  and 
+         corresponding uncertainties in matrix form
+       (4) the number of travel time picks used
+       (5) the RMS travel time residual
+       (6) the normalized chi-squared
+
+Output file: p.out  contains all plot  commands for the  run used  
+    for input by the program RAYPLOT.
+
+Output file: n.out contains the namelist parameter values.
+
+                         Input Parameters
+
+1) Plotting parameters (PLTPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iroute - equals 1 to plot to the screen, 2 to create a postscript 
+   file, 3 to create a plot file for the VERSATEC plotter, or 4
+   to create a colour postscript file; if iroute does not equal 1 
+   there is no plotting to the screen  (default: 1)
+
+iseg - create a Uniras segment(s) (default: 0)
+
+iplot - generate the plot  during the run (1), or  write all plot 
+   commands to the file p.out (0), or do both (2) (default: 1)
+
+imod - plot model boundaries (default: 1)
+
+ibnd - plot vertical model boundaries (default: 1)
+
+idash - plot model boundaries as dashed lines (default: 1)
+
+ivel - plot the P-wave (1) or  S-wave (-1) velocity values (km/s) 
+   within each trapezoid of the model (default: 0)
+
+iray - plot  all rays traced  (1) or  only those which  reach the  
+   surface (or reflect off the floating reflector for ray groups for 
+   which frbnd>0) (2); rays traced in the search mode are not 
+   plotted unless irays=1 (see below) (default: 1)
+
+irays - plot the rays traced in the search mode (default: 0)
+
+irayps - plot  the P-wave  segments of  ray paths as  solid lines  
+   and the S-wave segments as dashed lines (default: 0)
+
+idot - plot a symbol at each point (step length) defining each ray 
+   path (default: 0)
+
+itx -  plot the calculated travel time-distance  values   as lines 
+   (1), symbols of height symht (2),  symbols of height symht 
+   interpolated  at  the  observed receiver locations contained in
+   the  file  tx.in (invr=1 must be used, if not, itx=2 is used) (3); 
+   or as residuals measured from the oberved data in tx.in (invr=1
+   must be used) (4); no calculated travel times are plotted if itx=0 
+   (default: 1)
+
+itxbox - plot only those calculated and observed travel times that
+   have distances between xmint and xmaxt and times between tmin
+   and tmax (default: 0)
+
+idata - plot the  observed travel time  picks from the  file tx.in 
+   (1 or -1), or plot only those picks used in the inversion if invr=1 
+   (2 or -2); the observed data are represented by vertical bars with 
+   a height of twice the corresponding uncertainty specified in the 
+   file tx.in if idata>0, or by symbols of height symht if idata<0
+   (default: 0)
+
+isep - plot the model and rays and travel times in the same plot 
+   frame (0), separate plot frames (1), plot the model and rays and
+   travel times in a separate plot frame for each shot (2), or plot
+   the model and rays in separate plot frames for each shot followed
+   by the travel times in separate plot frames for each shot (3)
+   (default: 0)
+   Note: the value of isep may be changed during a program run with
+         entry from the keyboard of the values 0, 1, 2 or 3 between
+         plot frames when a <CR> is needed to continue; entering "s"
+         will terminate the program run
+
+ibreak - an array corresponding  to the ray groups  listed in the 
+   array ray to split travel  time-distance curves into prograde  
+   and retrograde segments when plotting with itx=1, and to increment 
+   the integer code by one in the file tx.out when changing from  a 
+   prograde to retrograde segment or  vice versa if itxout=1
+   (default: 1)
+
+iszero - plot the calculated and observed  travel times as if all 
+   shot points were at 0 km and  the rays travelled left to right  
+   (default: 0)
+
+itxout - write the  calculated travel time-distance  pairs to the  
+   file tx.out;  the  integer  code  identifying  each  pick  is  
+   determined by the array ibreak if itxout=1 or the array ivray  
+   if itxout=2 or 3; if itxout=3, the calculated travel times are
+   interpolated to the observed receiver locations (invr=1 must be
+   used if itxout=3, if not, itxout=2 is used) (default: 0)
+   Note: there appears to be a bug with itxout, itx=itxout may be
+         necessary for correct results
+
+idump  -   write  detailed   velocity  model   and   ray  tracing   
+   information to  the file  r2.out  and the  namelist parameter  
+   values to the file n.out; mainly for debugging (default: 0)
+   Note: using idump=1 will greatly slow down the run time
+ 
+isum -  write  a short  summary  about the  rays  traced  and the 
+   velocity model to the screen (1), also write the travel time 
+   residuals and chi-squared values for each phase and shot to the  
+   file r1.out (2), and to the screen (3) (must use invr=1 for 
+   isum>1) (default: 1)
+
+istep - pause after each ray is plotted writing its take-off angle
+        to the screen and waiting until a <CR> is entered before
+        plotting the next ray; this is mainly intended to be used in
+        conjunction with irays=1 to determine the cause of the 
+        failure of the search mode for a particular ray group; 
+        entering "s" after any ray will terminate the program run 
+        (default: 0)
+
+b) Other plotting parameters:
+
+symht - height of symbols (mm)  used when plotting each point 
+   defining a  ray path,  single  point travel  time  curves (if  
+   symht=0, single point travel time curves will not be plotted), 
+   the calculated travel times if itx=2, or the observed travel
+   times if idata<0 (default: 0.5)
+
+velht - the maximum  height of the velocity  values (mm) when  
+   ivel=1 or -1 is equal to velht*albht (default: 0.7)
+
+nskip - the first nskip points  (step lengths) of all ray paths  are 
+   not plotted (default: 0)
+
+nrskip - plot every nrskip ray traced (default: 1)
+
+npskip - plot every npskip point of each ray traced (default: 1)
+
+vred -  reducing  velocity  (km/s) of travel time-distance  plot;  
+   observed data in the file  tx.in is assumed to be unreduced (a 
+   value  of zero is  permitted for no  reduction; vred must be less 
+   than 10) (default: 8)
+
+xwndow, ywndow - the horizontal and vertical size of the graphics
+   window (mm) that will over-ride a window size specified in an 
+   "mx11.opt" or ".Xdefaults" file; the maximum allowable values 
+   (to use the entire screen) are 350 and 265 mm, respectively  
+   (defaults: if xwndow or ywndow is less than or equal to zero, 
+   the size of the window specified in the "mx11.opt" or ".Xdefaults" 
+   file is used)
+   Note: the effect of these parameters will depend on the local 
+         graphics system and machine type
+
+dvmax, dsmax - a  warning message is written  to the screen and  the 
+   to file r1.out indicating the  layers in which the  magnitude of 
+   the velocity gradient vector is greater than dvmax (km/s/km) and the 
+   layer boundaries having a change in slope across three successive 
+   points of greater than dsmax (degrees)  (defaults: infinite, infinite)
+
+ibcol, ifcol - background and foreground colours (defaults: 0, 1)
+
+mcol - an array specifying the colours of the model: the layer 
+   boundaries are mcol(1), the vertical boundaries are mcol(2),
+   the floating reflectors are mcol(3), the smooth layer boundaries
+   are mcol(4), and the velocity values are mcol(5) 
+   (default: 1, 1, 1, 1, 1)
+
+ircol - colour the ray paths according to the value of ivray for that
+   particular ray group (1), according to the shot number (2), or
+   according to the ray group (3) (default: 0)
+
+itcol - colour the observed travel times according to the integer 
+   code identifying each pick in the file tx.in (the 4th column) (1), 
+   or according to the shot number (2); if itcol=3, the observed
+   travel times are coloured as if itcol=1 and the calculated travel
+   times are coloured according to ray group (invr=1 must be used)
+   (default: 0)
+
+title - title for plot (up to 80 characters long) positioned using 
+   xtitle and ytitle (default: none)
+
+xtitle, ytitle - x and y position (mm) of the plot title (default: 0, 0)
+
+colour - an array specifying the colours of the ray paths if ircol>0
+   and the observed travel times if itcol>0 
+   (default: 2,3,4,5,6,8,17,27,22,7)
+
+2) Axes parameters (AXEPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iaxlab - plot axes labels (default: 1)
+
+itrev -  draw the  time-distance  plot with  the  time increasing  
+   downward (default: 0)
+
+b) Other axes parameters:
+
+albht - height of axes labels (mm) (default: 2.5)
+
+xmin, xmax - minimum and maximum distance (km) of velocity model
+xmm - length of distance axis (mm)
+xtmin, xtmax - minimum and maximum values (km) of tick marks
+ntickx - number of intervals separated by tick marks along distance axis
+ndecix - number of digits after decimal in distance axis annotation; 
+   -1 for integer annotation (defaults: 0, none, 250; values for
+   xtmin, xtmax, ntickx and ndecix depend on values of xmin and xmax)
+
+zmin, zmax - minimum and maximum depth (km) of velocity model
+zmm - length of depth axis (mm)
+ztmin, ztmax - minimum and maximum values (km) of tick marks
+ntickz - number of intervals separated by tick marks along depth axis
+ndeciz - number of digits after decimal in depth axis annotation;
+    -1 for integer annotation (defaults: 0, 50, 75; values for
+   ztmin, ztmax, ntickz and ndeciz depend on values of zmin and zmax)
+
+xmint, xmaxt - minimum and maximum distance (km) of time-distance plot
+xmmt - length of distance axis (mm)
+xtmint, xtmaxt - minimum and maximum values (km) of tick marks
+ntckxt - number of intervals separated by tick marks along distance axis
+ndecxt - number of digits after decimal in distance axis annotation; 
+   -1 for integer annotation (defaults: xmin, xmax, xmm; values for
+   xtmint, xtmaxt, ntckxt and ndecxt depend on values of xmint and xmaxt)
+
+tmin, tmax - minimum and maximum time (s) of time-distance plot
+tmm - length of time axis (mm)
+ttmin, ttmax - minimum and maximum values (s) of tick marks
+ntickt - number of intervals separated by tick marks along time axis
+ndecit - number of digits after decimal in time axis annotation; 
+   -1 for integer annotation (defaults: 0, 10, 75; values for
+   ttmin, ttmax, ntickt and ndecit depend on values of tmin and tmax)
+
+orig - lower left origin of plot is (orig,orig) mm (default: 12.5)
+
+sep - separation (mm) between the model and travel time diagrams
+   if isep=0 or 2 (default: 7.5)
+
+3) Ray tracing parameters (TRAPAR namelist):
+
+a) Switches (usually 0 = off, 1 = on):
+
+ishot - an array specifying the directions rays are to be traced 
+ from the shot points listed in the arrays xshot and zshot; the 
+  following code is used:
+   (1) 0 - no rays are traced
+   (2) -1 - rays are traced to the left only
+   (3) 1 - rays are traced to the right only
+   (4) 2 - rays are traced to the left and right
+   (default: 0)
+
+iraysl - use the  array irayt to  select which ray  groups listed 
+   in the array ray are to be traced for a particular shot point  
+   (default: 0)
+
+irayt - an array selecting  those ray groups listed  in the array 
+   ray which are active for a particular shot point listed in the 
+   arrays xshot and zshot.  If there are n  ray groups listed  in 
+   the array ray,  then the  jth ray group  for the  ith shot is  
+   referred to in  the (2n(i-1)+j)th  element of  irayt for rays  
+   traced to the  left ,  and in the  (2n(i-1)+n+j)th element  of 
+   irayt for rays traced to the right. You must specify values of 
+   irayt for each group and for each direction regardless of  the 
+   values of ishot  (default: 1)
+
+ifast - use a Runge-Kutta routine without error control to solve
+   the ray tracing equations and a look-up/interpolation routine 
+   to evaluate certain trigonometric functions; with ifast=0, a
+   Runge-Kutta method with error control and the intrinsic 
+   trigonometric functions are used. Using ifast=1 is about 30-40%
+   faster and provides essentially the same accuracy as ifast=0
+   (default: 1)
+   Note: ifast=1 is intended to be used for all routine modelling
+         and ifast=0 only to test a final model or if ifast=1 
+         obviously fails
+
+i2pt - perform two-point ray tracing, i.e., determine the ray take-
+   off angles that connect sources and observed receiver locations
+   within each ray group; the receiver locations are obtained from
+   the file tx.in for those picks that have the same integer code
+   as specified in the array ivray for the ray group; if i2pt=2,
+   only rays which reflect off the appropriate floating reflector
+   specified in the array frbnd (if frbnd>0) are traced (default: 0)
+
+iturn - an array  corresponding to the  ray groups listed  in the 
+   array ray to trace  rays only to  their turning or  reflection 
+   point in the search mode; if a refracted or head wave ray group 
+   is to contain a reflection(s) before it turns (specified using 
+   nrbnd and rbnd), then iturn=0 must be used (default: 1)
+
+isrch - search again  for the take-off  angles of a  ray group if 
+   the same ray code is listed more than once for the same shot in 
+   the array ray; isrch=1 must be used if the take-off angles of 
+   two or more ray  groups with the same  ray code are  different 
+   because of multiple reflections and/or conversions specified by 
+   nrbnd, rbnd, ncbnd,and cbnd (default: 0)
+
+istop - stop  tracing any  ray which reflects  off a  boundary not 
+   specified in the arrays ray or rbnd; if istop=2, rays are also
+   stopped if they enter a layer deeper than that specified by the
+   ray code in the array ray, i.e., the layer number is greater 
+   than L and the ray code is L.n, where n=0, 1, 2, or 3 
+   (default: 1)
+
+idiff - continue to trace headwaves along a boundary even if the
+   velocity contrast across the interface is no longer positive,
+   in which case headwaves emerge parallel to the boundary (idiff=1);
+   if idiff=2, initiate a headwave ray group even if there is no 
+   critical point (or it is not found) to model diffractions along 
+   the top of a low-velocity layer (default: 0)
+
+ibsmth - apply  a simulation  of smooth  layer boundaries  (1) or  
+   apply the simulation  and plot  the smoothed  boundaries (2);  
+   ibsmth=2 has no effect if isep>1 (default: 0)
+
+insmth - an array listing the layer boundaries for which the smooth
+   layer boundary simulation is not to be applied, or only applied
+   outside the model distances xminns and xmaxns, when ibsmth=1 
+   or 2, (default: 0) 
+
+imodf - use the velocity  model in the file v.in  instead of the 
+   model in part (5) of the file r.in (default: 0)
+
+b) Other ray tracing parameters:
+
+xshot - an  array containing  the x-coordinates  (km) of the  shot 
+   points (default: 0.0)
+
+zshot - an  array containing  the z-coordinates  (km) of the  shot 
+   points (default: a very small distance below the model surface)
+
+ray -  an  array  containing the  ray  groups  to be  traced;  the  
+   following code is used:
+   (1) L.1 - rays which refract (turn) in the Lth layer
+   (2) L.2 - rays which reflect off the bottom of the Lth layer
+   (3) L.3 -  rays which  travel as  head waves along  the bottom  
+   of the Lth layer
+   (4) L.0  - ray  take-off angles  supplied by  the user  in the  
+   arrays amin and amax
+
+nray - an  array containing the  number of rays  to be  traced for 
+   each ray group  in the  array ray  (default: 10;  however, the  
+   default is the first element of nray for all ray groups if only 
+   one value is specified)
+
+space - an array which  determines the spacing of  take-off angles 
+   between the minimum and  maximum values for each  ray group in 
+   the array  ray.  For  space=1,  the  take-off  angles will  be  
+   equally spaced;  for  space>1,  the  take-off angles  will  be  
+   concentrated  near  the  minimum  value;  for  0<space<1,  the  
+   take-off angles will  be concentrated  near the  maximum value  
+   (default: 1;  however, space=2  for a  reflected ray  group if  
+   specified as L.2 in the array ray)
+
+amin, amax  -  arrays  containing  minimum  and  maximum  take-off  
+   angles  (degrees);  measured  from  the  horizontal,  positive  
+   downward and negative upward (for rays traveling left to right 
+   or right to left); used for ray groups specified by ray=1.0
+
+nsmax -  an array  containing the  maximum number  of rays  traced 
+   when searching for the take-off angles of the ray groups in the 
+   array ray  (default: 10;  however,  the default  is  the first  
+   element of  nsmax for  all  ray groups  if only  one  value is  
+   specified)
+
+n2pt - maximum number of iterations during two-point ray tracing
+   (i2pt>0); this is the maximum number of rays traced for each
+   receiver to determine the take-off angle of the ray that
+   connects the source and receiver (default: 5)
+
+x2pt - distance tolerance (km) for two-point ray tracing; less than
+   n2pt rays will be traced for a particular receiver if a ray end 
+   point is within x2pt of the receiver location 
+   (default: (xmax-xmin)/2000)
+
+crit - head waves are generated if a down-going  ray in the search 
+   mode has an angle of incidence at the  bottom of the Lth layer 
+   within  crit  degrees  of  the  critical  angle  when  ray=L.3  
+   (default: 1)
+
+hws - the spacing (km) of rays emerging upward  from the bottom of 
+   the Lth layer when ray=L.3 (default: (xmax-xmin)/25)
+
+nhray - maximum number of rays traced for a head wave ray group
+   (default: pnrayf)
+
+aamin - minimum  take-off angle  (degrees) for  the refracted  ray 
+   group in the first layer (default: 5)
+
+aamax - maximum take-off angle (degrees) for  reflected ray groups 
+   specified as L.2 in the array ray (default: 85)
+
+stol - if a ray traced in  the search mode is of the  correct type 
+   and its  end point  is within  stol (km)  of the  previous ray  
+   traced in the search mode, then the search for that ray type is 
+   terminated; a value of stol=0 will ensure  that nsmax rays are 
+   always traced in the search mode (default: (xmax-xmin)/3500)
+
+xsmax - for  reflected ray  groups specified as  L.2 in  the array 
+   ray, determine the minimum take-off angle using the search mode 
+   so that the maximum range for this ray  group is xsmax (km) if 
+   iturn=0 or  the  maximum offset  of  the  reflection point  is  
+   xsmax/2 (km) if iturn=1; for head wave ray groups specified as 
+   L.3 in  the array  ray,  the maximum  offset of  the  point of  
+   emergence from the head wave  boundary is xsmax  (km); xsmax=0  
+   will ensure that the take-off angle of the reflected ray which 
+   grazes off the bottom of the Lth  layer is determined and head 
+   waves are traced along the Lth boundary  until the edge of the 
+   model is reached (default: 0.0)
+
+nrbnd - an  array containing the  number of  reflecting boundaries 
+   for each ray group in the array ray (default: 0)
+
+rbnd - an array containing the reflecting  boundaries specified in 
+   the array nrbnd; the following code is used:
+   (1) L -  ray traveling  downward is  reflected upward  off the  
+   bottom of the Lth layer
+   (2) -L -  ray traveling upward  is reflected downward  off the  
+   top of the Lth layer
+
+ncbnd - an array containing the number of converting (P  to S or S 
+   to P) boundaries for each ray group in the array ray (default: 
+   0)
+
+cbnd - an array containing the converting  boundaries specified in 
+   the array ncbnd; the following code is used:
+   (1) i   - ray will  convert from its  present wave type  (P or  
+   S) at the ith layer boundary encountered
+   (2) 0 - ray will leave the source as an S-wave
+
+frbnd - an  array containing the  floating reflecting boundaries 
+   for each ray group in the array ray; the values of frbnd 
+   correspond to the order in which the reflectors are listed in
+   the file f.in  (default: 0)
+
+pois - an array containing  the value of Poisson's ratio  for each 
+   model layer; a  value of  0.5 signifies  a water layer  with a  
+   corresponding  S-wave   velocity  of   zero   (default:  0.25;   
+   however, the  default is  the first  element of  pois  for all  
+   layers if only one value is specified)
+
+poisl, poisb -  arrays specifying  the layers  and block  numbers, 
+   respectively, of model trapezoids within which Poisson's ratio 
+   is modified over that given by pois using the array poisbl; for 
+   poisb, the trapezoids with  a layer are numbered  from left to 
+   right
+
+poisbl - an array containing the value of Poisson's  ratio for the 
+   model trapezoids  specified  in  the  arrays poisl  and  poisb  
+   overriding the values assigned using the array pois
+
+npbnd  -  number  of  points  at  which  each  layer  boundary  is  
+   uniformly sampled  for smoothing  if ibsmth=1  or  2 (default:  
+   100)
+
+nbsmth - number of applications of a  three-point averaging filter 
+   to each layer boundary if ibsmth=1 or 2 (default: 10)
+
+xminns, xmaxns - minimum and maximum model distance over which the
+   layer boundaries listed in the array insmth are not to be smoothed
+   using ibsmth=1 or 2 (defaults: smooth boundaries between xmin and 
+   xmax) 
+
+step - controls  the ray step  length in the  solution of  the ray 
+   tracing equations according to the relationship
+
+             step length (km) = step*v/(|vx|+|vz|) 
+
+  where   v   is  velocity   and   vx   and  vz   are   its   partial  
+   derivatives with respect to x and z (default: 0.05)
+
+smin, smax -  minimum and maximum  allowable ray step  length (km) 
+   (defaults: (xmax-xmin)/4500, (xmax-xmin)/15)
+
+4) Inversion parameters (INVPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+invr -  calculate  partial  derivatives  of  the  selected  model  
+   parameters and write these to the file i.out (default: 0)
+
+b) Other inversion parameters:
+
+ivray - an  array of  non-zero integers  corresponding to the  ray 
+   groups listed in the  array ray used  to identify the  type of 
+   arrival in the file tx.out if itxout=2 or 3 and to allow for the 
+   appropriate comparison with the  observed travel times  in the 
+   file tx.in if invr=1 or i2pt>0
+
+ximax - the maximum allowable distance (km) between the nearest ray
+   end point and an observed seismogram location for one of the rays
+   used to interpolate the partial derivatives and travel time at
+   that observed seismogram location (default: (xmax-xmin)/20)
+
+ttunc - uncertainty of the calculated travel times  (s) written to 
+   the file tx.out if itxout>0 (default: 0.01)
+
+bndunc, velunc -  estimated uncertainty of  the depth  of boundary 
+   nodes (km)  and velocities  (km/s) written  to the  file i.out  
+   (defaults: 0.1, 0.1)
+
+                         Additional Notes
+
+Array defaults: if  a single  default value is  indicated for  an 
+   array parameter, all elements of the array  have that default 
+   value.
+
+Layer boundaries: must begin at xmin and end at xmax even  if the 
+   layer above and/or below is pinched out  (unless the boundary 
+   is defined by only one point, then it is specified at xmax).
+
+Bottom layer boundary: should consist of at most ten points.
+
+Near-vertical layer boundaries:  should be  avoided because  they 
+   may result in large velocity gradients  nearby. If necessary, 
+   the adjacent trapezoids should have zero velocity gradient.
+
+Shot point locations: may be anywhere in the model,  but locating 
+   them directly on a model boundary may cause problems.
+
+Ray group: is defined as a set of rays specified by a ray code in 
+   the  array  ray,   possibly  modified  to   include  multiple  
+   reflections and/or  conversions,  whose take-off  angles  are  
+   determined by an  iterative search mode  or specified  by the 
+   user using ray=1.0 and the arrays amin and amax.
+
+Zero velocity gradient: if the four corner velocities of  a model 
+   trapezoid are equal, then  there is a zero  velocity gradient 
+   inside and no  ray bending  will occur.  It is preferable  to 
+   have a zero gradient in all or part of a  layer rather than a 
+   very small gradient  so that the  Runge Kutta routine  can be 
+   avoided and straight ray paths are used.
+
+Large velocity gradients: ray  tracing becomes inaccurate if  the 
+   velocity gradient is  large and  the ray  step length is  not 
+   small enough. In this case a warning message is given and the 
+   value of smin and/or step should be reduced.
+
+Ray code:  listed in  the  file r1.out  for  each ray  traced  is 
+   supplied as an internal check to ensure that the correct rays 
+   specified in the array ray  or the arrays amin and  amax have 
+   been traced. This  ray code is  determined by the  program as 
+   follows: the number to the left of the decimal  refers to the 
+   deepest layer encountered by the ray; the number to the right 
+   of the decimal will be one, unless (1) the  ray was reflected 
+   upward from a layer boundary, in which case it will be two, or 
+   (2) the ray travelled as a head wave, in which case it will be 
+   three (assuming the ray was not reflected upward from a layer 
+   boundary after traveling as a head wave).
+
+Shot point located at depth: in  this case, the array ray  should 
+   not contain ray codes corresponding to layers  above the shot 
+   point.
+
+Ray step length:  a very small  value of step  may not result  in 
+   increased ray tracing accuracy due to round-off error
+
+Ray changes direction: a ray traveling left to right  can reflect 
+   or refract and change direction and travel right  to left, or 
+   vice versa.
+
+Terminating a ray:  if istop=0,  a ray  will be  traced until  it 
+   encounters the top, bottom, left or right of the model, unless 
+   it is reflected off the top of the model using nrbnd and rbnd.
+
+Ray stopped warning: the warnings which begin "ray stopped -" are 
+   included in  the  file  r1.out  directly before  the  summary  
+   information for that particular ray is listed.
+
+Failure of ray  search mode:  it is possible  that the  iterative 
+   shooting/bisection algorithm used in the ray  search mode may 
+   fail, or find  a limited range  of take-off angles  that only 
+   sample a part of a  layer, if either (1) the  model has large 
+   lateral variations, (2) the range of take-off angles defining 
+   the desired ray group is very small, (3) the value of nsmax is 
+   too small or stol is too large, or (4) it  is not possible to 
+   trace the desired type of  rays through a particular  part of 
+   the model (i.e., violates Snell's law). In any case, increase 
+   the value of nsmax first and then decrease the  value of stol 
+   if necessary and this should work (unless the problem is case 
+   4). If this fails,  take-off angles can be  supplied manually 
+   using ray=1.0 and  the arrays amin  and amax. Use  irays=1 to 
+   see why the search mode is failing.
+
+Travel time curves: join successive  points of the same ray  code 
+   in the same ray group. Prograde and  retrograde branches will 
+   be separated if ibreak=1.
+
+Ray  search  mode  and  multiple  reflections:  for   ray  groups  
+   specified by  L.2  in  the  array ray,  the  take-off  angles  
+   determined in the search  mode will correspond to  rays which 
+   reflect off the Lth  layer boundary only  and may or  may not 
+   give rise to the multiple reflections specified  by nrbnd and 
+   rbnd .
+
+Integer code in the file tx.out: is used to identify  each travel 
+   time to allow  for the appropriate  comparison with  the rays 
+   traced  during  inversion  It  will  begin  at   one  and  be  
+   incremented one for each ray group if  itxout=1. In addition, 
+   the integer will be  incremented by one  for a change  from a 
+   prograde to retrograde branch or vice versa if ibreak=1. 
+   This may  be  undesirable  if  the  prograde  and  retrograde  
+   branches should be identified by a single number for inversion 
+   or if more than one ray group should be identified by the same 
+   number, in which case itxout=2 or 3 and the array  ivray should 
+   be used when writing to the file tx.out.
+
+Laterally homogeneous  layer:  if  a  layer  boundary  is  to  be  
+   horizontal or the upper or lower velocity of a layer is to be 
+   constant, then only a single point is required in the velocity 
+   model and it should be specified at an  x-coordinate equal to 
+   xmax. If two or more points are required, then  the first and 
+   last point must be specified at xmin and xmax, respectively.
+
+Constant  velocity  layer:  to  specify  a  layer  with  constant  
+   velocity, assign a  single upper layer  velocity at  xmax and 
+   assign a lower layer velocity of zero at xmax.
+
+Zero vertical velocity  gradient layer: to  specify a layer  with 
+   zero vertical  velocity gradient,  assign one  or more  upper 
+   layer velocities as usual and assign a lower layer velocity of 
+   zero at xmax.
+
+Zero velocity discontinuity across  layer boundary: to specify  a 
+   layer boundary  with  no associated  velocity  discontinuity,  
+   assign an upper layer velocity of zero at xmax  for the layer 
+   directly beneath the boundary.
+
+Fixed  vertical  velocity  gradient:  if  the  vertical  velocity  
+   gradient is to remain fixed in all  or part of a layer during  
+   the inversion, then the x-coordinates  at which the upper and  
+   lower layer velocities are defined must be the same. Note that 
+   if the x-coordinates of  the velocity values  are not all  the 
+   same as the location of the upper and lower layer boundary 
+   nodes, then it is possible for the velocity gradient to vary at 
+   these nodes since there are  no velocities specified at these  
+   points  and  the   upper  and  lower   layer  velocities  are   
+   interpolated from values on either side, or at xmax if only one 
+   velocity point is used.
+
+Fixed layer thickness: if the  thickness of a layer  is to remain 
+   fixed in all or part of a layer during the inversion, then the 
+   x-coordinates at which the upper and lower layer boundaries are 
+   defined must be the same.
+
+Multiple ray paths to a single observation: if more than one pair 
+   of ray paths brackets the location of an observed travel time  
+   pick, then the pair  of ray paths  corresponding to the  least 
+   interpolated travel time is used to calculate the travel time  
+   residual and the partial derivatives for the inversion.
+
+Inversion of  zero-velocity-discontinuity  boundary:  it  is  not  
+   possible to invert  for a  layer boundary  with an associated  
+   zero-velocity discontinuity if only  refracted rays cross  the 
+   boundary, i.e.,  rays  must  be  reflected  off  the boundary  
+   (although  the  physical   meaning  of   reflections  from   a  
+   zero-velocity discontinuity must be considered).
+
+Boundaries crossing after inversion: check  that layer boundaries 
+   do not cross after inversion; if they do, re-do the inversion  
+   with increased  damping or  re-do  the ray  tracing  with the  
+   appropriate boundary nodes held fixed or the thickness of the  
+   layer held fixed.
+
+Inversion of layer pinchouts:  for a few special  cases there are  
+   bugs in the  inversion code  when attempting  to invert model  
+   parameters associated with a layer pinchout.
+
+S-waves and inversion: although rays corresponding to S-waves and 
+   conversions can  be  traced, they  should  not  be traced  if  
+   partial derivatives are being  calculated for the  purpose of 
+   inversion since  the appropriate  code to  invert for  S-wave 
+   velocity or Poisson's ratio has not yet been included.
+
+External plot routines: RAYINVR is self-contained except  for the 
+   graphics calls inside the following CALCOMP or CALCOMP-like plot 
+   routines: PLOTS, PLOT, NUMBER, SYMBOL, LINE, EMPTY, ERASE, PLOTND. 
+   The file pltlib.f contains ALL these routines (and a few other 
+   less important ones used by the graphics system where the 
+   code was developed) and it will be necessary to replace the "call" 
+   statements within each of these with their equivalents in the 
+   local graphics package.
+
+                           Array Sizes
+
+The parameters specifying the size  of all arrays within  RAYINVR 
+are contained in the file rayinvr.par and may be altered to suit a 
+particular problem and memory requirements.
+
+model layers - player
+
+points defining a single layer boundary (must be a multiple of 10) 
+   - ppcntr
+
+points at which the upper or lower layer velocity is defined (must 
+   be a multiple of 10) - ppvel
+
+trapezoids within a layer - ptrap
+
+shot points - pshot
+
+ray codes for a single shot - prayf
+
+ray groups for all shots combined - ptrayf
+
+rays in a single group - pnrayf
+
+rays reaching the surface (not including the search mode) - pray
+
+points defining a single ray - ppray
+
+reflecting boundaries for a single ray - prefl
+
+reflecting boundaries for all ray groups - preflt
+
+converting boundaries for a single ray - pconv
+
+converting boundaries for all ray groups - pconvt
+
+points defining smooth layer boundary - pnsmth
+
+trapezoids within which Poisson's ratio is modified - papois
+
+model parameters for which partial derivatives are calculated for 
+   inversion - pnvar
+
+travel time picks in the file tx.in - prayi
+
+floating reflectors - pfrefl
+
+points defining a single floating reflector - ppfref
+
+iterations in two-point ray tracing search - pn2pt
+
+travel times with the same integer code for a single shot - pnobsf
+
+                                      
+                    Warning and Error Messages
+
+The following  is a  list and  explanation of  warning and  error 
+messages generated by RAYINVR:
+
+*** error  in velocity  model ***  - an  error in  the format  of 
+   the velocity model in the file r.in or v.in has been detected. 
+   One of the following problems exists:
+      (1) the  x-coordinates  of a  boundary  or upper  or  lower 
+         velocity have not been listed from left to right
+      (2) the  x-coordinate  of the  first  or last  point  of  a 
+         boundary or upper or lower velocity (comprised of two or 
+         more points) does not equal xmin or xmax, respectively
+      (3) a model block has a P-wave velocity less than or equal 
+         to zero
+      (4) a line  specifying the  model (x-  or z-coordinates or  
+         upper  or  lower  velocity   or  flags  indicating  the   
+         parameters to be  varied during  the inversion)  in the  
+         file r.in or v.in  has been omitted  (i.e., the file is  
+         incomplete)
+      (5) the x-coordinates of the upper layer velocities do not  
+         equal the x-coordinates of the lower layer velocities in 
+         a layer in which  the vertical velocity  gradient is to  
+         remain fixed during the inversion
+      (6) the x-coordinates of  the upper layer  boundary do not  
+         equal the x-coordinates of the lower layer boundary in a 
+         layer in which the thickness  is to remain fixed during  
+         the inversion
+
+*** array  size  error for  number  of  model points  ***  -  the 
+   parameters specifying the maximum number of points defining a 
+   layer boundary  (ppcntr)  and/or  the  upper or  lower  layer  
+   velocity (ppvel) is not a multiple of 10
+
+*** maximum number of  blocks in layer _  exceeded *** - a  layer 
+   in the velocity model will  consist of more than  the maximum 
+   number of trapezoids  allowed for  a single  layer given  the 
+   current form  of  the  model.  Reduce the  number  of  points  
+   defining the upper and/or lower boundary or  velocity for the 
+   particular layer.
+
+*** location of shot  point outside model ***  - a shot point  is 
+    located outside the model.
+
+*** error  in specification  of  amin or  amax  *** -  values  of 
+   amin or amax have not been specified or are  greater than 180 
+   in absolute value.
+
+*** max  reflecting  boundaries  exceeded  *** -  the  number  of  
+   reflecting boundaries in nrbnd  is greater than  that allowed 
+   for one or more ray groups.
+
+*** max  converting  boundaries  exceeded  *** -  the  number  of  
+   converting boundaries in ncbnd  is greater than  that allowed 
+   for one or more ray groups.
+
+*** reflect boundary greater  than # of  layers *** - a  boundary 
+   in rbnd  is greater  than or  equal  to the  number of  model 
+   layers.
+
+*** no  ray  codes  specified  ***  -  no  ray  codes  have  been  
+   specified in the array ray.
+
+*** shot# _  ray code  _ no  rays traced  *** -  the search  mode 
+   was unable  to find  rays for  the  shot point  and ray  code 
+   specified.
+
+*** shot# _ ray  code _ 1  ray traced *** -  the search mode  was 
+   unable to find the maximum take-off angle of  a refracted ray 
+   group for the shot point and ray code specified; only a single 
+   ray with  a take-off  angle  equal to  the  minimum value  is  
+   traced.
+
+*** less  than  nray rays  traced  for _  ray  groups ***  -  the 
+   search mode was unable to find rays (or traced less than nray 
+   rays) for the number of ray groups specified.
+
+*** possible  inaccuracies  in  rngkta  ***  -  the  Runge  Kutta  
+   routine has detected possible inaccuracies in  its attempt to 
+   solve the ray tracing equations. The exact  point(s) at which 
+   the problem  occurred can  be  found in  the  file r2.out  if  
+   idump=1 is  used. The  problem  can be  eliminated by  either  
+   reducing the velocity gradient in the appropriate location of 
+   the model or  reducing the  value of  step and/or smin.  Note 
+   that this  warning  is conservative  so  that no  significant  
+   inaccuracies may have occurred.
+
+*** ray stopped  - consists  of too many  points ***  - a ray  is 
+   composed of  more than  the  maximum number  of points  (step  
+   lengths) allowed. Tracing of this ray is terminated.
+
+*** ray stopped -  illegal reflection ***  - a ray has  reflected 
+   off a  boundary not  specified in  ray or  rbnd and  istop=1. 
+   Tracing of this ray is terminated.
+
+*** ray stopped -  converted ray cannot  reflect/refract *** -  a 
+   ray is at a point of conversion from S to P and is beyond the 
+   critical angle. Tracing of this ray is terminated.
+
+***  ray  stopped  -  s-wave   cannot  propagate  ***  -  a   ray  
+   propagating as an S-wave has  entered a model block  in which 
+   the  S-wave  velocity  is  zero.  Tracing  of   this  ray  is  
+   terminated.
+
+*** ray  stopped  -  reflected  from pinchout  ***  -  the  layer  
+   from which  a ray  is  to be  reflected  has zero  thickness.  
+   Tracing of this ray is terminated.
+
+*** block  undetermined ***  -  this is  the most  serious  error 
+    since it implies that  RAYINVR has lost  track of what model  
+    block a ray is supposed to be in and therefore implies there 
+    is probably a bug in the code. The problem may be avoided if 
+    the ray  step  length  is  reduced.  Also  check that  layer  
+    boundaries do not  cross or  a deeper  boundary is specified  
+    before a shallower  boundary in the file r.in or v.in.  Also
+    check  that a  source is not  located  exactly on a layer or
+    block boundary or the edge of the model.
+
+*** max  number  of rays  reaching  surface  exceeded ***  -  the 
+    maximum allowable number  of rays reaching  the surface (not  
+    including those traced in the search mode) has been reached.
+
+*** no  parameters  varied for  inversion  ***  - invr=1  but  no 
+    model parameters have been selected for inversion in the file 
+    r.in or v.in.
+
+*** too many parameters  varied for inversion  *** - the  maximum 
+    allowable number of model  parameters selected for inversion  
+    has been exceeded.
+
+*** attempt  to  interpolate over  ximax  ***  - invr=1  and  the 
+    travel time and partial derivatives  were to be interpolated  
+    to  an observed  receiver location  using two rays that have
+    end points  greater than ximax from the receiver location;  no 
+    interpolation is performed.  This message is  included in the  
+    file r1.out at  the end of  each ray group in which this occurs 
+    at least once.
+
+                          Other Programs
+
+VMODEL: a program to check, edit  and plot the file v.in used  as 
+        input by the program RAYINVR
+
+                        Program Description
+  
+  The program VMODEL  performs three main  tasks associated with  
+the file v.in containing the velocity model used as input  by the 
+program RAYINVR. First, it checks the format of v.in to ensure it 
+is as  required  by RAYINVR.  If  it  detects format  errors,  it 
+indicates the location  and type of  error. Similarly, it  checks 
+for unusually small or  large velocity values, negative  vertical 
+velocity gradients, large vertical or lateral velocity gradients, 
+low-velocity zones, crossing layer boundaries, and boundaries with 
+large slope changes. Second, VMODEL can edit the file v.in by (1) 
+re-ordering the boundary and/or velocity nodes from left to right, 
+(2) re-sampling the boundary and/or velocity nodes to increase or 
+decrease the number  of model parameters,  and (3) smoothing  the 
+boundaries and/or lateral velocity variations using a three-point 
+averaging filter. Third, plot (1)  the 2-D model versus depth  or 
+two-way travel time,  (2) 1-D velocity  profiles versus depth  or 
+time, or (3) the RMS velocity variation across the model.
+  
+                              Files
+
+Input file:  vm.in  contains  program  input  parameters  in  the  
+   PLTPAR, AXEPAR and MODPAR namelists
+
+Input file: v.in  contains the  velocity model used  as input  by 
+   RAYINVR
+
+Output file: v.out contains the velocity model after it  has been 
+   edited or smoothed  or nodes  have been  sorted from left  to 
+   right
+
+Output file: vm.out contains warning and error messages regarding 
+   the format of the file v.in as well as summary information
+
+Output file: m.out  contains the  two-way travel  times of  model 
+   boundaries and RMS velocity profile corresponding to the plots 
+   generated by VMODEL
+
+Output file: p.out contains all plot commands for the run used as 
+   input by the program RAYPLOT
+
+                         Input parameters
+
+1) Plotting parameters (PLTPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iplot - generate the plot  during the run (1), or  write all plot 
+   commands to the file p.out (0), or do both (2) (default: 1)
+
+imod - plot  the 2-D  model as  distance versus depth  or two-way  
+   travel time (default: 0)
+
+idash - plot model boundaries as dashed lines (default: 1)
+
+ivel -  plot  the velocity  values  (km/s)  at their  appropriate  
+   locations within model (default: 0)
+
+ivp - plot 1-D  velocity profiles versus depth  or two-way travel  
+   time; the velocity  profiles are  written to  the file vm.out  
+   (default: 0)
+
+izort -  plot  the 1-D  velocity  profiles and  2-D  model versus  
+   two-way travel time; if izort=0, they are plotted versus depth 
+   (default: 0)
+
+ivrms - plot the RMS  velocity of the model  versus distance; the 
+   RMS velocity profile is written to  the file m.out if idump=1  
+   (default: 0)
+
+idump - write  the two-way travel  times of model  boundaries and  
+   the RMS  velocity  profile  as  plotted  to  the  file  m.out  
+   (default: 0)
+
+ifrefl - plot floating reflectors from the file f.in in the 2-D
+   model (default: 0)
+
+b) Other plotting parameters:
+
+velht - the  height of the  velocity values (mm)  when ivel=1  
+   is equal to velht*albht (default: 0.7)
+
+xtinc - the spacing  (km) of points  at which the  two-way travel 
+   time of model boundaries is  calculated if imod=1 and izort=1  
+   (default: (xmax-xmin)/100)
+
+ntsmth - number of applications of  a 3-point averaging filter to 
+   the model boundaries when plotted  versus two-way travel time  
+   (default: 0)
+
+xvp - an  array containing  the x-coordinates  (km) at  which 1-D  
+   velocity   profiles   are   plotted    if   ivp=1   (default:    
+   (xmin+xmax)/2, for the first element only)
+
+vrmstl, vrmsbl  - the  top and  bottom layer,  respectively, over  
+   which the RMS velocity of the  model is calculated if ivrms=1  
+   (default: 1, number of model layers)
+
+xrinc - the spacing (km)  of points at which the  RMS velocity is 
+   calculated (default: (xmax-xmin)/100)
+
+nrsmth - number of applications of  a 3-point averaging filter to 
+   the RMS velocity versus distance profile (default: 0)
+
+ibcol, ifcol - background and foreground colours (defaults: 0, 1)
+
+2) Axes parameters (AXEPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iaxlab - plot axes labels (default: 1)
+
+b) Other axes parameters:
+
+albht - height of axes labels (mm) (default: 0.2)
+
+xmin, xmax - minimum and maximum distance (km) of velocity model
+xmm - length of distance axis (mm)
+xtmin, xtmax - minimum and maximum values (km) of tick marks
+ntickx - number of intervals separated by tick marks along distance axis
+ndecix - number of digits after decimal in distance axis annotation;
+   -1 for integer annotation (defaults: 0, none, 250; values for
+   xtmin, xtmax, ntickx and ndecix depend on values of xmin and xmax)
+
+zmin, zmax - minimum and maximum depth (km) of velocity model
+zmm - length of depth axis (mm)
+ztmin, ztmax - minimum and maximum values (km) of tick marks
+ntickz - number of intervals separated by tick marks along depth axis
+ndeciz - number of digits after decimal in depth axis annotation;
+    -1 for integer annotation (defaults: 0, 50, 75; values for
+   ztmin, ztmax, ntickz and ndeciz depend on values of zmin and zmax)
+
+tmin, tmax - minimum and maximum two-way travel time (s) of 1-D
+             velocity profiles or 2-D model boundary plots
+tmm - length of time axis (mm)
+ttmin, ttmax - minimum and maximum values (s) of tick marks
+ntickt - number of intervals separated by tick marks along time axis
+ndecit - number of digits after decimal in time axis annotation;
+   -1 for integer annotation (defaults: 0, 10, 75; values for
+   ttmin, ttmax, ntickt and ndecit depend on values of tmin and tmax)
+
+vmin, vmax - minimum and maximum velocity (km/s) of 1-D velocity 
+             profiles
+vmm - length of velocity axis (mm)
+vtmin, vtmax - minimum and maximum values (km/s) of tick marks
+ntickv - number of intervals separated by tick marks along velocity axis
+ndeciv - number of digits after decimal in velocity axis annotation; 
+   -1 for integer annotation (defaults: 0, 8, 75, values for
+   vtmin, vtmax, ntickv and ndeciv depend on values of vmin and vmax)
+
+vrmin, vrmax - minimum and maximum velocity (km/s) of RMS velocity profile
+vrmm - length of RMS velocity axis (mm)
+vrtmin, vrtmax - minimum and maximum values (km/s) of tick marks
+ntckvr - number of intervals separated by tick marks along RMS velocity axis
+ndecir - number of digits after decimal in RMS velocity  axis annotation; 
+   -1 for integer annotation (defaults: 2, 7, 75, values for
+   vrtmin, vrtmax, ntckvr and ndecir depend on values of vrmin and vrmax) 
+
+3) Model parameters (MODPAR namelist):
+
+a) Switches  (usually 0 = off, 1 = on):
+
+iorder - re-order all boundary  and velocity nodes from  left to 
+   right; if iorder=0, a  message is written to  the screen and  
+   the file vm.out to indicate the locations where boundaries or 
+   velocities are not listed left to right (default: 0)
+
+izint  -  an  array  containing  the  layer   boundaries  to  be  
+   re-sampled to increase  or decrease  the number  of boundary  
+   nodes
+
+ivuint, ivlint -  an array  containing the  layers in which  the 
+   upper and  lower  velocity  values  are  to  be  re-sampled,  
+   respectively, to increase or decrease the number of velocity 
+   points
+
+iswit - when interpolating  the boundaries and  velocities using 
+   izint, ivuint and ivlint, the corresponding switches equal to 
+   0, 1 or -1 (see lines  c, f and i in  the description of the 
+   file r.in for the program RAYINVR) will be set equal to 1 if 
+   either of  the switches  across which  the  interpolation is  
+   performed is equal to 1 and it will be set equal to -1 if the 
+   two switches equal 0  and -1; if  iswit=0, the corresponding  
+   switch will be set equal  to 0 if the  switches across which 
+   the interpolation is performed are different (default: 1)
+
+izsmt - an array containing the layer  boundaries to be smoothed 
+   using a three-point averaging filter
+
+ivusmt, ivlsmt -  an array  containing the  layers in which  the 
+   upper  and  lower  velocity  values   are  to  be  smoothed,  
+   respectively,  using   a   three-point   averaging   filter;   
+   smoothing is  performed  laterally  on  the  upper and  lower  
+   velocities separately.
+
+b) Other model parameters:
+
+nzint - an  array containing  the number of  points at  which to 
+   uniformly re-sample  the layer  boundaries specified  in the  
+   array izint;  if  nzint=1,  the  average  boundary depth  is  
+   calculated; if nzint  equals the current  number of boundary  
+   nodes, no re-sampling is performed  (default: none; however, 
+   the default  is the  first element  of nzint  for  all layer  
+   boundaries if only one value is specified)
+
+nvuint, nvlint -  an array  containing the  number of points  at 
+   which to  uniformly  re-sample  the  upper  and lower  layer  
+   velocities  specified  in  the  arrays  ivuint  and  ivlint,  
+   respectively; if nvuint=1 or nvlint=1,  the average upper or 
+   lower layer  velocity  is calculated;  if  nvuint  or nvlint  
+   equals the current number of upper or lower velocity points, 
+   no re-sampling  is  performed (default:  none;  however, the  
+   default is the  first element of  nvuint and nvlint  for all  
+   layers if only one value is specified)
+
+nzsmt -  an array  containing the  number of  applications of  a  
+   three-point  averaging  filter   to  the   layer  boundaries   
+   specified in  the  array  izsmt  (default:  1; however,  the  
+   default  is  the  first  element  of  nzsmt  for  all  layer  
+   boundaries if only one value is specified)
+
+nvusmt, nvlsmt - an array containing the  number of applications 
+   of a  three-point averaging  filter to  the upper  and lower  
+   layer velocities specified in the  arrays ivusmt and ivlsmt, 
+   respectively (default: 1; however, the  default is the first 
+   element of nvusmt and nvlsmt for all layers if only one value 
+   is specified)
+
+velmin, velmax -  write a  message to  the screen  and the  file 
+   vm.out indicating the location and  value of velocities less 
+   than  or  greater  than  velmin   and  velmax,  respectively  
+   (defaults: 0.1, 7)
+
+dsmax -  write  a message  to  the screen  and  the file  vm.out  
+   indicating the location  and value of  slope changes between  
+   three successive boundary nodes greater than dsmax (degrees), 
+   (default: 10)
+
+dvvmax, dlvmax -  write a  message to  the screen  and the  file 
+   vm.out indicating the location and value of vertical velocity 
+   gradients greater  than  dvvmax (s-1)  and  lateral velocity  
+   gradients greater than dlvmax (s-1), (defaults: 1.0, 0.1)
+
+                        Additional Notes
+
+Order of operations:  the following list  is the order  in which 
+   the main operations are performed by VMODEL:
+      1) check  that boundary  nodes and  velocities are  listed 
+        left to right, or re-order them
+      2) re-sample boundary nodes and velocities to  increase or 
+        decrease the number of model parameters
+      3) smooth layer boundaries and lateral velocity variations
+      4)  check  for  small  and  large  velocities,  boundaries  
+        crossing, low-velocity zones, negative vertical velocity 
+        gradients, large changes  in boundary  slope, and  large 
+        vertical and lateral velocity gradients
+      5) plot  the model,  velocity  profiles and  RMS  velocity 
+        profile
+      6) write velocity model to  the file v.out if it  has been 
+       changed
+
+Low-velocity zones and pinchouts: low-velocity  zones that occur 
+   across one or more layers that have been pinched out will not 
+   be detected.
+
+External plot routines: VMODEL is self-contained except  for the
+   graphics calls inside the following CALCOMP or CALCOMP-like plot 
+   routines: PLOTS, PLOT, NUMBER, SYMBOL, LINE, EMPTY, ERASE, PLOTND. 
+   The file pltlib.f contains ALL these routines (and a few other 
+   less important ones used by the graphics system where the 
+   code was developed) and it will be necessary to replace the "call" 
+   statements within each of these with their equivalents in the 
+   local graphics package.
+
+                           Array Sizes
+
+The parameters specifying the size of all arrays within VMODEL are 
+contained in the  file vmodel.par and  may be altered  to suit  a 
+particular problem and memory requirements.
+
+model layers - player
+
+points defining a single layer boundary (must be a multiple of 10) 
+   - ppcntr
+
+points at which the upper or lower layer velocity is defined (must 
+   be a multiple of 10) - ppvel
+
+1-D velocity profiles - pnvp
+
+points defining layer boundary versus two-way travel time or RMS 
+   velocity profile - ppnpts
+
+                    Warning and Error Messages
+
+The following  is a  list and  explanation of  warning and  error 
+messages generated by VMODEL:
+
+***  xmax  not  specified  ***  -  the  value  of  xmax  must  be  
+   specified in the AXEPAR namelist.
+
+*** xmin not  specified ***  - the  value of xmin  is needed  and 
+   must be specified in the  AXEPAR namelist since it  cannot be 
+   determined from the file v.in.
+
+*** a value  of nzint  > ppcntr  *** -  all values  in the  array 
+   nzint must  be less  than or  equal  to the  value of  ppcntr 
+   specified in the file vmodel.par.
+
+*** a value  of nvuint  > ppvel  *** -  all values  in the  array 
+   nvuint must  be less  than or  equal  to the  value of  ppvel 
+   specified in the file vmodel.par.
+
+*** a value  of nvlint  > ppvel  *** -  all values  in the  array 
+   nvlint must  be less  than or  equal  to the  value of  ppvel 
+   specified in the file vmodel.par.
+
+*** v.in  has incorrect  number  of lines  ***  - the  number  of 
+   lines in the file v.in is not a multiple of three as it should 
+   be.
+
+*** no  node specified  at xmax  for boundary  _ ***  - the  last 
+   (or only) node of boundary _ must be specified at xmax.
+
+*** no upper vel  specified at xmax  for layer _  *** - the  last 
+   (or only) upper velocity value of layer _ must be specified at 
+   xmax.
+
+*** no lower vel  specified at xmax  for layer _  *** - the  last 
+   (or only) lower velocity value of layer _ must be specified at 
+   xmax.
+
+*** first node  not specified at  xmin for boundary  _ *** -  the 
+   first node of boundary _ must be specified at xmin.
+
+*** first  upper vel  not specified  at xmin  for layer  _ ***  - 
+   the first upper velocity value of layer _ must be specified at 
+   xmin.
+
+*** first  lower vel  not specified  at xmin  for layer  _ ***  - 
+   the first lower velocity value of layer _ must be specified at 
+   xmin.
+
+*** single node not  specified at xmax for  boundary _ *** -  the 
+   single node of boundary _ must be specified at xmax.
+
+*** single upper  vel not  specified at  xmax for layer  _ ***  - 
+   the single upper  velocity of  layer _  must be specified  at 
+   xmax.
+
+*** single lower  vel not  specified at  xmax for layer  _ ***  - 
+   the single lower  velocity of  layer _  must be specified  at 
+   xmax.
+
+*** nodes not specified left to right at _ km for boundary _  *** 
+   - the nodes of boundary _  are not listed left to right  at _ 
+   km.
+
+*** upper vel not  specified left to  right at _  km for layer  _ 
+   *** - the upper velocities of layer _ are  not listed left to 
+   right at _ km.
+
+*** lower vel not  specified left to  right at _  km for layer  _ 
+   *** - the lower velocities of layer _ are  not listed left to 
+   right at _ km.
+
+*** check for incorrect  xmax *** -  the value of xmax  specified 
+   in the AXEPAR namelist is probably incorrect  since the final 
+   node or velocity value does not equal xmax at least twice.
+
+*** unequal  # of  bnd nodes  for layer  _ ***  -  the number  of 
+   upper and lower boundary nodes for layer _ must be equal since 
+   its thickness is fixed at one or more points.
+
+*** unequal  # of  vel  nodes in  layer _  ***  - the  number  of 
+   upper and lower velocity nodes for layer _ must be equal since 
+   the vertical velocity gradient is fixed at one or more points.
+
+***  different  bnd  node  positions  for  layer  _  ***   -  the  
+   x-coordinates of upper and  lower boundary nodes for  layer _ 
+   must be equal  since its  thickness is fixed  at one  or more 
+   points.
+
+***  different  vel  node  positions  for  layer  _  ***   -  the  
+   x-coordinates of upper and lower velocities for  layer _ must 
+   be equal since its vertical velocity gradient is fixed at one 
+   or more points.
+
+*** check  gradient  in  layer  _ ***  -  the  vertical  velocity  
+   gradient is fixed in a  layer which contains a  pinchout, the 
+   updated  lower  velocity  values  should   be  checked  after  
+   re-sampling, smoothing or inverting these parameters.
+
+*** zero  velocity  at  top  of  model  ***  -  the  upper  layer  
+   velocity in the top model layer cannot be equal to zero.
+
+*** boundary  _  is  above  boundary _  ***  -  the  first  layer 
+   boundary is positioned above the second boundary, although it 
+   is listed below it in the file v.in.
+
+*** boundary  _  crosses boundary  _  at _  km  *** -  the  first 
+   layer boundary crosses the second boundary at _ km.
+
+***  premature  end  of  file  ***  -  an  end-of-file  has  been  
+   reached before it  was expected  in the  file v.in,  probably 
+   because of an insufficient number of lines (i.e., the file is 
+   incomplete) or the values of player, ppcntr and/or ppvel in
+   the file vmodel.par (and rayinvr.par) are insufficient for the 
+   current problem (see section on array sizes).
+
+
+DMPLSTSQR: a program to apply the method of  damped least-squares 
+            to the linearized inverse problem  using the partial 
+            derivatives of  travel times  with respect  to model  
+            parameters and the travel  time residuals calculated  
+            by the program RAYINVR
+
+
+                              Files
+
+Input file: d.in contains program input parameters in  the DMPPAR 
+   namelist
+
+Input file: i.out is the output file generated by RAYINVR
+
+Input/Output file:  v.in is  the input  file used  by RAYINVR  if 
+   imodf=1; it is  overwritten with  the updated  velocity model 
+   after applying the inversion
+
+Output file: d.out contains  the model parameter adjustments  and 
+   corresponding resolution and error  estimates as well  as the 
+   updated velocity model
+
+                         Input parameters
+
+iscrn - a switch to  plot the parameter adjustments  and updated 
+   velocity model to the screen (default: 1)
+
+dmpfct -  an overall  damping  factor to  control the  trade-off  
+   between resolution and variance (default: 1.0)
+
+velunc -  an estimate  of the  uncertainty (square  root of  the  
+   variance) of  the  model  velocity  values (km/s)  (default:  
+   0.1; however, if velunc is equal  to zero, the uncertainties 
+   listed in the file i.out are used)
+
+bndunc -  an estimate  of the  uncertainty (square  root of  the  
+   variance)  of  the  depth  of  model  boundary  values  (km)  
+   (default: 0.1;  however, if  bndunc  is equal  to  zero, the  
+   uncertainties listed in the file i.out are used)
+
+xmax -  maximum distance (km) of velocity model (default: none)
+
+                        Additional Notes
+
+Run only once: after running RAYINVR, you can not change the v.in
+   file in anyway if you intend to run DMPLSTSQR afterwards. And
+   you must not run DMPLSTSQR more than once without first
+   running RAYINVR again, otherwise twice the model perturbation
+   will be added to the current model.
+
+Specifying model uncertainties: the main purpose of this is as a 
+   weighting to  account  for the  difference  in  magnitude of  
+   velocity and depth  of boundary values  and thereby equalize  
+   their relative importance during the inversion. If different 
+   uncertainties are required for specific boundary or velocity 
+   nodes,  the  file   i.out  is  edited   to  incorporate  the   
+   appropriate uncertainties  and the  values of  velunc and/or  
+   bndunc are set equal to zero.
+
+Fixed vertical  velocity  gradient:  if  the  vertical  velocity  
+   gradient is fixed  in a  layer which  contains a  pinchout ,  
+   there may be problems in determining the updated lower layer 
+   velocities in a  few special cases.  A warning is  given and  
+   these parameters should be checked after the inversion.
+
+Inversion of layer pinchouts: in  a few special cases  there are 
+   bugs in the inversion  code when attempting  to invert model  
+   parameters associated  with  a layer  pinchout;  check these  
+   parameters after the inversion.
+
+
+VDIFF: a program to take the difference of two v.in  files having 
+       the same  number and  position of  boundary  and velocity  
+       nodes
+
+                              Files
+
+Input file: v1.in is the input file v.in containing  the velocity 
+   model used by RAYINVR
+
+Input file: v2.in is the input file v.in containing  the velocity 
+   model used by RAYINVR
+
+Output file: vdiff.out contains the difference between  the files 
+   v2.and v1.in;  it has  the  same x-coordinates  as v1.in  and  
+   v2.in, but the difference of the v2.in values minus the v1.in 
+   values for each boundary depth and velocity
+
+The value of  xmax is  input interactively. The  main purpose  of 
+VDIFF is to allow the resolution of a final model to be tested by 
+observing how the  perturbation of  a single  model parameter  is 
+"smeared" into adjacent  parameters. To  do this, the  difference 
+between the original  final model  and the  final model  obtained 
+after inverting  the data  generated by  the final  model with  a 
+single parameter perturbation is taken. VDIFF may also be used to 
+compare a final model with the true model in a synthetic test.
+
+SPREAD:  a  program  to  select  arrivals  from  the  tx.in  file  
+     according to a specified shot gap and left and right spread 
+     length
+
+                              Files
+
+Input file: tx.in  is the  pick file containing  the observed  or 
+   calculated travel times used as input by RAYINVR
+
+Output file: tx.out contains the those travel times from the file 
+   tx.in that satisfy the specified shot gap and spread lengths
+
+The shot gap and left and right spread length (km) are input 
+    interactively.
+
+FTEST: a program  to test  whether two  models are  significantly 
+      different given  their  corresponding  chi-squared  values  
+      using the F-test
+
+The input and output is interactive in which the chi-squared value 
+and corresponding number of observations used in the inversion are 
+supplied for  the two  models. The  probability of  significantly 
+different models is given as well  as a statement of whether  the 
+models are significantly different at a 5% significance level.
+
+ISEIS:  a  program  to  interpolate  the  travel  time  picks  at  
+     uniformly or irregularly spaced seismogram locations
+
+                              Files
+
+Input file:  tx.in  is  the  output file  (tx.out)  generated  by  
+   RAYINVR
+
+Input file:  rec.in contains  the irregularly  spaced  seismogram 
+   locations at which the  travel times are to  be interpolated; 
+   format is F10.3 if the same receiver locations are to be used 
+   for  each  shot,  and  format  is  the  same  as  tx.in  (see  
+   description under RAYINVR) if different receiver locations are 
+   required for each shot, the x-coordinates of the travel times 
+   being the seismogram locations.
+
+Output file: tx.out contains the interpolated travel times in the 
+   same format as tx.in
+
+For  a  uniform  seismogram  spacing,  the  minimum  and  maximum  
+seismogram location and spacing (km) are input  interactively. If 
+a non-uniform spacing is required, the seismogram locations in the 
+file rec.in are used. Note  that if the file tx.in  corresponding 
+to a set of observed travel time picks is used for rec.in, a  set 
+of calculated travel times may  be generated at the same  station 
+locations (and assigned the same associated pick  uncertainty) as 
+the observed data, as is  needed when estimating a final  model's 
+spatial resolution using the technique described under VDIFF.
+
+TTNOISE: a program to add Gaussian noise to travel times
+
+                              Files
+
+Input file:  tx.in  is  the  output file  (tx.out)  generated  by  
+   RAYINVR
+
+Output file: tx.out contains the travel times with noise added in 
+   the same format as tx.in
+
+A seed for  the random number  generator is input  interactively. 
+The standard deviation of the noise added to each pick is equal to 
+the uncertainty for that pick in the tx.in file.
+
+COMBINE: a  program  to  combine  two i.out  files  generated  by  
+         RAYINVR in two separate runs into one file of  the same 
+         format for use by DMPLSTSQR
+
+                              Files
+
+Input file: i1.in is the output file i.out generated by RAYINVR
+
+Input file: i2.in is the output file i.out generated by RAYINVR
+
+Output file: i.out contains the combined information in the files 
+   i1.in and i2.in in  the same format  for use as input  to the 
+   program DMPLSTSQR
+
+The files i1.in  and i2.in  must have been  generated by  RAYINVR 
+using the same velocity model  with the same parameters  selected 
+for inversion in both runs. COMBINE may be used if,  for example, 
+the rays from two  or more shots are  traced in separate runs  of 
+RAYINVR. Note, COMBINE should not be used if  partial derivatives 
+for the same travel time picks have been calculated in both of the 
+separate runs since two  ray paths may  be used in the  inversion 
+corresponding to a single  travel time pick,  instead of the  ray 
+path with minimum travel time.
+
+RAYPLOT: a program  to plot to  the screen using  the file  p.out 
+         generated by RAYINVR as input.
+
+Separate x and y scale factors may be applied to change the aspect
+ratio of the plots and multiple plots may be included in a single frame.
+
+                              Files
+
+Input file: p.out is the output file generated by RAYINVR
+
+Input file: p.in contains the (x,y) coordinates (mm) of the
+   origins of each plot if multiple plot panels are to be placed
+   in a single plot frame; each (x,y) pair is contained on a 
+   separate line in free-format. 
+ 
+External plot routines: RAYPLOT is self-contained except  for the
+   graphics calls inside the following CALCOMP or CALCOMP-like plot 
+   routines: PLOTS, PLOT, NUMBER, SYMBOL, LINE, EMPTY, ERASE, PLOTND. 
+   The file pltlib.f contains ALL these routines (and a few other 
+   less important ones used by the graphics system where the 
+   code was developed) and it will be necessary to replace the "call" 
+   statements within each of these with their equivalents in the 
+   local graphics package.
+
+A "plot" here constitutes the graphics that occurs between successive 
+erasures of the screen when running any of the graphics programs. Therefore,
+each screen erasure is replaced by a resetting of the plot origin
+according to the coordinates in the file p.in. Thus, for example,
+the ray or traveltime diagrams for each shot may be organized
+into a single plot frame, but each in its separate box, if isep>0.
+
+Another purpose of RAYPLOT is for generating a minimum-traveltime raypath
+diagram when using RAYINVR with i2pt>0. After running RAYINVR with i2pt>0
+and iplot=0 or 2, run the program 2pt. The program 2pt produces a
+bit mask file which will force only the minimum traveltime raypths to bg
+plotted with RAYPLOT. Note the purpose of this is only for the case in 
+which more than one ray group has the same corresponding value of ivray
+when running RAYINVR so that it is possible for multiple raypaths to be 
+traced to a single receiver when using i2pt>0. By plotting only the
+minimum-traveltime raypaths, only the raypaths actually used in the
+inversion are displayed, and hence an exact illustration of the model
+coverage is obtained.
+
+Other interactive input is for the parameters iroute and iseg which
+are only needed for users with uniras graphics.

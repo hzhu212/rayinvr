@@ -1,0 +1,86 @@
+c
+c     version 1.3  Aug 1992
+c
+c     parameter statement for RAYINVR
+c
+c     ----------------------------------------------------------------
+c
+      integer player,ppcntr,ptrap,pshot,prayf,ptrayf,ppray,pnrayf,
+     +        pray,prefl,preflt,pconv,pconvt,pnsmth,papois,pnvar,
+     +        prayi,ppvel,pncntr,picv,pinvel,prayt,pshot2,pfrefl,
+     +        ppfref,pn2pt,pnobsf,pr2pt,pcol,pxgrid,pzgrid,pitan,
+     +        pitan2,piray
+c
+      parameter(pi=3.141592654,  pi4=.785398163,   pi2=1.570796327,
+     +          pi34=2.35619449, pi18=57.29577951, pit2=-6.283185307)
+c
+      parameter(player=12, ppcntr=300,  ptrap=300,   pshot=200,
+     +          prayf=20, ptrayf=750, ppray=500,  pnrayf=500,
+     +          pray=100000, prefl=20,   preflt=150, pconv=10,
+     +          pconvt=100, pnsmth=500, papois=50, pnvar=400,
+     +          prayi=25000, ppvel=300, pfrefl=10, ppfref=10,
+     +          pn2pt=15, pnobsf=1200, pcol=20, pxgrid=700,
+     +          pzgrid=200, pitan=1000, piray=100)
+c
+      parameter(pncntr=player+1, picv=player*ptrap*20, pinvel=player*2,
+     +          pshot2=pshot*2, prayt=pshot2*prayf, pitan2=pitan*2,
+     +          pr2pt=pnrayf+(pn2pt-1)*pnobsf)
+c
+c     player - model layers
+c
+c     ppcntr - points defining a single model layer
+c              (must be a multiple of 10)
+c
+c     ppvel - points at which upper and lower layer velocities defined
+c             (must be a multiple of 10)
+c
+c     ptrap - trapezoids within a layer
+c
+c     pshot - shot points
+c
+c     prayf - ray groups for a single shot
+c
+c     ptrayf - ray groups for all shots           
+c
+c     ppray - points defining a single ray
+c
+c     piray - intersections with model boundaries for a single ray
+c
+c     pnrayf - rays in a single group
+c
+c     pray - rays reaching the surface (not including the search mode)
+c
+c     prefl - reflecting boundaries for a single group
+c
+c     preflt - reflecting boundaries for all groups    
+c
+c     pconv - converting boundaries for a single group
+c
+c     pconvt - converting boundaries for all groups
+c
+c     pnsmth - points defining smooth layer boundary
+c
+c     papois - blocks within which Poisson's ratio is altered
+c
+c     pnvar - model parameters varied in inversion
+c
+c     prayi - travel times used in inversion
+c
+c     pfrefl - floating refectors
+c
+c     ppfref - points defining a single floating reflector
+c
+c     pn2pt - iterations in two-point ray tracing search
+c
+c     pnobsf - travel times with the same integer code for a single shot
+c
+c     pcol - colours for ray groups and observed travel times
+c
+c     pxgrid - number of grid points in x-direction for output of uniformly 
+c             sampled velocity mdoel
+c
+c     pzgrid - number of grid points in z-direction for output of uniformly 
+c             sampled velocity mdoel
+c
+c     pitan - number of intervals at which tangent function is pre-evaluated
+c             and used for interpolation

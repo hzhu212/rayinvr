@@ -1,0 +1,6 @@
+cp r2.in r.in
+cp tx2.in tx.in
+cp d2.in d.in
+cp v2_s.in v.in
+cp vm2.in vm.in
+cp s2.in s.in
