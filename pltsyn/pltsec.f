@@ -250,7 +250,7 @@ c
           end if
         end if
         go to 107
-108     if(namp.eq.0) write(*,*, fmt="(/
+108     if(namp.eq.0) write(*, fmt="(/
      +                '***  error in file tx.out  ***'/)")
         if(namp.gt.0) write(18,45) xshot,0.,0.,0
       end if

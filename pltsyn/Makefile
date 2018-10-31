@@ -1,8 +1,8 @@
 #
 # makefile for PLTSYN
 #
-EXEDIR=/elmore/sunbin/
-PLTLIB=/elmore/src/pltlib
+EXEDIR=../build/
+PLTLIB=../pltlib
 #
 # compile flags
 #
@@ -29,7 +29,8 @@ XPLTSYN_EXEC=$(EXEDIR)xpltsyn
 #
 pltsyn: $(PLTSYN_EXEC)
 $(PLTSYN_EXEC): ${PLTSYN_OBJS}
-	unilink ${PLTSYN_OBJS}
+	# unilink ${PLTSYN_OBJS}
+	f77 -o main ${PLTSYN_OBJS}
 	mv main ${PLTSYN_EXEC}
 #
 xpltsyn: $(XPLTSYN_EXEC)
