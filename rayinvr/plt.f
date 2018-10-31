@@ -395,7 +395,7 @@ c                         call ssymbl(xplot,tplot,symht,3)
                       end if
                     end if
                     if(itxout.eq.3) then
-                      fcalc=sign(1.,icalc(j))
+                      fcalc=sign(1.,float(icalc(j)))
                       if(xscalc(j).ne.xcshot.or.fcalc.ne.fc) then
                         if(iszero.ne.1) then
                           write(17,5) xscalc(j),fcalc,0.,0

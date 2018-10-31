@@ -1,12 +1,12 @@
 #
 # makefile for RAYINVR
 #
-EXEDIR=/net/ray/sunbin/
-PLTLIB=/net/ray/src/pltlib
+EXEDIR=../build/
+PLTLIB=../pltlib/
 #
 # compile flags
 #
-FFLAGS =  -O
+FFLAGS =  -O -fdollar-ok
 #CFLAGS =  -O -I/usr/openwin/include
 CFLAGS =  -O -I/usr/openwin/share/include
 #

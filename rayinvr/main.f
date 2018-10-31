@@ -72,7 +72,9 @@ c
      +        poisl(papois),poisb(papois),ibreak(prayf),frbnd(prayf),
      +        ifo2pt(pnobsf),ipos(pr2pt),modi(player),nsmin(prayf),
      +        insmth(pncntr)
-      character flag*1,title*80
+      character flag*1
+      CHARACTER(LEN=50) FMT_555
+      CHARACTER(LEN=50) FMT_575
 c
       include 'rayinvr.com'
 c
@@ -234,9 +236,9 @@ c
          read(iunit,15,end=999) ilyr,(xm(icont,j),j=j1,j2)
          read(iunit,15,end=999) icnt,(zm(icont,j),j=j1,j2)
          read(iunit,235,end=99) (ivarz(icont,j),j=j1,j2)
-15       format(i2,1x,10f7.2)
-c235      format(3x,10i7)
-235      format(3x,10(5x,i2))
+15       format(i2,1x,10f8.3)
+c235      format(3x,10i8)
+235      format(3x,10(6x,i2))
          nrz=nrz+1
          if(icnt.ne.1) go to 211
          j1=j1+10
@@ -396,11 +398,13 @@ c
         nfrefl=nfrefl+1
         npfref(nfrefl)=nfrefr
 545     format(i2)
-        read(30,555) (xfrefl(nfrefl,i),i=1,npfref(nfrefl))
-        read(30,555) (zfrefl(nfrefl,i),i=1,npfref(nfrefl))
-        read(30,575) (ivarf(nfrefl,i),i=1,npfref(nfrefl))
-555     format(3x,<npfref(nfrefl)>f7.2)
-575     format(3x,<npfref(nfrefl)>i7)
+        WRITE(FMT_555,'("(3x,", I0, "f7.2)")') npfref(nfrefl)
+        WRITE(FMT_575,'("(3x,", I0, "i7)")') npfref(nfrefl)
+        read(30,FMT_555) (xfrefl(nfrefl,i),i=1,npfref(nfrefl))
+        read(30,FMT_555) (zfrefl(nfrefl,i),i=1,npfref(nfrefl))
+        read(30,FMT_575) (ivarf(nfrefl,i),i=1,npfref(nfrefl))
+C 555     format(3x,<npfref(nfrefl)>f7.2)
+C 575     format(3x,<npfref(nfrefl)>i7)
         go to 590
 595     close(30)
         do 550 i=1,ngroup
