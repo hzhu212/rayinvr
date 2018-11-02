@@ -55,21 +55,21 @@ ccc     endif
 c
       if (iplot .le. 0) then
 c       if (iroute .eq. 4) then
-	  ipscol=1
+        ipscol=1
 c       else
 c         ipscol=0
 c       endif
-	write(19,1) '%! xpltlib'
+      write(19,1) '%! xpltlib'
 1       format(a10)
-ccz	write(19,*) 'initgraphics'
-	write(19,*) '/initxplt'
-	write(19,*) '{90 rotate'
-	write(19,*) '50 -600 translate'
-	write(19,*) '2.834 2.834 scale'
-	write(19,*) '0.2 setlinewidth'
-	write(19,*) '/Helvetica findfont 12 scalefont setfont'
-	write(19,*) '} def'
-	write(19,*) 'initxplt'
+ccz   write(19,*) 'initgraphics'
+      write(19,*) '/initxplt'
+      write(19,*) '{90 rotate'
+      write(19,*) '50 -600 translate'
+      write(19,*) '2.834 2.834 scale'
+      write(19,*) '0.2 setlinewidth'
+      write(19,*) '/Helvetica findfont 12 scalefont setfont'
+      write(19,*) '} def'
+      write(19,*) 'initxplt'
       endif
 c
       return
@@ -102,7 +102,7 @@ ccc     end if
 
 c
       if (iplot .le. 0) then
-	write(19,*) 'erasepage'
+      write(19,*) 'erasepage'
       endif
 c
       return
@@ -123,13 +123,13 @@ c
       if (iplot .ge. 0) call xbuplot (x, y, pen)
 c
       if (iplot .le. 0) then
-	if (ipen .eq. 3) then
+      if (ipen .eq. 3) then
           write (19,*)  x, y, ' moveto'
-	else
+      else
           write (19,*)  xcurr, ycurr, ' moveto'
           write (19,*)  x, y, ' lineto'
           write (19,*)  'stroke'
-	endif
+      endif
       xcurr=x
       ycurr=y
       endif
@@ -156,24 +156,24 @@ c
         write (19,*) 'gsave'
         write (19,*) ang, ' rotate'
         write (19,*) '/Helvetica findfont ',ht,' scalefont setfont'
-	if (xnum .eq. 0.) then
-	  lon=1
+      if (xnum .eq. 0.) then
+        lon=1
         else
-	  if (xnum .gt. 0.) then
-	    lon=int(log10(abs(xnum)))+1
+        if (xnum .gt. 0.) then
+          lon=int(log10(abs(xnum)))+1
           else
-	    lon=int(log10(abs(xnum)))+2
+          lon=int(log10(abs(xnum)))+2
            endif
         endif
-	if (ndeci .lt. 0) then
-	  write (buffor,6) '(a1,i',lon,',a6)'
+      if (ndeci .lt. 0) then
+        write (buffor,6) '(a1,i',lon,',a6)'
   6       format(a5,i2,a4)
-	  write(19,buffor) '(',int(xnum),') show'
-	else
-	  lon=lon+ndeci+2
-	  write (buffor,5) '(a1,f',lon,'.',ndeci,',a6)'
+        write(19,buffor) '(',int(xnum),') show'
+      else
+        lon=lon+ndeci+2
+        write (buffor,5) '(a1,f',lon,'.',ndeci,',a6)'
   5       format(a5,i2,a1,i2,a4)
-	  write(19,buffor) '(',xnum,') show'
+        write(19,buffor) '(',xnum,') show'
         endif
         write (19,*) 'grestore'
       endif
@@ -201,9 +201,9 @@ c
         write (19,*) 'gsave'
         write (19,*) ang, ' rotate'
         write (19,*) '/Helvetica findfont ',ht,' scalefont setfont'
-	write (buffor,5) '(a1,',nchar,'a1,a6)'
+      write (buffor,5) '(a1,',nchar,'a1,a6)'
   5     format(a4,i3,a6)
-	write(19,buffor) '(',(label(i),i=1,nchar),') show'
+      write(19,buffor) '(',(label(i),i=1,nchar),') show'
         write (19,*) 'grestore'
       endif
 c
@@ -225,7 +225,7 @@ c
       if (iplot .le. 0) then
         write (19,*) 'newpath'
         write (19,*) x(1), y(1), ' moveto'
-	do 5 i=2,npts
+      do 5 i=2,npts
   5       write (19,*) x(i), y(i), ' lineto'
         write (19,*) 'stroke'
       end if
@@ -273,11 +273,11 @@ ccc
       end if
 c
       if (iplot .le. 0) then
-	write(19,*) 'gsave'
-	call pcolor(icol)
-	write(19,*) 'newpath'
-	write(19,*) x, y, size/2, ' 0 360 arc fill'
-	write(19,*) 'grestore'
+      write(19,*) 'gsave'
+      call pcolor(icol)
+      write(19,*) 'newpath'
+      write(19,*) x, y, size/2, ' 0 360 arc fill'
+      write(19,*) 'grestore'
       endif
 c
       return
@@ -295,39 +295,39 @@ c
       if (iplot .ge. 0) call xbucolour (icol)
 c
       if (iplot .le. 0) then
-	if (ipscol .eq. 1) then
-	  if (icol.eq.0) then
-	    write(19,*) '1 setgray'
+      if (ipscol .eq. 1) then
+        if (icol.eq.0) then
+          write(19,*) '1 setgray'
           elseif (icol .eq. 1) then
-	    write(19,*) '0 setgray'
+          write(19,*) '0 setgray'
           elseif (icol .eq. 2) then
-	    write(19,*) '1 0 0 setrgbcolor'
+          write(19,*) '1 0 0 setrgbcolor'
           elseif (icol .eq. 3) then
-	    write(19,*) '0 1 0 setrgbcolor'
+          write(19,*) '0 1 0 setrgbcolor'
           elseif (icol .eq. 4) then
-	    write(19,*) '0 0 1 setrgbcolor'
+          write(19,*) '0 0 1 setrgbcolor'
           elseif (icol .eq. 5) then
-	    write(19,*) '1 1 0 setrgbcolor'
+          write(19,*) '1 1 0 setrgbcolor'
           elseif (icol .eq. 6) then
-	    write(19,*) '1 0 1 setrgbcolor'
+          write(19,*) '1 0 1 setrgbcolor'
           elseif (icol .eq. 7) then
-	    write(19,*) '0 1 1 setrgbcolor'
+          write(19,*) '0 1 1 setrgbcolor'
           elseif (icol .eq. 8) then
-	    write(19,*) '1 0.5 0 setrgbcolor'
+          write(19,*) '1 0.5 0 setrgbcolor'
           elseif (icol .eq. 9) then
-	    write(19,*) '1 0 0.5 setrgbcolor'
+          write(19,*) '1 0 0.5 setrgbcolor'
           else
-	    write(19,*) '0 setgray'
-	  endif
-	else
-	  if (icol.eq.0) then
-	    write(19,*) '1 setgray'
+          write(19,*) '0 setgray'
+        endif
+      else
+        if (icol.eq.0) then
+          write(19,*) '1 setgray'
           elseif (icol .eq. 1) then
-	    write(19,*) '0 setgray'
+          write(19,*) '0 setgray'
           else
-	    write(19,*) real(icol)/10., ' setgray'
-	  endif
-	endif
+          write(19,*) real(icol)/10., ' setgray'
+        endif
+      endif
       endif
 5     format (i2/i10)
 c
@@ -346,7 +346,7 @@ c
       end if
 c
       if (iplot .le. 0) then
-	write(19,*) '% segment'
+      write(19,*) '% segment'
       endif
 c
 c
@@ -380,8 +380,8 @@ c
       end if
 c
       if (iplot .le. 0) then
-	write(19,*) 'showpage'
-	write(19,*) 'initxplt'
+      write(19,*) 'showpage'
+      write(19,*) 'initxplt'
       endif
 c
       return
@@ -410,7 +410,7 @@ c
       end if
 c
       if (iplot .le. 0) then
-	write(19,*) 'showpage'
+      write(19,*) 'showpage'
       endif
 c
       return
