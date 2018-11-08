@@ -30,12 +30,12 @@ XTRAMP_EXEC=$(EXEDIR)xtramp
 tramp: $(TRAMP_EXEC)
 $(TRAMP_EXEC): ${TRAMP_OBJS}
 	# unilink ${TRAMP_OBJS}
-	f77 -o main ${TRAMP_OBJS}
+	$(FC) -o main ${TRAMP_OBJS}
 	mv main ${TRAMP_EXEC}
 #
 xtramp: $(XTRAMP_EXEC)
 $(XTRAMP_EXEC): ${XTRAMP_OBJS}
-	f77 -o main ${XTRAMP_OBJS} -L/usr/openwin/lib -lX11
+	$(FC) -o main ${XTRAMP_OBJS} -L/usr/openwin/lib -lX11
 	mv main ${XTRAMP_EXEC}
 #
 # dependencies
@@ -53,18 +53,18 @@ calmod.o   :  tramp.par tramp.com
 rngkta.o   :  tramp.par tramp.com
 
 $(PLTLIB)/pltsub.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/pltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xpltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xbuplot.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 

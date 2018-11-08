@@ -14,7 +14,7 @@ apt install gfortran libx11-dev
 
 ### Makefile: unilink not found
 
-We can just let `unilink` go, and use `f77` instead. Open the `Makefile` that throws this error, and replace the line:
+We can just let `unilink` go, and use `$(FC)` instead. Open the `Makefile` that throws this error, and replace the line:
 
 ```sh
 unilink ${TRAMP_OBJS}
@@ -23,8 +23,11 @@ unilink ${TRAMP_OBJS}
 with
 
 ```sh
-f77 -o main ${TRAMP_OBJS}
+$(FC) -o main ${TRAMP_OBJS}
 ```
+
+> `$(FC)` is an implicit variable of `make`, which sets the command of Fortran Compliler. It equals 'f77' by default, but you can set it temperarily when running `make` command. For example: `make ... FC=gfortran`.
+> Similarly, you can set variable `CC` to specify your C compiler.
 
 ### Issue of fortran "Variable FORMAT expression"
 

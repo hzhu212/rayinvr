@@ -30,12 +30,12 @@ XVMODEL_EXEC=$(EXEDIR)xvmodel
 vmodel: $(VMODEL_EXEC)
 $(VMODEL_EXEC): ${VMODEL_OBJS}
 	# unilink ${VMODEL_OBJS}
-	f77 -o main ${TRAMP_OBJS}
+	$(FC) -o main ${TRAMP_OBJS}
 	mv main ${VMODEL_EXEC}
 #
 xvmodel: $(XVMODEL_EXEC)
 $(XVMODEL_EXEC): ${XVMODEL_OBJS}
-	f77 -o main ${XVMODEL_OBJS} -L/usr/openwin/lib -lX11
+	$(FC) -o main ${XVMODEL_OBJS} -L/usr/openwin/lib -lX11
 	mv main ${XVMODEL_EXEC}
 #
 # dependencies
@@ -46,18 +46,18 @@ misc.o   :  vmodel.par vmodel.com
 blkdat.o :  vmodel.par vmodel.com
 
 $(PLTLIB)/pltsub.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/pltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xpltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xbuplot.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 

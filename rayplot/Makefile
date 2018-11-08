@@ -29,27 +29,27 @@ XRAYPLOT_EXEC=$(EXEDIR)xrayplot
 #
 rayplot: $(RAYPLOT_EXEC)
 $(RAYPLOT_EXEC): ${RAYPLOT_OBJS}
-	f77 -o rayplot ${RAYPLOT_OBJS}
+	$(FC) -o rayplot ${RAYPLOT_OBJS}
 	mv rayplot ${RAYPLOT_EXEC}
 #
 xrayplot: $(XRAYPLOT_EXEC)
 $(XRAYPLOT_EXEC): ${XRAYPLOT_OBJS}
-	f77 -o rayplot ${XRAYPLOT_OBJS} -L/usr/openwin/lib -lX11
+	$(FC) -o rayplot ${XRAYPLOT_OBJS} -L/usr/openwin/lib -lX11
 	mv rayplot ${XRAYPLOT_EXEC}
 
 $(PLTLIB)/pltsub.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/pltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xpltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xbuplot.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 

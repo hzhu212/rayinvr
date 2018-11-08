@@ -30,12 +30,12 @@ XPLTSYN_EXEC=$(EXEDIR)xpltsyn
 pltsyn: $(PLTSYN_EXEC)
 $(PLTSYN_EXEC): ${PLTSYN_OBJS}
 	# unilink ${PLTSYN_OBJS}
-	f77 -o main ${PLTSYN_OBJS}
+	$(FC) -o main ${PLTSYN_OBJS}
 	mv main ${PLTSYN_EXEC}
 #
 xpltsyn: $(XPLTSYN_EXEC)
 $(XPLTSYN_EXEC): ${XPLTSYN_OBJS}
-	f77 -o main ${XPLTSYN_OBJS} -L/usr/openwin/lib -lX11
+	$(FC) -o main ${XPLTSYN_OBJS} -L/usr/openwin/lib -lX11
 	mv main ${XPLTSYN_EXEC}
 #
 # dependencies
@@ -46,17 +46,17 @@ misc.o     :  pltsyn.par
 blkdat.o   :  pltsyn.par pltsyn.com
 
 $(PLTLIB)/pltsub.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/pltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xpltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xbuplot.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
