@@ -30,13 +30,13 @@ XRAYINVR_EXEC=$(EXEDIR)xrayinvr
 #
 rayinvr: $(RAYINVR_EXEC)
 $(RAYINVR_EXEC): ${RAYINVR_OBJS}
-	f77 -o main ${RAYINVR_OBJS}
-	mv main ${RAYINVR_EXEC}
 #	unilink ${RAYINVR_OBJS}
+	$(FC) -o main ${RAYINVR_OBJS}
+	mv main ${RAYINVR_EXEC}
 #
 xrayinvr: $(XRAYINVR_EXEC)
 $(XRAYINVR_EXEC): ${XRAYINVR_OBJS}
-	f77 -o main ${XRAYINVR_OBJS} -L/usr/openwin/lib -lX11
+	$(FC) -o main ${XRAYINVR_OBJS} -L/usr/openwin/lib -lX11
 	mv main ${XRAYINVR_EXEC}
 #
 # dependencies
@@ -54,19 +54,17 @@ calmod.o   :  rayinvr.par rayinvr.com
 rngkta.o   :  rayinvr.par rayinvr.com
 
 $(PLTLIB)/pltsub.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/pltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
 
 $(PLTLIB)/xpltlib.o: FORCE
-	cd $(@D); $(MAKE) $(@F)
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
-
 
 $(PLTLIB)/xbuplot.o: FORCE
-	cd $(@D);cc -O -I/usr/openwin/share/include -c xbuplot.c
+	cd $(@D); "$(MAKE)" $(@F)
 FORCE:
-
