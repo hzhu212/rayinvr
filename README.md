@@ -1,44 +1,69 @@
-Some part of rayinvr is too old to be compiled correctly. This project lists some patches to make rayinvr run properly on Ubuntu Linux 18.04.
+A modified version of [rayinvr](http://terra.rice.edu/department/faculty/zelt/rayinvr.html) that can work properly on modern Linux(e.g. Ubuntu 18.04) and Windows(e.g. Windows 10) platform.
 
-# How to compile
+# How to use
 
-Just follow the `Makefile` under each subdirectory. But before that, you should make some patches first.
+## Prepare tool-chains
 
-## Install tool chains
+On Linux, you need to install `x11` library and `gfortran`. For example, on Ubuntu 18.04:
 
 ```sh
-apt install gfortran libx11-dev
+sudo apt install gfortran libx11-dev
 ```
 
-## Patches for compiling on Ubuntu 18.04
+On Windows, you need to install [GNU Make](http://gnuwin32.sourceforge.net/packages/make.htm) and [mingw-w64](http://www.mingw-w64.org/doku.php) manually.
 
-### Makefile: unilink not found
+## Build
 
-We can just let `unilink` go, and use `$(FC)` instead. Open the `Makefile` that throws this error, and replace the line:
+Assuming we are in root directory of rayinvr source now. 
+
+Inside each subdirectory there is a `Makefile` to make two versions of each program. For example, you can build `tramp` as the following steps:
+
+```sh
+cd tramp
+make xtramp FC=gfortran CC=gcc
+make tramp FC=gfortran CC=gcc
+# or just `make FC=gfortran CC=gcc`, will build both the two versions.
+```
+
+PS: the keyword arguments `FC=gfortran CC=gcc` means setting Fortran Compiler to `gfortran` and C Compiler to `gcc`. By default, the two variables are `f77` and `cc` respectively.
+
+The first version, prefixed by the letter `x`, is based on `X11` graphics system. The second version is originally for users who have access to the commercial graphics package called Uniras. However, the second version would also be helpful if you just need to calculate without ploting. On Windows, there is no `x11` library so that the second version is the only choice.
+
+## Add to PATH
+
+**This step is optional.**
+
+Add `build` directory to `PATH`.
+
+# Blame
+
+This section lists what errors the original rayinvr throws and how I fix them.
+
+## Makefile: unilink not found
+
+Just abandon `unilink` command and use `$(FC)` instead. Open the `Makefile` that throws this error, and change the line:
 
 ```sh
 unilink ${TRAMP_OBJS}
 ```
 
-with
+to
 
 ```sh
 $(FC) -o main ${TRAMP_OBJS}
 ```
 
-> `$(FC)` is an implicit variable of `make`, which sets the command of Fortran Compliler. It equals 'f77' by default, but you can set it temperarily when running `make` command. For example: `make ... FC=gfortran`.
-> Similarly, you can set variable `CC` to specify your C compiler.
+PS: `$(FC)` will be replaced with your Fortran Compiler, for example `gfortran`.
 
-### Issue of fortran "Variable FORMAT expression"
+## Issue of fortran "Variable FORMAT expression"
 
-`gfortran` does not support "Variable FORMAT expression". For example, `pltlib.f:198` reads:
-
+Both `f77` and `gfortran` do not support "Variable FORMAT expression", which is used in several rayinvr programs. For example, `pltlib.f:198` reads:
 
 ```fortran
 5     format(i2/i10/4e15.5,<nchar>a1)
 ```
 
-The expression `<nchar>` is a "Variable FORMAT expression". We can find out from the code that `nchar` is an local integer variable. When compiling this source file, `gfortran` will throw a compiling error:
+This line includes a "Variable FORMAT expression", in which `nchar` is an integer variable. The error throwed out is like the following:
 
 ```txt
 gfortran Error: Unexpected element ‘<’ in format string at (1)
@@ -54,9 +79,9 @@ To fix this issue, there are 2 common ways:
     5     format(i2/i10/4e15.5,10000a1)
     ```
 
-### Issue of character '$'
+## Issue of character '$'
 
-Using '$' in variable names is not allowed by default in gfortran. Or it will throw the following error:
+`gfortran` does not allow using `$` in variable name by default. Or it will throw the following error:
 
 ```txt
 # when building xrayinvr
@@ -64,27 +89,27 @@ Using '$' in variable names is not allowed by default in gfortran. Or it will th
 Fatal Error: Invalid character ‘$’ at (1). Use ‘-fdollar-ok’ to allow it as an extension compilation terminated
 ```
 
-To fix this error, you should add '-fdollar-ok' option to `f77` command. However, we don't use `f77` command directly; what we need to do is change the `Makefile` a bit:
+To fix this error, you should add option `-fdollar-ok` to `gfortran`. To be more detail, add this option to `FFLAGS` at the beginning of each `Makefile` file:
 
 ```make
 FFLAGS = -O -fdollar-ok
 ```
 
-### Change backgroud color of Xbuplot
+## Change default foreground and backgroud color of Xwindow
 
-`pltlib/xbuplot.c` used `Xlib` to create window, the foreground and background settings are in line 99, 100:
+`pltlib/xbuplot.c` uses `Xlib` to plot graphics. Foreground and background settings locates at line 99 and 100:
 
 ```c
   /*  create opaque window  */
   win = XCreateSimpleWindow (display, RootWindow (display, screen_num),
                 x, y, win_width, win_height, border_width,
-        WhitePixel (display, screen_num),
-        BlackPixel (display, screen_num));
+        WhitePixel (display, screen_num),    // foreground
+        BlackPixel (display, screen_num));   // background
 ```
 
-### Read v.in with higher precision
+## Read v.in with higher precision
 
-The default precision of `v.in` is `f7.2`. If you want to read a higher precision version of `v.in`(say, `f8.3`), just open the `main.f` that reads the `v.in`, find and change the lines like
+The default precision of `v.in` is `f7.2`. If you want to read a higher precision version of `v.in`(say, `f8.3`), just open the `main.f` that reads the `v.in`, change the lines:
 
 ```fortran
 15       format(i2,1x,10f7.2)
@@ -92,7 +117,7 @@ The default precision of `v.in` is `f7.2`. If you want to read a higher precisio
 25       format(3x,10(5x,i2))
 ```
 
-into
+to:
 
 ```fortran
 15       format(i2,1x,10f8.3)
@@ -100,33 +125,16 @@ into
 25       format(3x,10(6x,i2))
 ```
 
-### Some other syntax errors
+## Some syntax errors
 
-`pltsyn/pltsec.f`:253, change from:
+Change `pltsyn/pltsec.f`:253:
 
 ```fortran
 108     if(namp.eq.0) write(*,*, fmt="(/
 ```
 
-into:
+to:
 
 ```fortran
 108     if(namp.eq.0) write(*, fmt="(/
-```
-
-
-
-## An example for compiling: `tramp`
-
-Assuming we are in rayinvr source directory now. Firstly, go to `tramp` subdirectory:
-
-```sh
-cd tramp
-```
-
-Secondly, modify the `Makefile` and set proper input and output directory. ENSURE that the output directory exists. Then you can start to make:
-
-```sh
-make tramp
-make xtramp
 ```
