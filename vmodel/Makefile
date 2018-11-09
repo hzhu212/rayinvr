@@ -30,7 +30,7 @@ XVMODEL_EXEC=$(EXEDIR)xvmodel
 vmodel: $(VMODEL_EXEC)
 $(VMODEL_EXEC): ${VMODEL_OBJS}
 	# unilink ${VMODEL_OBJS}
-	$(FC) -o main ${TRAMP_OBJS}
+	$(FC) -o main ${VMODEL_OBJS}
 	mv main ${VMODEL_EXEC}
 #
 xvmodel: $(XVMODEL_EXEC)
