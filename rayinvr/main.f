@@ -73,8 +73,8 @@ c
      +        ifo2pt(pnobsf),ipos(pr2pt),modi(player),nsmin(prayf),
      +        insmth(pncntr)
       character flag*1
-      CHARACTER(LEN=50) FMT_555
-      CHARACTER(LEN=50) FMT_575
+      character FMT_555*50
+      character FMT_575*50
 c
       include 'rayinvr.com'
 c
@@ -398,8 +398,8 @@ c
         nfrefl=nfrefl+1
         npfref(nfrefl)=nfrefr
 545     format(i2)
-        WRITE(FMT_555,'("(3x,", I0, "f7.2)")') npfref(nfrefl)
-        WRITE(FMT_575,'("(3x,", I0, "i7)")') npfref(nfrefl)
+        write(FMT_555,'("(3x,", I0, "f7.2)")') npfref(nfrefl)
+        write(FMT_575,'("(3x,", I0, "i7)")') npfref(nfrefl)
         read(30,FMT_555) (xfrefl(nfrefl,i),i=1,npfref(nfrefl))
         read(30,FMT_555) (zfrefl(nfrefl,i),i=1,npfref(nfrefl))
         read(30,FMT_575) (ivarf(nfrefl,i),i=1,npfref(nfrefl))

@@ -18,7 +18,8 @@ c
      +     xzf(ppzff),zff(ppzff),zpts(ppnpts),vpts(ppnpts)
       integer ivarz(player,ppcntr),ivarv(player,ppvel,2)
       include 'vmodel.com'
-      CHARACTER(LEN=50) FMT
+      character FMT_755*50
+      character FMT_555*50
 c
       call dxmin(ncont)
 c
@@ -205,9 +206,9 @@ c
 c
 790       read(30,745,end=795) nfrefr
 745       format(i2)
-          WRITE(FMT,'("(3x,", I0, "f7.2)")') nfrefr
-          read(30,FMT) (xfrefl(i),i=1,nfrefr)
-          read(30,FMT) (zfrefl(i),i=1,nfrefr)
+          write(FMT_755,'("(3x,", I0, "f7.2)")') nfrefr
+          read(30,FMT_755) (xfrefl(i),i=1,nfrefr)
+          read(30,FMT_755) (zfrefl(i),i=1,nfrefr)
           read(30,765)
 C 755       format(3x,<nfrefr>f7.2)
 765       format(' ')
@@ -471,9 +472,9 @@ c
 c
 590       read(30,545,end=595) nfrefr
 545       format(i2)
-          WRITE(FMT,'("(3x,", I0, "f7.2)")') nfrefr
-          read(30,FMT) (xfrefl(i),i=1,nfrefr)
-          read(30,FMT) (zfrefl(i),i=1,nfrefr)
+          write(FMT_555,'("(3x,", I0, "f7.2)")') nfrefr
+          read(30,FMT_555) (xfrefl(i),i=1,nfrefr)
+          read(30,FMT_555) (zfrefl(i),i=1,nfrefr)
           read(30,765)
 C 555       format(3x,<nfrefr>f7.2)
 c

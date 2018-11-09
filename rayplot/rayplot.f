@@ -34,7 +34,7 @@ c
 c
       real xa(nmax),ya(nmax)
       character label(80),reply*1,title*40
-      CHARACTER(LEN=50) FMT
+      character FMT_45*50
 c
       sf=1.2
       i33=0
@@ -126,8 +126,8 @@ c
 c
 3000  read(20,35) nchar
 35    format(2i10)
-      WRITE(FMT,'("(4e15.5,", I0, "a1)")') nchar
-      read(20,FMT) x,y,albht,angle,(label(i),i=1,nchar)
+      write(FMT_45,'("(4e15.5,", I0, "a1)")') nchar
+      read(20,FMT_45) x,y,albht,angle,(label(i),i=1,nchar)
 C 45    format(4e15.5,<nchar>a1)
       x=x*xsf+x0
       y=y*ysf+y0
