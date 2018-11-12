@@ -14,7 +14,7 @@ c
       parameter(pi=3.141592654,  pi4=.785398163,   pi2=1.570796327,
      +          pi34=2.35619449, pi18=57.29577951, pit2=-6.283185307)
 c
-      parameter(player=12, ppcntr=300,  ptrap=300,   pshot=200,
+      parameter(player=50, ppcntr=300,  ptrap=300,   pshot=200,
      +          prayf=30, ptrayf=3000, ppray=500,  pnrayf=1000,
      +          pray=100000, prefl=20,   preflt=150, pconv=10,
      +          pconvt=100, pnsmth=500, papois=50, pnvar=400,
