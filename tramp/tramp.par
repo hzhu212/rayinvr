@@ -14,13 +14,13 @@ c
       parameter(pi=3.141592654, pi4=.785398163, pi2=1.570796327,
      +     pi34=2.35619449, pi18=57.29577951, pit2=-6.283185307)
 c
-      parameter(player=12,   ppcntr=40,  ptrap=100,   pshot=40,
-     +          prayf=30,    ptrayf=500, ppray=500,  pnrayf=500,
-     +          pray=10000,  piray=100,   prefl=20,   preflt=150,
-     +          pconv=10,    pconvt=100, pnvz=10,    parriv=100,
-     +          pseis=300,   pnsmth=500, papois=50,  paqpqs=50,
-     +          pcntr=100,   plcntr=10,  pshvel=50,  ppvrms=1000,
-     +          prayi=3000,  ppvel=40, pcol=20, pzff=5, ppzff=20,
+      parameter(player=50, ppcntr=300, ptrap=300, pshot=200,
+     +          prayf=30, ptrayf=3000, ppray=500, pnrayf=1000,
+     +          pray=100000, piray=100, prefl=20, preflt=150,
+     +          pconv=10, pconvt=100, pnvz=10, parriv=100,
+     +          pseis=1000, pnsmth=500, papois=50, paqpqs=50,
+     +          pcntr=100, plcntr=10, pshvel=50, ppvrms=1000,
+     +          prayi=30000, ppvel=300, pcol=20, pzff=5, ppzff=20,
      +          pitan=1000)
 c
       parameter(pncntr=player+1, pinvel=player*2, pitan2=pitan*2,

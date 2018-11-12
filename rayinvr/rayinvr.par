@@ -19,7 +19,7 @@ c
      +          pray=100000, prefl=20,   preflt=150, pconv=10,
      +          pconvt=100, pnsmth=500, papois=50, pnvar=400,
      +          prayi=25000, ppvel=300, pfrefl=10, ppfref=10,
-     +          pn2pt=15, pnobsf=1200, pcol=20, pxgrid=1000,
+     +          pn2pt=15, pnobsf=1200, pcol=20, pxgrid=10000,
      +          pzgrid=500, pitan=1000, piray=100)
 c
       parameter(pncntr=player+1, picv=player*ptrap*20, pinvel=player*2,
