@@ -805,7 +805,7 @@ c     code (iint=0) or two values of the same ray family (iint=1)
 c
       include 'tramp.par'
       real x(pnrayf),t(pnrayf),a(pnrayf),p(pnrayf),
-     +     dist(pseis),sect(pseis,parriv,3),xshots(1),
+     +     dist(pseis),sect(pseis,parriv,4),xshots(1),
      +     xh(pnrayf),th(pnrayf),ah(pnrayf),
      +     ph(pnrayf),rh(pnrayf),disth(pseis),p0h(pnrayf),
      +     prh(pnrayf),p1(pnrayf),p2(pnrayf)
@@ -951,6 +951,7 @@ c
      +                      a(l)*x(l+1)-a(l+1)*x(l))/denom
                           sect(j,na(j),3)=((p(l+1)-p(l))*dist(j)+
      +                      p(l)*x(l+1)-p(l+1)*x(l))/denom
+                          sect(j,na(j),4)=rhc
                         end if
                        else
                         itwice=0
@@ -1019,6 +1020,7 @@ c
      +                      a(l)*x(l+1)-a(l+1)*x(l))/denom
                           sect(j,na(j),3)=((p(l+1)-p(l))*dist(j)+
      +                      p(l)*x(l+1)-p(l+1)*x(l))/denom
+                          sect(j,na(j),4)=rhc
                         end if
                       else
                         itwice=0
@@ -1041,8 +1043,8 @@ c
                  else
                    sectt=sect(i,j,1)+abs(dist(i)-xshots(ii))/vred
                  end if
-                 write(21,45) sectt,(sect(i,j,k),k=2,3)
-45               format(3e12.5)
+                 write(21,45) sectt,(sect(i,j,k),k=2,4)
+45               format(3e12.5,f4.1)
 190           continue
             end if
 180      continue
