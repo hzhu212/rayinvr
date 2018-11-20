@@ -887,7 +887,7 @@ c
             nrayr=nrg
 69          write(6,375) ishotw(is),ray(i),nrayr
 375         format('shot#',i4,':   ray code',f5.1,':   ',
-     +             i3,' rays traced')
+     +             i5,' rays traced')
 c
             if(ntt.gt.pray) go to 1000
 c
