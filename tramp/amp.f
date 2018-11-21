@@ -1032,8 +1032,10 @@ c
             end if
 10       continue
          write(21,15) xshots(ii),-1
+         write(210,15) xshots(ii),-1
          do 180 i=1,nseis
             write(21,15) dist(i),na(i)
+            write(210,15) dist(i),na(i)
 15          format(f10.3,i10)
 25          format(2f10.3,i10)
             if(na(i).gt.0) then
@@ -1043,8 +1045,10 @@ c
                  else
                    sectt=sect(i,j,1)+abs(dist(i)-xshots(ii))/vred
                  end if
-                 write(21,45) sectt,(sect(i,j,k),k=2,4)
-45               format(3e12.5,f4.1)
+                 write(21,45) sectt,(sect(i,j,k),k=2,3)
+                 write(210,455) sectt,(sect(i,j,k),k=2,4)
+45               format(3e12.5)
+455              format(3e12.5,f4.1)
 190           continue
             end if
 180      continue

@@ -273,7 +273,10 @@ c
       if(isect.eq.2) open(unit=16, file='rec.in', status='old')
       if(itxout.gt.0) open(unit=17, file='tx.out')
       if(iplot.le.0) open(unit=19, file='p.out')
-      if(isect.gt.0) open(unit=21, file='sect.out')
+      if(isect.gt.0) then
+        open(unit=21, file='sect.out')
+        open(unit=210, file='sect_ext.out')
+      end if
       if(((ivrms.ne.0.or.icntr.ne.0.or.ivz.ne.0).and.idump.eq.1).or.
      +  igrid.ne.0.or.iden.eq.1) open(unit=23, file='m.out')
       if(iamout.eq.1) open(unit=24, file='amp.out')
