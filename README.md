@@ -125,9 +125,25 @@ to:
 25       format(3x,10(6x,i2))
 ```
 
+## Higher precision for shot position identification
+
+Changed `rayinvr/main.f:890`:
+
+```fortran
+if(abs(xshotr-xshotf).lt..001.and.idr(is).eq.idf) then
+```
+
+to:
+
+```fortran
+if(abs(xshotr-xshotf).lt.9.9e-4.and.idr(is).eq.idf) then
+```
+
+So that the current shot-x-position precision is improved to `0.001km`(used to be less than `0.001km`).
+
 ## Some syntax errors
 
-Change `pltsyn/pltsec.f`:253:
+Changed `pltsyn/pltsec.f:253`:
 
 ```fortran
 108     if(namp.eq.0) write(*,*, fmt="(/
@@ -138,3 +154,7 @@ to:
 ```fortran
 108     if(namp.eq.0) write(*, fmt="(/
 ```
+
+## Adaption for large models
+
+Enlarged some parameters in `rayinvr/rayinvr.par` and `tramp/tramp.par` for processing larger models.
