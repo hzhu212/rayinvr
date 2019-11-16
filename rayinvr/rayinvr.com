@@ -14,7 +14,7 @@ c
      +        icalc(prayi),npfref(pfrefl),colour(pcol),mcol(5),
      +        ivarf(pfrefl,ppfref),ircalc(prayi),
      +        nbnda(piray),sample(pzgrid,pxgrid)
-      real*4 c(player,ptrap,11),s(player,ptrap,2),b(player,ptrap,2),
+      real   c(player,ptrap,11),s(player,ptrap,2),b(player,ptrap,2),
      +       vm(player,ptrap,4),xbnd(player,ptrap,2),xshtar(pray),
      +       xm(pncntr,ppcntr),zm(pncntr,ppcntr),fidarr(pray),
      +       vf(player,ppvel,2),xr(ppray),zr(ppray),parorg(pnvar),

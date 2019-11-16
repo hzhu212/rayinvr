@@ -10,7 +10,7 @@ c
      +        nptamp(piray),icbnd(pconv+1),ivg(player,ptrap),
      +        nzed(pncntr),nvel(player,2),ipf(prayi+pshot2+1),
      +        ilshot(pshot2+1),colour(pcol),npzf(pzff),izrefl(prayf)
-      real*4 c(player,ptrap,11),s(player,ptrap,2),b(player,ptrap,2),
+      real   c(player,ptrap,11),s(player,ptrap,2),b(player,ptrap,2),
      +       vm(player,ptrap,4),xbnd(player,ptrap,2),
      +       xm(pncntr,ppcntr),zm(pncntr,ppcntr),xvel(player,ppvel,2),
      +       vf(player,ppvel,2),xr(ppray),zr(ppray),range(pray),

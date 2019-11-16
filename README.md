@@ -158,3 +158,7 @@ to:
 ## Adaption for large models
 
 Enlarged some parameters in `rayinvr/rayinvr.par` and `tramp/tramp.par` for processing larger models.
+
+## promote default `real` and `integer` precision from 4 bytes to 8 bytes
+
+Add `-fdefault-real-8 -fdefault-double-8 -fdefault-integer-8` options to `FFLAGS` in `Makefile`, and replace fixed declaritions (`real*4`) in the code with flexible ones (`real`).

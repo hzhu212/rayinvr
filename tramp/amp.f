@@ -552,7 +552,7 @@ c
 c     routine to fit a cubic spline to the n values of y versus x
 c
       implicit double precision (a-h,o-z)
-      real*4 x,y,dy,s,yy,yy1,yy2
+      real x,y,dy,s,yy,yy1,yy2
       common /spln$/ ncount
       dimension x(n),y(n),dy(n),w(1)
       dimension yy(1),yy1(1),yy2(1)

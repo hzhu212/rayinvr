@@ -6,7 +6,7 @@ PLTLIB=../pltlib/
 #
 # compile flags
 #
-FFLAGS =  -O -fdollar-ok
+FFLAGS =  -O -fdollar-ok -fdefault-real-8 -fdefault-double-8 -fdefault-integer-8
 #CFLAGS =  -O -I/usr/openwin/include
 CFLAGS =  -O -I/usr/openwin/share/include
 #
