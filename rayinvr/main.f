@@ -278,6 +278,7 @@ c
       if(iplot.eq.0) iplot=-1
       if(iplot.eq.2) iplot=0
       open(unit=11, file='r1.out')
+      open(unit=1111, file='r1_ext.out')
       if(idump.eq.1) open(unit=12, file='r2.out')
       if(itxout.gt.0) open(unit=17, file='tx.out')
       if(iplot.le.0) open(unit=19, file='p.out')
@@ -559,8 +560,11 @@ c
       if(isep.gt.1.and.ibsmth.eq.2) ibsmth=1
 c
       write(11,35)
+      write(1111,3535)
 35    format('shot  ray i.angle  f.angle   dist     depth',1x,
      +       'red.time  npts code')
+3535  format('shot  ray  i.angle  f.angle    xrecv    zrecv',1x,
+     +       'red.time  npts  code    xturn    zturn')
       if(idump.eq.1) write(12,45)
 45    format(/'gr ray npt   x       z      ang1    ang2    v1 ',1x,
      +       '   v2  lyr bk id iw')

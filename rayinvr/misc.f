@@ -17,6 +17,7 @@ c
       include 'rayinvr.par'
       real vave(ppray)
       integer itt(1)
+      integer iturn
       include 'rayinvr.com'
 c
       if(idump.eq.1) write(12,15) ifam,nr,npt,xr(npt),zr(npt),
@@ -51,6 +52,13 @@ c
       write(11,5) is,nr,a1,a2,xr(npt),zr(npt),timer,nptr,
      +            rayid(ntt)
 5     format(2i4,2f9.3,f9.3,f8.2,f8.3,i6,f6.1)
+
+C     write r1_ext.out to extend information of r1.out
+      iturn=maxloc(zr(1:npt),1)
+      write(1111,55) is,nr,a1,a2,xr(npt),zr(npt),timer,nptr,
+     +               rayid(ntt),xr(iturn),zr(iturn)
+55    format(i4,i5,5f9.3,i6,f6.1,2f9.3)
+
       if(vr(npt,2).ne.0.) then
         itt(ifam)=itt(ifam)+1
         if(iszero.eq.0) then
