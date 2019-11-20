@@ -200,7 +200,7 @@ c
       if(irayf.eq.0) then
         xshotf=xf
         idf=sign(1.,tf)
-        if(abs(xshotr-xshotf).lt..001.and.idr.eq.idf) then
+        if(abs(xshotr-xshotf).lt..0001.and.idr.eq.idf) then
           iflag=1
           npick=isf-nsfc
           isf=isf+1

@@ -363,9 +363,9 @@ c
 1010         if((itx.ge.3.or.itxout.eq.3).and.narinv.gt.0) then
                ichold=-999999
                do 120 j=1,narinv
-                  if((abs(xscalc(j)-xshota).lt..001.and.icalc(j)*fh(1).
+                  if((abs(xscalc(j)-xshota).lt..0001.and.icalc(j)*fh(1).
      +            gt.0..and.isep.eq.2).or.(abs(xscalc(j)-xshota).lt.
-     +            .001.and.isep.eq.3).or.isep.lt.2) then
+     +            .0001.and.isep.eq.3).or.isep.lt.2) then
                     if(itx.ge.3) then
                       xplot=(xcalc(j)-xmint)/xscalt+orig
                       if(itx.eq.3) then
@@ -647,11 +647,11 @@ c
         idp=sign(1.,tp)
         do 10 i=1,nshot
            xdiff=abs(xshot(i)-xshota)
-           if((xdiff.lt..001.and.ida.eq.idr(i).and.
+           if((xdiff.lt..0001.and.ida.eq.idr(i).and.
      +     (imod.gt.0.or.iray.gt.0)).or.
-     +     (xdiff.lt..001.and.imod*iray.eq.0).or.isep.lt.2) then
+     +     (xdiff.lt..0001.and.imod*iray.eq.0).or.isep.lt.2) then
              xdiff=abs(xshot(i)-xsp)
-             if(xdiff.lt..001.and.idr(i).eq.idp) then
+             if(xdiff.lt..0001.and.idr(i).eq.idp) then
                iplt=1
                npick=isf-nsfc
                isf=isf+1

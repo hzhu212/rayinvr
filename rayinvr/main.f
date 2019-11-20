@@ -301,7 +301,7 @@ c
         nsf=0
         xshotc=0.
 910     read(26,930) xpf(isf),tpf(isf),upf(isf),ipf(isf)
-930     format(3f10.3,i10)
+930     format(3f10.4,i10)
         if(ipf(isf).le.0) then
           nsf=nsf+1
           ilshot(nsf)=isf
@@ -662,7 +662,7 @@ c
               tang(i,4)=999.
 810        continue
          else
-           if(abs(xshotr-xsec).lt..001.and.abs(zshotr-zsec).lt..001)
+           if(abs(xshotr-xsec).lt..0001.and.abs(zshotr-zsec).lt..0001)
      +       then
              if(iflags.eq.1) go to 60
              ics=0
@@ -801,7 +801,7 @@ c
               if(irayf.eq.0) then
                 xshotf=xf
                 idf=sign(1.,tf)
-                if(abs(xshotr-xshotf).lt..001.and.idr(is).eq.idf) then
+                if(abs(xshotr-xshotf).lt..0001.and.idr(is).eq.idf) then
                   i2flag=1
                   isf=isf+1
                 else
