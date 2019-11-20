@@ -125,9 +125,9 @@ to:
 25       format(3x,10(6x,i2))
 ```
 
-## Higher precision for shot position identification
+## Promoted X axis precision from 1m to 0.1m
 
-Changed `rayinvr/main.f:890`:
+Changed `rayinvr/main.f:890` (and many others):
 
 ```fortran
 if(abs(xshotr-xshotf).lt..001.and.idr(is).eq.idf) then
@@ -136,10 +136,8 @@ if(abs(xshotr-xshotf).lt..001.and.idr(is).eq.idf) then
 to:
 
 ```fortran
-if(abs(xshotr-xshotf).lt.9.9e-4.and.idr(is).eq.idf) then
+if(abs(xshotr-xshotf).lt..0001.and.idr(is).eq.idf) then
 ```
-
-So that the current shot-x-position precision is improved to `0.001km`(used to be less than `0.001km`).
 
 ## Some syntax errors
 

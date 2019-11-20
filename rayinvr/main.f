@@ -891,7 +891,7 @@ c
               if(irayf.eq.0) then
                 xshotf=xf
                 idf=sign(1.,tf)
-                if(abs(xshotr-xshotf).lt.9.9e-4.and.idr(is).eq.idf) then
+                if(abs(xshotr-xshotf).lt..0001.and.idr(is).eq.idf) then
                   i2flag=1
                   isf=isf+1
                 else
