@@ -157,6 +157,8 @@ to:
 
 Enlarged some parameters in `rayinvr/rayinvr.par` and `tramp/tramp.par` for processing larger models.
 
+Promoted `prayi` to `100000` to enable huge `tx.in` files (>100000 lines).
+
 ## promote default `real` and `integer` precision from 4 bytes to 8 bytes
 
 Add `-fdefault-real-8 -fdefault-double-8 -fdefault-integer-8` options to `FFLAGS` in `Makefile`, and replace fixed declaritions (`real*4`) in the code with flexible ones (`real`).

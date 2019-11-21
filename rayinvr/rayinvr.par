@@ -18,7 +18,7 @@ c
      +          prayf=60, ptrayf=3000, ppray=500, pnrayf=20000,
      +          pray=1000000, prefl=20, preflt=150, pconv=10,
      +          pconvt=100, pnsmth=500, papois=500, pnvar=400,
-     +          prayi=25000, ppvel=3000, pfrefl=50, ppfref=100,
+     +          prayi=100000, ppvel=3000, pfrefl=50, ppfref=100,
      +          pn2pt=1000, pnobsf=20000, pcol=20, pxgrid=10000,
      +          pzgrid=5000, pitan=1000, piray=500)
 c
