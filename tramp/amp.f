@@ -1036,7 +1036,7 @@ c
          do 180 i=1,nseis
             write(21,15) dist(i),na(i)
             write(210,15) dist(i),na(i)
-15          format(f10.3,i10)
+15          format(f10.4,i10)
 25          format(2f10.3,i10)
             if(na(i).gt.0) then
               do 190 j=1,na(i)
