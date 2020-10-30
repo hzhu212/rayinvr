@@ -1,0 +1,5 @@
+  &dmppar  xmax=10., 
+           dmpfct=1.0,
+           velunc=0.100,
+           bndunc=0.100,
+  &end   

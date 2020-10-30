@@ -2,3 +2,5 @@ build/*
 !build/.gitkeep
 bin/
 *.o
+examples-new/*/*
+!examples-new/*/*.in*

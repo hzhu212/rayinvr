@@ -29,13 +29,74 @@ PS: the keyword arguments `FC=gfortran CC=gcc` means setting Fortran Compiler to
 
 The first version, prefixed by the letter `x`, is based on `X11` graphics system. The second version is originally for users who have access to the commercial graphics package called Uniras. However, the second version would also be helpful if you just need to calculate without ploting. On Windows, there is no `x11` library so that the second version is the only choice.
 
+After this step, we will get `rayinvr.exe`, `tramp.exe` etc. under `build` directory.
+
 ## Add to PATH
 
 **This step is optional.**
 
-Add `build` directory to `PATH`.
+Add `build` directory to `PATH`, then we will be able to run `rayinvr` and other commands at any path.
 
-# Blame
+## Run examples
+
+In original rayinvr repository, Zelt provided 8 example datasets, which is helpful to test our build results. 
+
+But we can't run our commands on these datasets directly, because I have changed `main.f` to handle higher float precision when reading `v.in` file (see [below](#read-vin-with-higher-precision)). If you have tried running commands at `examples` directory, you will probably end up with an error msg like this:
+
+```
+At line 236 of file main.f (unit = 20, file = 'v.in')
+Fortran runtime error: Bad value during floating point read
+
+Error termination. Backtrace:
+```
+
+But don't worry, I have made a python script which can convert old style v.in file into high precision version, and I have put all converted example datasets in `examples-new` directory.
+
+Now, let's try example3 (Why not example1? because example3 is neither too simple, nor too complicated):
+
+```cmd
+# On Windows 10 WSL for my case
+
+# go to dataset directory
+cd examples-new/e3
+
+# run rayinvr.exe
+../../build/rayinvr.exe
+```
+
+The output will be as below, basically consistent with that of original rayinvr:
+
+```
+shot#   1:   ray code  2.2:    59 rays traced
+shot#   1:   ray code  3.2:    60 rays traced
+shot#  -2:   ray code  2.2:    17 rays traced
+shot#  -2:   ray code  3.2:     7 rays traced
+shot#   2:   ray code  2.2:    63 rays traced
+shot#   2:   ray code  3.2:    73 rays traced
+shot#  -3:   ray code  2.2:    34 rays traced
+shot#  -3:   ray code  3.2:    26 rays traced
+shot#   3:   ray code  2.2:    65 rays traced
+shot#   3:   ray code  3.2:    73 rays traced
+
+|----------------------------------------------------------------|
+|                                                                |
+| total of   2089 rays consisting of    21239 points were traced |
+|                                                                |
+|           model consists of  4 layers and  40 blocks           |
+|                                                                |
+|----------------------------------------------------------------|
+
+
+Number of data points used:      477
+RMS traveltime residual:       0.068
+Normalized chi-squared:       46.331
+
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DIVIDE_BY_ZERO IEEE_OVERFLOW_FLAG IEEE_DENORMAL
+```
+
+Now, start your work with rayinvr!
+
+# Problems in original rayinvr and fix
 
 This section lists what errors the original rayinvr throws and how I fix them.
 

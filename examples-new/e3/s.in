@@ -1,0 +1,17 @@
+&pltpar
+  iplot=1, vred=4.0,
+
+  ! useless for matlab
+  iscale=1, ishade=1, rcor=0.,
+  iroute=1, scalef=0.75, amp=0.50, sps=250., clip=0.1,
+  ibcol=1, ifcol=0,
+  xwndow=292., ywndow=175.,
+&end
+&axepar
+  xmin=0., xmax=10.,
+  tmin=0., tmax=4.,
+
+  ! useless for matlab
+  albht=3.5, orig=20., itrev=1,
+  xmm=300., tmm=175.,
+&end
